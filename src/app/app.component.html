@@ -5,8 +5,12 @@
             <router-outlet></router-outlet>
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-12">
+            <agm-map [latitude]="lat" [longitude]="lng">
+                <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+            </agm-map>
+        </div>
+    </div>
 </div>
 
-<agm-map [latitude]="lat" [longitude]="lng">
-  <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
-</agm-map>
