@@ -10,6 +10,7 @@ import { PropertyBrowserComponent } from './properties/property-browser/property
 import { PropertiesComponent } from './properties/properties.component';
 import { HeaderComponent } from './header/header.component';
 import { AppRoutingModule } from './app-routing.module';
+import { MapComponent } from './map/map.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { AppRoutingModule } from './app-routing.module';
     HomeComponent,
     PropertyBrowserComponent,
     PropertiesComponent,
-    HeaderComponent
+    HeaderComponent,
+    MapComponent
   ],
   imports: [
     AgmCoreModule.forRoot({
