@@ -1,27 +1,17 @@
-# Tusafeliving
+# Save Living App
+This project is being developed for CS-4503 Senior Software Project at the University of Tulsa.
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.2.6.
+## Setup and Installation
+1. Install [Node.js](https://nodejs.org/en/).
+2. Clone the repository to a local directory.
+3. Run `npm install` at the local repo directory to install dependencies.
 
-## Development server
+> **_NOTE:_** There have been some issues related to installing in certain directories. If an issue arises with installation or running the code, try installing in a different directory.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## Build/Test Software
+To build the software, run `ng serve`. Add `--open` at the end to open in the default browser.
 
-## Code scaffolding
+> **_NOTE:_** If you are using Windows and run into a "Running scripts is disabled on this system" issue, use `powershell -ExecutionPolicy ByPass ng serve --open`.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## Contributing
+To contribute, make a branch with any changes!
