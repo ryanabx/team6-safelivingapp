@@ -11,10 +11,8 @@
   <a href="#about">About</a>
   <a href="#contact">Contact</a>
   <div class="search-container">
-    <form action="/coord-list">
-      <input type="text" placeholder="Enter Address" name="search" id = "userInput">
-      <button type="submit" onclick = "sendInput()"><i class="fa fa-search"></i></button>
-    </form>
+      <input type="text" placeholder="Enter Address" name="search" id = "userInput" #userInput> <!-- id = "userInput" -->
+      <button class="btn btn-primary fa fa-search" (click)="sendInput(userInput.value)" type="button"></button> <!-- onclick = 'sendInput()' -->
   </div>
 </div>
 
@@ -23,6 +21,13 @@
     Safe Living App
   </h1>
 </div>
+
+<div style = "text-align:center">
+  <h1>
+    {{ inputAddr}}
+  </h1>
+</div>
+
 
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
 <!-- * * * * * * * * * * * The content above * * * * * * * * * * * -->
