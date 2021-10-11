@@ -1,40 +1,19 @@
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * The content below * * * * * * * * * * * -->
-<!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * -->
-<!-- * * * * * * * * * * and can be replaced. * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * Delete the template below * * * * * * * * * * -->
-<!-- * * * * * * * to get started with your project! * * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<div class="topnav">
-  <a class="active" href="#home">Home</a>
-  <a href="#about">About</a>
-  <a href="#contact">Contact</a>
-  <div class="search-container">
-      <input type="text" placeholder="Enter Address" name="search" id = "userInput" #userInput> <!-- id = "userInput" -->
-      <button class="btn btn-primary fa fa-search" (click)="sendInput(userInput.value)" type="button"></button> <!-- onclick = 'sendInput()' -->
-  </div>
+<app-header></app-header>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
 </div>
 
-<div style = "text-align:center">
-  <h1>
-    Safe Living App
-  </h1>
-</div>
 
+<div class="search-container">
+    <input type="text" placeholder="Enter Address" name="search" id = "userInput" #userInput> <!-- id = "userInput" -->
+    <button class="btn btn-primary fa fa-search" (click)="sendInput(userInput.value)" type="button"></button> <!-- onclick = 'sendInput()' -->
+</div>
 <div style = "text-align:center">
   <h1>
     {{ inputAddr}}
   </h1>
 </div>
-
-
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * The content above * * * * * * * * * * * -->
-<!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * -->
-<!-- * * * * * * * * * * and can be replaced. * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * End of Placeholder * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-
-<router-outlet></router-outlet>
