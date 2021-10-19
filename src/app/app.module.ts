@@ -12,6 +12,9 @@ import { HeaderComponent } from './header/header.component';
 import { AppRoutingModule } from './app-routing.module';
 import { MapComponent } from './map/map.component';
 
+import { HttpClientModule } from '@angular/common/http';
+import { CrimeapiComponent } from './crimeapi/crimeapi.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -20,14 +23,16 @@ import { MapComponent } from './map/map.component';
     PropertyBrowserComponent,
     PropertiesComponent,
     HeaderComponent,
-    MapComponent
+    MapComponent,
+    CrimeapiComponent
   ],
   imports: [
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyD2QfpFioTBH5t8YSU_US-vDItosqF1Iv4'
     }),
     AppRoutingModule,
-    BrowserModule
+    BrowserModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
