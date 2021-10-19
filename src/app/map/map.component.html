@@ -1,4 +1,15 @@
 <p>map works!</p>
+
+<div class="search-container">
+    <input type="text" placeholder="Enter Address" name="search" id = "userInput" #userInput> <!-- id = "userInput" -->
+    <button class="btn btn-primary fa fa-search" (click)="sendInput(userInput.value)" type="button"></button> <!-- onclick = 'sendInput()' -->
+</div>
+<div style = "text-align:center">
+  <h1>
+    {{inputAddr}}
+  </h1>
+</div>
+
 <agm-map style="width: 500px; height: 500px" [latitude]="lat" [longitude]="long">
     <agm-marker [latitude]="lat" [longitude]="long"></agm-marker>
 </agm-map>
