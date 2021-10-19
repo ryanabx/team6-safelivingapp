@@ -13,3 +13,7 @@
 <agm-map style="width: 500px; height: 500px" [latitude]="lat" [longitude]="long">
     <agm-marker [latitude]="lat" [longitude]="long"></agm-marker>
 </agm-map>
+<!-- --><agm-drawing-manager #drawing="agmDrawingManager" (circleComplete)="circleAdded($event)" [drawingMode]="'circle'" [circleOptions]="{fillColor:'red', radius: 150}">
+</agm-drawing-manager>
+
+<!--(circleComplete)="circleAdded($event)" before [drawingmode] -->
