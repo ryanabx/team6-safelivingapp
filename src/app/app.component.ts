@@ -20,18 +20,15 @@ export class AppComponent implements OnInit {
   title = 'tusafeliving';
   public inputAddr: any;
 
-constructor(
-  private appService: AppService,
-  private addrInputService: AddrInputService, 
-  private router: Router,){}
-
+constructor(){}
+/*
   sendInput(value: string) {
     this.inputAddr = value;
     console.log(this.inputAddr);
     this.addrInputService.setAddr(this.inputAddr);
     this.router.navigateByUrl('/coord-list');
    }
-
+*/
   ngOnInit(): void {
   }
 }

@@ -14,24 +14,23 @@ import { MapComponent } from './map/map.component';
 import { HttpClientModule } from '@angular/common/http';
 import { CoordListComponent } from './coord-list/coord-list.component';
 import { AddrInputService } from './addr-input.service';
+import { AppService } from './app.service';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    CoordListComponent
-  ],
-  imports: [
-    BrowserModule,
-    //onSameUrlNavigation used for reloading routes when already on them
-    RouterModule.forRoot(routes, {onSameUrlNavigation: 'reload'}),
-    HttpClientModule,
-    PropertyViewerComponent,
-    HomeComponent,
-    PropertyBrowserComponent,
+    CoordListComponent,
     PropertiesComponent,
     HeaderComponent,
     MapComponent,
+    HomeComponent,
+    PropertyViewerComponent,
+    PropertyBrowserComponent
+  ],
+  imports: [
+    BrowserModule,
+    HttpClientModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyD2QfpFioTBH5t8YSU_US-vDItosqF1Iv4'
     }),
