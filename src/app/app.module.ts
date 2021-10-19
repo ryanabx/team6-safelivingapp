@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AgmCoreModule } from '@agm/core';
+import { AgmDrawingModule } from '@agm/drawing';
 
 import { AppComponent } from './app.component';
 import { PropertyViewerComponent } from './properties/property-viewer/property-viewer.component';
@@ -32,10 +33,12 @@ import { AppService } from './app.service';
     BrowserModule,
     HttpClientModule,
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyD2QfpFioTBH5t8YSU_US-vDItosqF1Iv4'
+      apiKey: 'AIzaSyD2QfpFioTBH5t8YSU_US-vDItosqF1Iv4',
+      libraries: ['drawing']
     }),
     AppRoutingModule,
-    BrowserModule
+    BrowserModule,
+    AgmDrawingModule
   ],
   providers: [AppService, AddrInputService],
   bootstrap: [AppComponent]
