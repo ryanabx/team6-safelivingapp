@@ -10,6 +10,8 @@
   },
   "private": true,
   "dependencies": {
+    "@agm/core": "^1.1.0",
+    "@agm/drawing": "^1.1.0",
     "@angular/animations": "~12.2.0",
     "@angular/common": "~12.2.0",
     "@angular/compiler": "~12.2.0",
