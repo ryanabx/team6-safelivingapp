@@ -17,7 +17,6 @@ import { AddrInputService } from './addr-input.service';
 import { AppService } from './app.service';
 
 
-import { HttpClientModule } from '@angular/common/http';
 import { CrimeapiComponent } from './crimeapi/crimeapi.component';
 
 @NgModule({
