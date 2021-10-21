@@ -3,6 +3,8 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import { AddrInputService } from '../addr-input.service';
 import { AppService } from '../app.service';
 
+import { MapsAPILoader } from '@agm/core';
+
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
@@ -11,6 +13,8 @@ import { AppService } from '../app.service';
 export class MapComponent implements OnInit {
   lat: number;
   long: number;
+  radius: number;
+
   inputAddr: any;
   apiFile: any;
   locationData: any;
@@ -23,6 +27,10 @@ export class MapComponent implements OnInit {
     // Dietler Commons: 36.1522971, -95.9481072
     this.lat = 0;
     this.long = 0;
+    this.radius = 5000;
+
+    //private mapsAPILoader: MapsAPILoader;
+
   }
 
   sendInput(value: string) {
