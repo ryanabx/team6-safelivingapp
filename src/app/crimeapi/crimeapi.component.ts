@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute, Params } from '@angular/router';
+import { analyzeAndValidateNgModules } from '@angular/compiler';
 
 @Component({
   selector: 'app-crimeapi',
@@ -21,7 +22,7 @@ export class CrimeapiComponent implements OnInit {
   specificcrimedata: object;
 
 
-  constructor(private http: HttpClient, private route: ActivatedRoute) {
+  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router) {
     this.returnedstuff = new Object;
     this.specificcrimedata = new Object;
     this.ori = '';
@@ -35,9 +36,18 @@ export class CrimeapiComponent implements OnInit {
     .subscribe(params => {
       this.ori = params['ori'];
       this.fromstr = params['from'];
-      this.from = this.fromstr ? parseInt(params['from']) : 0;
+      this.from = this.fromstr ? (parseInt(params['from']) ? parseInt(params['from']) : new Date().getFullYear() - 5) : new Date().getFullYear() - 5;
       this.tostr = params['to'];
-      this.to = this.tostr ? parseInt(params['to']) : 0;
+      this.to = this.tostr ? (parseInt(params['to']) ? parseInt(params['to']) : new Date().getFullYear()) : new Date().getFullYear();
+      if(params['from'] != parseFloat(params['from']) || params['to'] != parseFloat(params['to']))
+      {
+        this.router.navigate(['crimeapi'], {queryParams: {ori: this.ori, from: this.from, to: this.to}});
+      }
+      if(this.from > this.to)
+      {
+        this.to = this.from + 1;
+        this.router.navigate(['crimeapi'], {queryParams: {ori: this.ori, from: this.from, to: this.to}});
+      }
     });
 
     this.url = 'https://api.usa.gov/crime/fbi/sapi//api/summarized/agencies/'
@@ -60,12 +70,8 @@ export class CrimeapiComponent implements OnInit {
           str += ": ";
           str += JSON.stringify(data[key as never]);
           this.items.push(str as never);
-
         }
-
-        
       }
-      
     });
    }
 
