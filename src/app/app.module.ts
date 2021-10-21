@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AgmCoreModule } from '@agm/core';
-import { AgmDrawingModule } from '@agm/drawing';
 
 import { AppComponent } from './app.component';
 import { PropertyViewerComponent } from './properties/property-viewer/property-viewer.component';
@@ -18,6 +17,8 @@ import { AddrInputService } from './addr-input.service';
 import { AppService } from './app.service';
 
 
+import { CrimeapiComponent } from './crimeapi/crimeapi.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -27,18 +28,18 @@ import { AppService } from './app.service';
     MapComponent,
     HomeComponent,
     PropertyViewerComponent,
-    PropertyBrowserComponent
+    PropertyBrowserComponent,
+    CrimeapiComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyD2QfpFioTBH5t8YSU_US-vDItosqF1Iv4',
-      libraries: ['drawing']
+      apiKey: 'AIzaSyD2QfpFioTBH5t8YSU_US-vDItosqF1Iv4'
     }),
     AppRoutingModule,
     BrowserModule,
-    AgmDrawingModule
+    HttpClientModule
   ],
   providers: [AppService, AddrInputService],
   bootstrap: [AppComponent]
