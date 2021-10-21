@@ -39,14 +39,16 @@ export class CrimeapiComponent implements OnInit {
       this.from = this.fromstr ? (parseInt(params['from']) ? parseInt(params['from']) : new Date().getFullYear() - 5) : new Date().getFullYear() - 5;
       this.tostr = params['to'];
       this.to = this.tostr ? (parseInt(params['to']) ? parseInt(params['to']) : new Date().getFullYear()) : new Date().getFullYear();
-      if(params['from'] != parseFloat(params['from']) || params['to'] != parseFloat(params['to']))
+      if(params['from'] != parseInt(params['from']) || params['to'] != parseInt(params['to']))
       {
-        this.router.navigate(['crimeapi'], {queryParams: {ori: this.ori, from: this.from, to: this.to}});
+        this.router.navigate(['crimeapi'], {queryParams: {ori: this.ori, from: this.from, to: this.to}}).then(()=>{window.location.reload()});
       }
       if(this.from > this.to)
       {
-        this.to = this.from + 1;
-        this.router.navigate(['crimeapi'], {queryParams: {ori: this.ori, from: this.from, to: this.to}});
+        var temp = this.to;
+        this.to = this.from;
+        this.from = temp;
+        this.router.navigate(['crimeapi'], {queryParams: {ori: this.ori, from: this.from, to: this.to}}).then(()=>{window.location.reload()});
       }
     });
 
