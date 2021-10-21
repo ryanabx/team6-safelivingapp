@@ -44,8 +44,12 @@ export class MapComponent implements OnInit {
   ngOnInit(): void {
     this.route.queryParams
     .subscribe(params => {
-      this.lat = params['lat'] ? parseFloat(params['lat']) : 0;
-      this.long = params['long'] ? parseFloat(params['long']) : 0;
+      this.lat = params['lat'] ? (parseFloat(params['lat']) ? parseFloat(params['lat']) : 0) : 0;
+      this.long = params['long'] ? (parseFloat(params['long']) ? parseFloat(params['long']) : 0) : 0;
+      if(params['lat'] != parseFloat(params['lat']) || params['long'] != parseFloat(params['long']))
+      {
+        this.router.navigate(['map'], {queryParams: {lat : this.lat, long : this.long}});
+      }
       console.log(this.lat + " : " + this.long)
     })
   }
