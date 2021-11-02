@@ -16,10 +16,13 @@ To build the software, run `ng serve`. Add `--open` at the end to open in the de
 ## Setup and Installation (Django Backend)
 1. Ensure that Python 3.10 is installed.
 2. Clone the repository to a local directory.
-3. In a shell or command line, navigate to the "backend" directory and create a virtual python environment inside of it. Example for Powershell: `py -m venv venv`
-4. Activate the environment by running the activate script inside of venv/Scripts. Example for Powershell within backend directory: `powershell -ExecutionPolicy ByPass .\venv\Scripts\activate.bat`
+3. In a shell or command line, navigate to the "backend" directory and create a virtual python environment inside of it.
+> **_EXAMPLES:_** For Powershell users: `py -m venv venv`
+4. Activate the environment by running the activate script inside of venv/Scripts.
+> **_EXAMPLES:_** Example for VSCode with built in Powershell terminal: `& './venv/Scripts/Activate.ps1'`
 5. Set your preferred Python interpreter to be the one inside of venv/Scripts.
-6. Within the virtual environment, install dependencies: `python -m pip install django`
+6. Change to the backend/backend_server directory and within the virtual environment, install dependencies from requirements.txt: (Example: use `python -m pip install -r requirements.txt`
+7. Make sure to read tutorials for how to do things in Django!
 
 ## Build/Test Software (Django Backend)
 To build the software, run `python manage.py runserver` in the backend/backend_server directory and navigate to `localhost:8080`.
