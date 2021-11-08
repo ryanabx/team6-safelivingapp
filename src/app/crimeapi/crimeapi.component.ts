@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { analyzeAndValidateNgModules } from '@angular/compiler';
+import { Globals } from '../globals'
 
 @Component({
   selector: 'app-crimeapi',
@@ -10,7 +11,7 @@ import { analyzeAndValidateNgModules } from '@angular/compiler';
 })
 export class CrimeapiComponent implements OnInit {
 
-  url = 'https://api.usa.gov/crime/fbi/sapi//api/summarized/agencies/FL0500500/offenses/2019/2020?api_key=nHym62MTPDELS0XgtAZLLw0fL3jNWoNvsY2kn315';
+  url = '';
   items = [];
   keynames = [];
   ori: string;
@@ -22,7 +23,7 @@ export class CrimeapiComponent implements OnInit {
   specificcrimedata: object;
 
 
-  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router) {
+  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router, public globals: Globals) {
     this.returnedstuff = new Object;
     this.specificcrimedata = new Object;
     this.ori = '';
@@ -51,31 +52,25 @@ export class CrimeapiComponent implements OnInit {
         this.router.navigate(['crimeapi'], {queryParams: {ori: this.ori, from: this.from, to: this.to}}).then(()=>{window.location.reload()});
       }
     });
+    this.url = globals.backendUrl;
+    this.url += 'crimedata/api/';
+    this.url += this.ori;
+    this.url += '/';
+    this.url += this.fromstr;
+    this.url += '/';
+    this.url += this.tostr;
+    this.url += '/';
+    returned_data: JSON;
+    
+    
 
-    this.url = 'https://api.usa.gov/crime/fbi/sapi//api/summarized/agencies/'
-    this.url += this.ori
-    this.url += '/offenses/'
-    this.url += this.fromstr
-    this.url += '/'
-    this.url += this.tostr
-    this.url+= '?api_key=nHym62MTPDELS0XgtAZLLw0fL3jNWoNvsY2kn315';
-
-    this.http.get(this.url).toPromise().then(data =>{
-      console.log(data);
-      for (let key in data){
-        if(data.hasOwnProperty(key)){
-          var str : string;
-          str = '';
-          var str2 : string;
-          str2 = JSON.stringify(key);
-          str += str2;
-          str += ": ";
-          str += JSON.stringify(data[key as never]);
-          this.items.push(str as never);
-        }
-      }
-    });
    }
+
+  getData(url:any, cb:any){
+    fetch(url)
+    .then(response => response.json())
+    .then(result => cb(result));
+  }
 
   ngOnInit(): void {
     
