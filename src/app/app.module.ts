@@ -16,7 +16,6 @@ import { CoordListComponent } from './coord-list/coord-list.component';
 import { AddrInputService } from './addr-input.service';
 import { AppService } from './app.service';
 
-
 import { CrimeapiComponent } from './crimeapi/crimeapi.component';
 
 @NgModule({
