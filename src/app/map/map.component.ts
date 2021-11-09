@@ -14,12 +14,15 @@ export class MapComponent implements OnInit {
   lat: number;
   long: number;
   radius: number;
+  crimeData: number;
 
   zillowLink = ''
 
   inputAddr: any;
   apiFile: any;
   locationData: any;
+
+  
 
   constructor(
     private route: ActivatedRoute,
@@ -30,6 +33,7 @@ export class MapComponent implements OnInit {
     this.lat = 0;
     this.long = 0;
     this.radius = 5000;
+    this.crimeData = -1;
 
     //private mapsAPILoader: MapsAPILoader;
 
