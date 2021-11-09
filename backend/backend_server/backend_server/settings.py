@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'cde_api',
+    'loc_to_addr',
 ]
 
 MIDDLEWARE = [

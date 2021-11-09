@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { analyzeAndValidateNgModules } from '@angular/compiler';
+import { Globals } from '../globals'
 
 @Component({
   selector: 'app-crimeapi',
@@ -10,11 +11,11 @@ import { analyzeAndValidateNgModules } from '@angular/compiler';
 })
 export class CrimeapiComponent implements OnInit {
 
-  url = 'https://api.usa.gov/crime/fbi/sapi//api/summarized/agencies/FL0500500/offenses/2019/2020?api_key=nHym62MTPDELS0XgtAZLLw0fL3jNWoNvsY2kn315';
+  url = 'http://localhost:8000/crimedata/api/FL0500500/2019/2020/';
   items: any = [];
   /*
     nationalCrimeData stores a array of integers whose indicies correspond
-    to the offense in the order presented for national 2020 data, 
+    to the offense in the order presented for national 2020 data,
     0 - property crime
     1 - violent crime
     2 - robbery
@@ -27,7 +28,7 @@ export class CrimeapiComponent implements OnInit {
     9 - arson
     10 - aggravated assault
     rape and rape-legacy are combined into one number, since rape is rape.
-  
+
   nationalCrimeData = [3424591, 640836, 102677, 68258, 426799, 2453533, 579, 10440, 522426, 21833, 459461];
   */
   // actual statistics from API call for a given location
@@ -57,7 +58,7 @@ export class CrimeapiComponent implements OnInit {
   arsonPercent: number = (this.arson / this.nationalCrimeData[9]) * 100
   aaPercent: number = (this.aggrAss / this.nationalCrimeData[10]) * 100
   */
- 
+
   keynames = [];
   file: any;
   ori: string;
@@ -69,7 +70,7 @@ export class CrimeapiComponent implements OnInit {
   specificcrimedata: object;
 
 
-  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router) {
+  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router, public globals: Globals) {
     this.returnedstuff = new Object;
     this.specificcrimedata = new Object;
     this.ori = '';
@@ -87,7 +88,7 @@ export class CrimeapiComponent implements OnInit {
       this.from = this.fromstr ? (parseInt(params['from']) ? parseInt(params['from']) : new Date().getFullYear() - 5) : new Date().getFullYear() - 5;
       this.tostr = params['to'];
       this.to = this.tostr ? (parseInt(params['to']) ? parseInt(params['to']) : new Date().getFullYear()) : new Date().getFullYear();
-      
+
       if(params['from'] != parseInt(params['from']) || params['to'] != parseInt(params['to']))
       {
         this.router.navigate(['crimeapi'], {queryParams: {ori: this.ori}}).then(()=>{window.location.reload()});
@@ -103,6 +104,17 @@ export class CrimeapiComponent implements OnInit {
         this.router.navigate(['crimeapi'], {queryParams: {ori: this.ori}}).then(()=>{window.location.reload()});
       }*/
     });
+    this.url = globals.backendUrl;
+    this.url += 'crimedata/api/';
+    this.url += this.ori;
+    this.url += '/';
+    this.url += this.fromstr;
+    this.url += '/';
+    this.url += this.tostr;
+    this.url += '/';
+    returned_data: JSON;
+
+
 
     this.url = 'https://api.usa.gov/crime/fbi/sapi/api/summarized/agencies/'
     this.url += this.ori
@@ -117,7 +129,7 @@ export class CrimeapiComponent implements OnInit {
       this.file = data
       this.items = this.file.results
       console.log(this.items);
-      
+
       for (let i = 0; i < this.items.length; i++){
         if (this.items[i].offense == "property-crime"){
           this.propertyCrime += this.items[i].actual
@@ -170,12 +182,12 @@ export class CrimeapiComponent implements OnInit {
     });
    }
 
+
   ngOnInit(): void {
-    
+
   }
 
 }
 function zillowRoute() {
   throw new Error('Function not implemented.');
 }
-
