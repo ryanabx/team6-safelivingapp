@@ -1,0 +1,14 @@
+.container{text-align: center;}
+
+.jumbotron {
+  position: relative;
+  background-image: url(cityPanorama.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  text-align: center;
+}
+
+.lead, .display-4 {
+  font-weight: bold;
+  color: white;
+}
