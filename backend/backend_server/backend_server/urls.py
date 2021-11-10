@@ -20,4 +20,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('crimedata/', include('cde_api.urls')),
     path('addrtoloc/', include('loc_to_addr.urls')),
+    path('safelivingscore/', include('safe_living_score.urls')),
 ]
