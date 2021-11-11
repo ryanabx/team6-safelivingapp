@@ -15,7 +15,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { CoordListComponent } from './coord-list/coord-list.component';
 import { AddrInputService } from './addr-input.service';
 import { AppService } from './app.service';
-
+import { Globals } from './globals';
 
 import { CrimeapiComponent } from './crimeapi/crimeapi.component';
 
@@ -41,7 +41,7 @@ import { CrimeapiComponent } from './crimeapi/crimeapi.component';
     BrowserModule,
     HttpClientModule
   ],
-  providers: [AppService, AddrInputService],
+  providers: [AppService, AddrInputService, Globals],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
