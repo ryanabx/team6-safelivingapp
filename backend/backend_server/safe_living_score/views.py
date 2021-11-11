@@ -140,6 +140,30 @@ def getScorebyORI(request, ORI):
             'agency is not a city': 'true'
         }
         return JsonResponse(context)
+      
+def findLocationCrimeScore(longitude, latitude, radius):
+    scoreDistanceTupleList = ORIsInRadius(longitude, latitude, radius)
+    ORIScoreToLocationScore(scoreDistanceTupleList)
+     
+    
+    
+def ORIScoreToLocationScore(scoreDistanceTupleList):
+    
+    sumWeights = 0
+    locationScore = 0
+    
+    for scoreDistanceTuple in scoreDistanceTupleList:
+        
+        weight = 1 / scoreDistanceTuple[1]
+        score = scoreDistanceTuple[0]
+        
+        sumWeights += weight
+        locationScore += score * weight
+    
+    
+    locationScore /= sumWeights
+    
+    return locationScore
     
 
 
