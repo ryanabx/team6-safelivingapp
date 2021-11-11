@@ -4,6 +4,8 @@ import requests
 from django.http import JsonResponse
 import json
 
+from safe_living_score.ori_utils import FBI_wrapper
+
 stateCodes = {
     "AK": "02",
     "AL": "01",
@@ -62,13 +64,35 @@ stateCodes = {
     "WY": "56"
 }
 
-def getScore(longitude, latitude, radius):
+def getScore(request, lon, lat, radius):
+    lon = float(lon)
+    lat = float(lat)
+    radius = float(radius)
+    d = FBI_wrapper()
+    result = d.getAgenciesByCoordinates(lat, lon, radius)
 
-    crime_score = getCrimeScore()
+    if(not result):
+        result = d.getNearestByType(lat, lon, "City")
+    
+    score_distance_tuple = {}
+
+    for k in result:
+        
+        res = getScorebyORI("", k["ori"])
+        print("Resulting dict: ", res)
+        if("agency is not a city" not in res):
+            score_distance_tuple[k["ori"]] = {}
+            score_distance_tuple[k["ori"]]["score"] = float(res['crime-ratio'])
+            score_distance_tuple[k["ori"]]["distance"] = float(k["distance"])
+        
+
+    print("Score distance tuple: ", score_distance_tuple)
+    crime_score = getCrimeScore(score_distance_tuple)
     
     context = {
         "safe-living-score": crime_score
     }
+    return JsonResponse(context)
 
 def getScorebyORI(request, ORI):
     key = 'nHym62MTPDELS0XgtAZLLw0fL3jNWoNvsY2kn315'
@@ -136,14 +160,15 @@ def getScorebyORI(request, ORI):
             'population': population,
             'state code': stateCodes[state],
             'state population': statePopulation,
-            'crime ratio': crimeRatio
+            'crime-ratio': crimeRatio
         }
-        return JsonResponse(context)
+        return context
     else:
         context = {
-            'agency is not a city': 'true'
+            'agency is not a city': 'true',
+            'crime-ratio': 0
         }
-        return JsonResponse(context)
+        return context
 
 def getCrimeScore(scoreDistanceTupleList):
     
@@ -152,8 +177,8 @@ def getCrimeScore(scoreDistanceTupleList):
     
     for scoreDistanceTuple in scoreDistanceTupleList:
         
-        weight = 1 / scoreDistanceTuple["distance"]
-        score = scoreDistanceTuple["score"]
+        weight = 1 / scoreDistanceTupleList[scoreDistanceTuple]['distance']
+        score = scoreDistanceTupleList[scoreDistanceTuple]['score']
         
         sumWeights += weight
         locationScore += score * weight
@@ -162,6 +187,3 @@ def getCrimeScore(scoreDistanceTupleList):
     locationScore /= sumWeights
     
     return locationScore
-    
-
-

@@ -176,8 +176,8 @@ class FBI_wrapper:
 	STATE_SCOPE = "states"
 	ORI_SCOPE = "agencies"
 
-	def __init__(self, api_key):
-		self.api_key = api_key
+	def __init__(self):
+		self.api_key = 'nHym62MTPDELS0XgtAZLLw0fL3jNWoNvsY2kn315'
 		self.rc = RequestCreator(self.api_key)
 	
 	def getAgencies(self):
