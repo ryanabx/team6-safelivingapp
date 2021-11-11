@@ -19,6 +19,8 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('crimedata/', include('cde_api.urls')),
-    path('addrtoloc/', include('loc_to_addr.urls')),
+    path('geocoding/', include('loc_to_addr.urls')),
     path('safelivingscore/', include('safe_living_score.urls')),
+    path('amenities/', include('amenities.urls')),
+    path('transportation/', include('transportation_score.urls')),
 ]
