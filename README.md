@@ -25,7 +25,7 @@ To build the software, run `ng serve`. Add `--open` at the end to open in the de
 7. Make sure to read tutorials for how to do things in Django!
 
 ## Build/Test Software (Django Backend)
-To build the software, run `python manage.py runserver` in the backend/backend_server directory and navigate to `localhost:8080`.
+To build the software, run `python manage.py runserver` in the backend/backend_server directory and navigate to `localhost:8000`.
 
 ## Contributing
 To contribute, make a branch with any changes!
