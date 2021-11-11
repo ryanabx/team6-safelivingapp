@@ -27,14 +27,14 @@ export class HomeComponent implements OnInit {
     this.addrInputService.setAddr(this.inputAddr);
     this.appService.callGeoApi(this.addrInputService.getAddr()).subscribe(
       (data: any) => {
-      console.log(data)
-      this.apiFile = data
-      this.locationData = this.apiFile.results[0].locations[0]
-      this.lat = this.locationData.latLng.lat
-      this.long = this.locationData.latLng.lng
+      console.log(data);
+      this.apiFile = data;
+      this.locationData = this.apiFile.results[0].locations[0];
+      this.lat = this.locationData.latLng.lat;
+      this.long = this.locationData.latLng.lng;
       console.log(document.location.href);
       this.router.navigate(['map'], {queryParams: {lat : this.lat, long : this.long}}).then(() => {window.location.reload()});
-      console.log("should route")
+      console.log("should route");
       },
       (err: any) => console.error(err),
       () => console.log('done loading coords : ' + this.addrInputService.getAddr() + " : " + this.apiFile)

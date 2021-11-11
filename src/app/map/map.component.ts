@@ -128,7 +128,6 @@ export class MapComponent implements OnInit {
     this.addrInputService.setAddr(this.inputAddr);
     this.appService.callGeoApi(this.addrInputService.getAddr()).subscribe(
       (data: any) => {
-        console.log("hi i'm here");
         this.geoApiFile = data;
         this.locationData = this.geoApiFile.results[0].locations[0];
         console.log(this.locationData);
