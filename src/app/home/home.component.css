@@ -1,4 +1,7 @@
-.container{text-align: center;}
+.container{
+  text-align: center;
+  font-size: large;
+}
 
 .jumbotron {
   position: relative;
