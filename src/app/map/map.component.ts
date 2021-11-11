@@ -14,10 +14,15 @@ export class MapComponent implements OnInit {
   lat: number;
   long: number;
   radius: number;
+  crimeData: number;
+
+  zillowLink = ''
 
   inputAddr: any;
   apiFile: any;
   locationData: any;
+
+  
 
   constructor(
     private route: ActivatedRoute,
@@ -28,6 +33,7 @@ export class MapComponent implements OnInit {
     this.lat = 0;
     this.long = 0;
     this.radius = 5000;
+    this.crimeData = -1;
 
     //private mapsAPILoader: MapsAPILoader;
 
@@ -35,11 +41,13 @@ export class MapComponent implements OnInit {
 
   sendInput(value: string) {
     this.inputAddr = value;
+    this.zillowLink = 'https://www.zillow.com/homes/' + this.inputAddr + '_rb/';
     console.log(this.inputAddr);
     this.addrInputService.setAddr(this.inputAddr);
     this.appService.callGeoApi(this.addrInputService.getAddr()).subscribe(
       (data: any) => {this.apiFile = data
       this.locationData = this.apiFile.results[0].locations[0]
+      console.log(this.locationData)
       this.lat = this.locationData.latLng.lat
       this.long = this.locationData.latLng.lng
       this.router.navigate(['map'], {queryParams: {lat : this.lat, long : this.long}});
@@ -48,6 +56,10 @@ export class MapComponent implements OnInit {
       () => console.log('done loading coords : ' + this.addrInputService.getAddr() + " : " + this.apiFile)
     );
    }
+
+   zillowRoute(){
+    window.location.href = this.zillowLink;
+  }
 
   ngOnInit(): void {
     this.route.queryParams
