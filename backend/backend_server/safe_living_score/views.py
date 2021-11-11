@@ -118,51 +118,60 @@ def getScorebyORI(request, ORI):
         f = open('./safe_living_score/state_population_data.json')
         state_population_data = json.load(f)
 
+        population = -1
+
         for k in population_data:
             if(k[2] == stateCodes[state]):
                 if(cityName in k[0] and "city" in k[0]):
                     population = k[1]
-        
         for k in state_population_data:
             if(k[2] == stateCodes[state]):
                 statePopulation = k[1]
         
-        crimeList = {}
-        for k in oriCrimeData["results"]:
-            crimeList[k["offense"]] = k["actual"]
+        if(population != -1):
+            
+            crimeList = {}
+            for k in oriCrimeData["results"]:
+                crimeList[k["offense"]] = k["actual"]
 
-        stateCrimeList = {}
-        stateCrimeList = summarizedStateData["results"][0]
+            stateCrimeList = {}
+            stateCrimeList = summarizedStateData["results"][0]
 
-        crimeList["rape_revised"] = crimeList["rape"]
-        crimeList["rape_legacy"] = crimeList["rape-legacy"]
-        crimeList["property_crime"] = crimeList["property-crime"]
-        crimeList["aggravated_assault"] = crimeList["aggravated-assault"]
-        crimeList["motor_vehicle_theft"] = crimeList["motor-vehicle-theft"]
-        crimeList["violent_crime"] = crimeList["violent-crime"]
+            crimeList["rape_revised"] = crimeList["rape"]
+            crimeList["rape_legacy"] = crimeList["rape-legacy"]
+            crimeList["property_crime"] = crimeList["property-crime"]
+            crimeList["aggravated_assault"] = crimeList["aggravated-assault"]
+            crimeList["motor_vehicle_theft"] = crimeList["motor-vehicle-theft"]
+            crimeList["violent_crime"] = crimeList["violent-crime"]
 
 
-        numCrimes = 0
-        stateNumCrimes = 0
+            numCrimes = 0
+            stateNumCrimes = 0
 
-        for k in {"violent_crime", "homicide", "rape_legacy", "rape_revised", "robbery", "aggravated_assault", "property_crime", "burglary", "larceny", "motor_vehicle_theft", "arson"}:
-            if(k in crimeList and k in stateCrimeList):
-                if(crimeList[k] is not None and stateCrimeList[k] is not None):
-                    numCrimes += int(crimeList[k])
-                    stateNumCrimes += int(stateCrimeList[k])
+            for k in {"violent_crime", "homicide", "rape_legacy", "rape_revised", "robbery", "aggravated_assault", "property_crime", "burglary", "larceny", "motor_vehicle_theft", "arson"}:
+                if(k in crimeList and k in stateCrimeList):
+                    if(crimeList[k] is not None and stateCrimeList[k] is not None):
+                        numCrimes += int(crimeList[k])
+                        stateNumCrimes += int(stateCrimeList[k])
                 
 
-        crimeRatio = (int(numCrimes) / int(population))/(int(stateNumCrimes) / int(statePopulation))
+            crimeRatio = (int(numCrimes) / int(population))/(int(stateNumCrimes) / int(statePopulation))
 
-        context = {
-            'city name': cityName,
-            'state': state,
-            'population': population,
-            'state code': stateCodes[state],
-            'state population': statePopulation,
-            'crime-ratio': crimeRatio
-        }
-        return context
+            context = {
+                'city name': cityName,
+                'state': state,
+                'population': population,
+                'state code': stateCodes[state],
+                'state population': statePopulation,
+                'crime-ratio': crimeRatio
+            }
+            return context
+        else:
+            context = {
+                'agency is not a city': 'true',
+                'crime-ratio': 0
+            }
+            return context
     else:
         context = {
             'agency is not a city': 'true',

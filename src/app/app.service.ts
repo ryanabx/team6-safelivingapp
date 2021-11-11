@@ -15,6 +15,11 @@ export class AppService {
   constructor(private http:HttpClient) {this.globals = new Globals();}
 
   callGeoApi(input:any): any {
-    return this.http.get(this.globals.backendUrl + 'geocoding/api/' + input + "/");; //Make sure backend server is running to use this!
-}
+    return this.http.get(this.globals.backendUrl + 'geocoding/api/' + input + "/"); //Make sure backend server is running to use this!
+  }
+
+  getSafeLivingScoreAPI(lat: any, lon: any, radius: any){
+    return this.http.get("http://localhost:8000/safelivingscore/api/" + lon + "/" + lat + "/" + radius + "/");
+  }
+
 }

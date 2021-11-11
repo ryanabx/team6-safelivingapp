@@ -1,5 +1,3 @@
-<p>map works!</p>
-
 <div class="search-container">
     <input type="text" placeholder="Enter Address" name="search" id = "userInput" #userInput> <!-- id = "userInput" -->
     <button class="btn btn-primary fa fa-search" (click)="sendInput(userInput.value)" type="button">Find</button> <!-- onclick = 'sendInput()' -->
@@ -36,6 +34,11 @@
 </div>
 
 <div>
+  <h1>
+    The safe living score for this area is <b>{{crimeScore}}</b>
+  </h1>
+  <p> How do we get our safe living score? The current method of getting a score for each area is to take the ratio of the crime per
+     capita of a city and the crime per capita of the state it resides in! </p>
   <h1>
     County-wide Economic Stats
   </h1>

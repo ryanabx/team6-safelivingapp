@@ -5,6 +5,7 @@ import { AppService } from '../app.service';
 
 import { MapsAPILoader } from '@agm/core';
 import { HttpClient } from '@angular/common/http';
+//import { stringify } from 'querystring';
 
 @Component({
   selector: 'app-map',
@@ -15,8 +16,9 @@ export class MapComponent implements OnInit {
   lat: number;
   long: number;
   radius: number;
-  crimeData: number;
-  crimeScore: number;
+
+  
+  crimeScore: any;
 
   zillowLink = ''
 
@@ -60,13 +62,14 @@ export class MapComponent implements OnInit {
     // Dietler Commons: 36.1522971, -95.9481072
     this.lat = 0;
     this.long = 0;
-    this.radius = 5000;
-    this.crimeData = -1;
-    this.crimeScore = 0;
+    this.radius = 5000
 
+    this.crimeScore = "Loading... Please wait!";
+    
   
 
     //private mapsAPILoader: MapsAPILoader;
+    
 
     // poverty and income api
     this.http.get("http://api.census.gov/data/timeseries/poverty/saipe?get=NAME,SAEMHI_PT,SAEPOVALL_PT,SAEPOVRTALL_PT&GEOID=40143&YEAR=2019").toPromise().then(data =>{
@@ -122,6 +125,10 @@ export class MapComponent implements OnInit {
   }
 
   sendInput(value: string) {
+
+    
+
+
     this.inputAddr = value;
     // this.zillowLink = 'https://www.zillow.com/homes/' + this.inputAddr + '_rb/';
     console.log(this.inputAddr);
@@ -136,16 +143,17 @@ export class MapComponent implements OnInit {
         this.state = this.locationData.adminArea3;
         this.county = this.locationData.adminArea4;
         this.city = this.locationData.adminArea5;
-        this.router.navigate(['map'], {queryParams: {lat : this.lat, long : this.long}});
+        this.router.navigate(['map'], {queryParams: {lat : this.lat, long : this.long}}).then(() => {this.crimeScore = "Loading... Please wait!";});
       },
       (err: any) => console.error(err),
       () => console.log('done loading coords : ' + this.addrInputService.getAddr() + " : " + this.geoApiFile)
     );
   }
-
-  zillowRoute(){
+                                                                                                                           
+   zillowRoute(){
     window.location.href = this.zillowLink;
   }
+
 
   ngOnInit(): void {
     this.route.queryParams
@@ -157,6 +165,16 @@ export class MapComponent implements OnInit {
         this.router.navigate(['map'], {queryParams: {lat : this.lat, long : this.long}});
       }
       console.log(this.lat + " : " + this.long)
+      if(this.lat != 0 && this.long != 0){
+        this.appService.getSafeLivingScoreAPI(this.long, this.lat, 1.0).subscribe(
+          (data: any)=>{
+            this.crimeScore = data["safe-living-score"];
+            this.crimeScore = parseFloat((Math.round(this.crimeScore * 100) / 100).toFixed(2));
+          }
+        );
+        console.log(this.crimeScore);
+      }
+      
     })
   }
 }
