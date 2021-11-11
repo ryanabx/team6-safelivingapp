@@ -12,7 +12,16 @@
 </div>
 
 <agm-map style="width: 500px; height: 500px" [latitude]="lat" [longitude]="long">
-    <agm-marker [latitude]="lat" [longitude]="long"></agm-marker>
+    <agm-marker [latitude]="lat" [longitude]="long">
+      <agm-info-window>
+        
+        According to all known laws of aviation, there is no way a bee should be able to fly.
+        Its wings are too small to get its fat little body off the ground.
+        The bee, of course, flies anyway because bees don't care what humans think is impossible.
+        {{crimeScore}}
+      
+      </agm-info-window>
+    </agm-marker>
     <!--<agm-circle [latitude]="lat" [longitude]="long" [radius]="radius" [fillColor]="'red'"
     [circleDraggable]="true" [editable]="false" (dragEnd)="radiusDragEnd($event)"
     (radiusChange)="event('radiusChange',$event)"></agm-circle> -->
