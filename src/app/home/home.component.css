@@ -4,6 +4,8 @@
   width: 200vh;
 }
 
+head {background-color: coral;}
+
 .jumbotron {
   position: relative;
   background-image: url(cityPanorama.png);
