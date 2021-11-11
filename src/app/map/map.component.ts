@@ -16,6 +16,7 @@ export class MapComponent implements OnInit {
   long: number;
   radius: number;
   crimeData: number;
+  crimeScore: number;
 
   zillowLink = ''
 
@@ -61,6 +62,7 @@ export class MapComponent implements OnInit {
     this.long = 0;
     this.radius = 5000;
     this.crimeData = -1;
+    this.crimeScore = 0;
 
   
 
@@ -121,26 +123,28 @@ export class MapComponent implements OnInit {
 
   sendInput(value: string) {
     this.inputAddr = value;
-    this.zillowLink = 'https://www.zillow.com/homes/' + this.inputAddr + '_rb/';
+    // this.zillowLink = 'https://www.zillow.com/homes/' + this.inputAddr + '_rb/';
     console.log(this.inputAddr);
     this.addrInputService.setAddr(this.inputAddr);
     this.appService.callGeoApi(this.addrInputService.getAddr()).subscribe(
-      (data: any) => {this.geoApiFile = data
-      this.locationData = this.geoApiFile.results[0].locations[0]
-      console.log(this.locationData)
-      this.lat = this.locationData.latLng.lat
-      this.long = this.locationData.latLng.lng
-      this.state = this.locationData.adminArea3
-      this.county = this.locationData.adminArea4
-      this.city = this.locationData.adminArea5
-      this.router.navigate(['map'], {queryParams: {lat : this.lat, long : this.long}});
+      (data: any) => {
+        console.log("hi i'm here");
+        this.geoApiFile = data;
+        this.locationData = this.geoApiFile.results[0].locations[0];
+        console.log(this.locationData);
+        this.lat = this.locationData.latLng.lat;
+        this.long = this.locationData.latLng.lng;
+        this.state = this.locationData.adminArea3;
+        this.county = this.locationData.adminArea4;
+        this.city = this.locationData.adminArea5;
+        this.router.navigate(['map'], {queryParams: {lat : this.lat, long : this.long}});
       },
       (err: any) => console.error(err),
       () => console.log('done loading coords : ' + this.addrInputService.getAddr() + " : " + this.geoApiFile)
     );
-   }
+  }
 
-   zillowRoute(){
+  zillowRoute(){
     window.location.href = this.zillowLink;
   }
 
