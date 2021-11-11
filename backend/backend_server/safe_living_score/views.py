@@ -63,8 +63,12 @@ stateCodes = {
 }
 
 def getScore(longitude, latitude, radius):
-    #Get list of agencies in region
-    pass
+
+    crime_score = getCrimeScore()
+    
+    context = {
+        "safe-living-score": crime_score
+    }
 
 def getScorebyORI(request, ORI):
     key = 'nHym62MTPDELS0XgtAZLLw0fL3jNWoNvsY2kn315'
@@ -140,22 +144,16 @@ def getScorebyORI(request, ORI):
             'agency is not a city': 'true'
         }
         return JsonResponse(context)
-      
-def findLocationCrimeScore(longitude, latitude, radius):
-    scoreDistanceTupleList = ORIsInRadius(longitude, latitude, radius)
-    ORIScoreToLocationScore(scoreDistanceTupleList)
-     
-    
-    
-def ORIScoreToLocationScore(scoreDistanceTupleList):
+
+def getCrimeScore(scoreDistanceTupleList):
     
     sumWeights = 0
     locationScore = 0
     
     for scoreDistanceTuple in scoreDistanceTupleList:
         
-        weight = 1 / scoreDistanceTuple[1]
-        score = scoreDistanceTuple[0]
+        weight = 1 / scoreDistanceTuple["distance"]
+        score = scoreDistanceTuple["score"]
         
         sumWeights += weight
         locationScore += score * weight

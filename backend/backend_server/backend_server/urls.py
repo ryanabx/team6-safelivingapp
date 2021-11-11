@@ -23,4 +23,6 @@ urlpatterns = [
     path('safelivingscore/', include('safe_living_score.urls')),
     path('amenities/', include('amenities.urls')),
     path('transportation/', include('transportation_score.urls')),
+    path('costofliving/', include('cost_of_living.urls')),
+
 ]
