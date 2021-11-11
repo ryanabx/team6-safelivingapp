@@ -167,6 +167,9 @@ class RequestCreator:
 		results = requests.get(f"{self.BASE_URL}estimates/{scope}/{relevantInfo}", self.baseParams)
 		return results	
 
+#######################################################################
+#######################################################################
+
 class FBI_wrapper:
 	NATIONAL_SCOPE = "national"
 	REGIONAL_SCOPE = "regions"
@@ -181,7 +184,14 @@ class FBI_wrapper:
 		"""
 		Gets information about all agencies in the United States.
 		"""
-		return self.rc.getAgencies()
+		message = self.rc.getAgencies()
+		data = message.json()
+		result = []
+		for stateName in data:
+			state = data[stateName]
+			for agencyName in state:
+				result.append(state[agencyName].copy())
+		return result
 
 	def getAgenciesByCoordinates(self, latitude, longitude, range = 50):
 		self.rc.checkValidRange(range)
@@ -194,11 +204,15 @@ class FBI_wrapper:
 		for stateName in data.keys():
 			state = data[stateName]
 			for agencyName in state.keys():
-				if not isinstance(state[agencyName]["latitude"], numbers.Number) and not isinstance(state[agencyName]["longitude"], numbers.Number):
+				agency = state[agencyName]
+				if not isinstance(agency["latitude"], numbers.Number) and not isinstance(agency["longitude"], numbers.Number):
 					# If the Agency does not have a Longitude/Latitude... we ignore it.
 					pass
-				elif self.rc.haversineDistance(latitude, longitude, state[agencyName]["latitude"], state[agencyName]["longitude"]) <= range:
-					agencies.append(state[agencyName])
+				else:
+					agency = agency.copy()
+					agency["distance"] = self.rc.haversineDistance(latitude, longitude, agency["latitude"], agency["longitude"])
+					if agency["distance"] <= range:
+						agencies.append(agency)
 		return agencies
 
 	# Types include... "City", "County", "Other State Agency", 
@@ -223,13 +237,14 @@ class FBI_wrapper:
 						pass
 					else:
 						dist = self.rc.haversineDistance(latitude, longitude, agency["latitude"], agency["longitude"])
+						agency = agency.copy()
+						agency["distance"] = dist
 						if dist == minDistance:
 							agencies.append(agency.copy())
 						elif dist < minDistance:
 							agencies = [agency.copy()]
 							minDistance = dist
 		return agencies
-
 
 	def getAgenciesByRegion(self, regionName):
 		regionName = self.rc.checkValidRegion(regionName)
@@ -264,10 +279,20 @@ class FBI_wrapper:
 		return data
 
 	def getAllStates(self):
-		self.getStates()
-		states = []
-		remainingRequests = []
+		message0 = self.getStates()
+		data0 = message0.json()
+		states = [].extend(data0)
+		for i in data0["pagination"]["pages"]:
+			messagei = self.getStates(i)
+			datai = messagei.json()
+			states.extend(datai)
+		return states
 
+	#def getStatesByRegion(self, regionName):
+	#	regionName = self.rc.convertRegionNameToRegionNumber(regionName)
+	#	dataList = self.getAllStates()
+		#if
+		
 if __name__ == "__main__":
 	api_key = "nHym62MTPDELS0XgtAZLLw0fL3jNWoNvsY2kn315"
 
