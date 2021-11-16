@@ -3,3 +3,11 @@
     font-weight: bold;
     font-size: large;
 }
+
+#footer {
+    bottom: 0;
+    height: 2em;
+    left: 0;
+    position: relative;
+    font-size: small;
+}
