@@ -1,15 +1,46 @@
-<nav class="navbar navbar-default">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #FFD580;">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a href="#" class="navbar-brand">SafeLiving</a>
+            <img  class="images" src="SL_Logo_NoBkg.png" width="100" height="75"/>
         </div>
         
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
+                <li routerLinkActive="active"><a routerLink="/home" style="color:#00009D">Home</a></li>
+                <!--<li routerLinkActive="active"><a routerLink="/property" style="color:#00009D">Properties</a></li>-->
+                <!--<li routerLinkActive="active"><a routerLink="/crimeapi" [queryParams] = "{ori: 'FL0500500', from: '2019', to: '2020'}" style="color:#00009D">Crime Api</a></li>-->
                 <li routerLinkActive="active"><a routerLink="/map">Map</a></li>
-                <li routerLinkActive="active"><a routerLink="/property">Properties</a></li>
-                <li routerLinkActive="active"><a routerLink="/crimeapi" [queryParams] = "{ori: 'FL0500500'}">Crime Api</a></li>
+                <!--<li routerLinkActive="active"><a routerLink="/property">Properties</a></li>
+                <li routerLinkActive="active"><a routerLink="/crimeapi" [queryParams] = "{ori: 'FL0500500'}">Crime Api</a></li>-->
             </ul>
         </div>
+        <div class="collapse navbar-collapse">
+            <ul class=" nav navbar-nav ml-auto">
+              <li routerLinkActive="active">
+                <a routerLink= "/map" style="color:#00009D">Map</a>
+              </li>
+              <li routerLinkActive="active">
+                <a routerLink="/about" style="color:#00009D">About</a>
+              </li>
+              <li routerLinkActive="active">
+                <a routerLink="/contact" style="color:#00009D">Contact Us</a>
+              </li>
+            </ul>
+          </div>
     </div>
 </nav>
+
+<footer class="bg-light text-center text-lg-start fixed-bottom">
+    <!-- Copyright -->
+      <div class="text-center p-3" style="background-color: #FFD580;">© University of Tulsa, Senior Software Design, Team 6, Fall 2021</div>
+    <!-- Copyright -->
+</footer>

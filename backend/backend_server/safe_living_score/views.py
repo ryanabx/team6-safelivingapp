@@ -4,6 +4,8 @@ import requests
 from django.http import JsonResponse
 import json
 
+from safe_living_score.ori_utils import FBI_wrapper
+
 stateCodes = {
     "AK": "02",
     "AL": "01",
@@ -62,13 +64,35 @@ stateCodes = {
     "WY": "56"
 }
 
-def getScore(longitude, latitude, radius):
+def getScore(request, lon, lat, radius):
+    lon = float(lon)
+    lat = float(lat)
+    radius = float(radius)
+    d = FBI_wrapper()
+    result = d.getAgenciesByCoordinates(lat, lon, radius)
 
-    crime_score = getCrimeScore()
+    if(not result):
+        result = d.getNearestByType(lat, lon, "City")
+    
+    score_distance_tuple = {}
+
+    for k in result:
+        
+        res = getScorebyORI("", k["ori"])
+        print("Resulting dict: ", res)
+        if("agency is not a city" not in res):
+            score_distance_tuple[k["ori"]] = {}
+            score_distance_tuple[k["ori"]]["score"] = float(res['crime-ratio'])
+            score_distance_tuple[k["ori"]]["distance"] = float(k["distance"])
+        
+
+    print("Score distance tuple: ", score_distance_tuple)
+    crime_score = getCrimeScore(score_distance_tuple)
     
     context = {
         "safe-living-score": crime_score
     }
+    return JsonResponse(context)
 
 def getScorebyORI(request, ORI):
     key = 'nHym62MTPDELS0XgtAZLLw0fL3jNWoNvsY2kn315'
@@ -94,56 +118,66 @@ def getScorebyORI(request, ORI):
         f = open('./safe_living_score/state_population_data.json')
         state_population_data = json.load(f)
 
+        population = -1
+
         for k in population_data:
             if(k[2] == stateCodes[state]):
                 if(cityName in k[0] and "city" in k[0]):
                     population = k[1]
-        
         for k in state_population_data:
             if(k[2] == stateCodes[state]):
                 statePopulation = k[1]
         
-        crimeList = {}
-        for k in oriCrimeData["results"]:
-            crimeList[k["offense"]] = k["actual"]
+        if(population != -1):
+            
+            crimeList = {}
+            for k in oriCrimeData["results"]:
+                crimeList[k["offense"]] = k["actual"]
 
-        stateCrimeList = {}
-        stateCrimeList = summarizedStateData["results"][0]
+            stateCrimeList = {}
+            stateCrimeList = summarizedStateData["results"][0]
 
-        crimeList["rape_revised"] = crimeList["rape"]
-        crimeList["rape_legacy"] = crimeList["rape-legacy"]
-        crimeList["property_crime"] = crimeList["property-crime"]
-        crimeList["aggravated_assault"] = crimeList["aggravated-assault"]
-        crimeList["motor_vehicle_theft"] = crimeList["motor-vehicle-theft"]
-        crimeList["violent_crime"] = crimeList["violent-crime"]
+            crimeList["rape_revised"] = crimeList["rape"]
+            crimeList["rape_legacy"] = crimeList["rape-legacy"]
+            crimeList["property_crime"] = crimeList["property-crime"]
+            crimeList["aggravated_assault"] = crimeList["aggravated-assault"]
+            crimeList["motor_vehicle_theft"] = crimeList["motor-vehicle-theft"]
+            crimeList["violent_crime"] = crimeList["violent-crime"]
 
 
-        numCrimes = 0
-        stateNumCrimes = 0
+            numCrimes = 0
+            stateNumCrimes = 0
 
-        for k in {"violent_crime", "homicide", "rape_legacy", "rape_revised", "robbery", "aggravated_assault", "property_crime", "burglary", "larceny", "motor_vehicle_theft", "arson"}:
-            if(k in crimeList and k in stateCrimeList):
-                if(crimeList[k] is not None and stateCrimeList[k] is not None):
-                    numCrimes += int(crimeList[k])
-                    stateNumCrimes += int(stateCrimeList[k])
+            for k in {"violent_crime", "homicide", "rape_legacy", "rape_revised", "robbery", "aggravated_assault", "property_crime", "burglary", "larceny", "motor_vehicle_theft", "arson"}:
+                if(k in crimeList and k in stateCrimeList):
+                    if(crimeList[k] is not None and stateCrimeList[k] is not None):
+                        numCrimes += int(crimeList[k])
+                        stateNumCrimes += int(stateCrimeList[k])
                 
 
-        crimeRatio = (int(numCrimes) / int(population))/(int(stateNumCrimes) / int(statePopulation))
+            crimeRatio = (int(numCrimes) / int(population))/(int(stateNumCrimes) / int(statePopulation))
 
-        context = {
-            'city name': cityName,
-            'state': state,
-            'population': population,
-            'state code': stateCodes[state],
-            'state population': statePopulation,
-            'crime ratio': crimeRatio
-        }
-        return JsonResponse(context)
+            context = {
+                'city name': cityName,
+                'state': state,
+                'population': population,
+                'state code': stateCodes[state],
+                'state population': statePopulation,
+                'crime-ratio': crimeRatio
+            }
+            return context
+        else:
+            context = {
+                'agency is not a city': 'true',
+                'crime-ratio': 0
+            }
+            return context
     else:
         context = {
-            'agency is not a city': 'true'
+            'agency is not a city': 'true',
+            'crime-ratio': 0
         }
-        return JsonResponse(context)
+        return context
 
 def getCrimeScore(scoreDistanceTupleList):
     
@@ -152,8 +186,8 @@ def getCrimeScore(scoreDistanceTupleList):
     
     for scoreDistanceTuple in scoreDistanceTupleList:
         
-        weight = 1 / scoreDistanceTuple["distance"]
-        score = scoreDistanceTuple["score"]
+        weight = 1 / scoreDistanceTupleList[scoreDistanceTuple]['distance']
+        score = scoreDistanceTupleList[scoreDistanceTuple]['score']
         
         sumWeights += weight
         locationScore += score * weight
@@ -162,6 +196,3 @@ def getCrimeScore(scoreDistanceTupleList):
     locationScore /= sumWeights
     
     return locationScore
-    
-
-

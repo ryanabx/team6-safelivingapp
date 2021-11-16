@@ -6,6 +6,8 @@ import { PropertyViewerComponent } from "./properties/property-viewer/property-v
 import { HomeComponent } from './home/home.component';
 import { MapComponent } from './map/map.component';
 import { CrimeapiComponent } from './crimeapi/crimeapi.component';
+import { AboutComponent } from './about/about.component';
+import { ContactComponent } from './contact/contact.component';
 
 const routes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -15,7 +17,9 @@ const routes: Routes = [
         { path: '', component: PropertyBrowserComponent },
         { path: ':id', component: PropertyViewerComponent }
     ]},
-    {path: 'crimeapi', component: CrimeapiComponent}
+    {path: 'crimeapi', component: CrimeapiComponent},
+    { path: 'about', component: AboutComponent },
+    { path: 'contact', component: ContactComponent }
 ]
 
 @NgModule({

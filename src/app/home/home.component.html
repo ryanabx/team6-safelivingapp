@@ -1,1 +1,39 @@
-<p>home works!</p>
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
+    <div class="jumbotron">
+        <h1 class="display-4"><strong>Safe Living</strong></h1>
+        <p class="lead">A service that helps you find the best and safest place to live.</p>
+        <hr class="my-4">
+        <form class="form-inline my-2 my-lg-0 justify-content-center">
+          <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id = "userInput" #userInput>
+          <button class="btn btn-primary fa fa-search" (click)="sendInput(userInput.value)" type="button">Find</button>
+          <!--<button class="btn btn-success my-2 my-sm-0" (click)="sendInput(userInput.value)" type="search">Search</button>-->
+        </form>
+    </div>
+
+    <div class="container">
+      <!-- Example row of columns -->
+      <div class="row">
+        <div class="col-md-4">
+          <h2>Search Locations</h2>
+          <p>Search for locations anywhere in the United States. Type a state, city, address, or zip code into the search bar to find safe places to live in and around that location </p>
+        </div>
+        <div class="col-md-4">
+          <h2>Customize Filters</h2>
+          <p>Our safety specifications are defined by multiple different factors. You have the option to filter results to meet your personal criteria to find the best place that matches your wanted living conditions. </p>
+        </div>
+        <div class="col-md-4">
+            <h2>Support</h2>
+            <p>If you have any questions,suggestions, or concerns feel free to reach out to us.</p>
+            <p><a class="btn btn-primary btn-lg" routerLink="/contact" style="color:white" role="button">Contact Us »</a></p>
+        </div>
+      </div>
+    </div> <!-- /container -->
+</body>
