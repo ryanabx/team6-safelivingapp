@@ -1,5 +1,10 @@
 <app-header></app-header>
 <div class="container">
+  <div class="row">
+      <div class="col-md-12">
+          <router-outlet></router-outlet>
+      </div>
+  </div>
   <!-- Temp Login Stuff -->
   <h2>Log In</h2>
   <div class="row" *ngIf="!_userService.token">
@@ -53,9 +58,4 @@
     </div>
   </div>
   <!-- Temp Login Stuff End -->
-  <div class="row">
-      <div class="col-md-12">
-          <router-outlet></router-outlet>
-      </div>
-  </div>
 </div>
