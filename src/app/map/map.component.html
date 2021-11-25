@@ -3,7 +3,7 @@
     <button class="btn btn-primary fa fa-search" (click)="sendInput(userInput.value)" type="button">Find</button> <!-- onclick = 'sendInput()' -->
     <button class="btn btn-primary fa fa-search" (click)="addToInput(userInput.value)" type="button">Add to Search</button>
 </div>
-<div style = "text-align:center">
+<div *ngIf="inputAddr != null" style = "text-align:center">
   <h1>
     Showing "{{inputAddr}}"
   </h1>
@@ -30,13 +30,13 @@
     <!--<agm-circle [radius]="radius" [fillColor]="'red'"></agm-circle>-->
 </agm-map>
 
-<div>
+<div *ngIf="inputAddr != null">
   <button *ngFor= "let location of locations; let i=index" class="btn btn-primary" (click)="zillowRoute(i)">Find Houses In {{location.city}}</button>
   <!--<a *ngFor="let link of zillowLinks; let i = index" href = {{link}}>[See houses in {{cityNameArray[i]}}]</a>-->
   <p>*Will take you off site to Zillow.com*</p>
 </div>
 
-<div>
+<div *ngIf="inputAddr != null">
   <h1>
     The safe living score for this area is: <b>{{crimeScore}}</b>
   </h1>
