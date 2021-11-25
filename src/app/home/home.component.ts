@@ -14,6 +14,10 @@ export class HomeComponent implements OnInit {
   locationData: any;
   lat: any;
   long: any;
+  geoApiFile: any;
+  latLongArray: any = [];
+  cityNameArray: any = [];
+  crimeScore: string | undefined;
 
   constructor(private route: ActivatedRoute,
   private appService: AppService,
@@ -23,23 +27,22 @@ export class HomeComponent implements OnInit {
 
   sendInput(value: string) {
     this.inputAddr = value;
+    // this.zillowLink = 'https://www.zillow.com/homes/' + this.inputAddr + '_rb/';
     console.log(this.inputAddr);
-    this.addrInputService.setAddr(this.inputAddr);
-    this.appService.callGeoApi(this.addrInputService.getAddr()).subscribe(
+    //this.addrInputService.setAddr(this.inputAddr);
+    this.appService.callGeoApi(value).subscribe(
       (data: any) => {
-      console.log(data);
-      this.apiFile = data;
-      this.locationData = this.apiFile.results[0].locations[0];
-      this.lat = this.locationData.latLng.lat;
-      this.long = this.locationData.latLng.lng;
-      console.log(document.location.href);
-      this.router.navigate(['map'], {queryParams: {lat : this.lat, long : this.long}}).then(() => {window.location.reload()});
-      console.log("should route");
+        this.geoApiFile = data;
+        this.locationData = this.geoApiFile.results[0].locations[0];
+        console.log(this.locationData);
+        this.latLongArray = [this.locationData.latLng.lat, this.locationData.latLng.lng]
+        this.cityNameArray = [this.locationData.adminArea5];
+        this.router.navigate(['map'], {queryParams: {latLng : JSON.stringify(this.latLongArray), city : JSON.stringify(this.cityNameArray), addr : this.inputAddr}}).then(() => {this.crimeScore = "Loading... Please wait!";});
       },
       (err: any) => console.error(err),
-      () => console.log('done loading coords : ' + this.addrInputService.getAddr() + " : " + this.apiFile)
+      () => console.log('done loading coords : ' + this.addrInputService.getAddr() + " : " + this.geoApiFile)
     );
-   }
+  }
 
   ngOnInit(): void {
     console.log(this.inputAddr)

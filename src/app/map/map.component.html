@@ -1,29 +1,33 @@
 <div class="search-container">
-    <input type="text" placeholder="Enter Address" name="search" id = "userInput" #userInput> <!-- id = "userInput" -->
+    <input type="text" placeholder="Search Cities" name="'search'" id = "userInput" #userInput> <!-- id = "userInput" -->
     <button class="btn btn-primary fa fa-search" (click)="sendInput(userInput.value)" type="button">Find</button> <!-- onclick = 'sendInput()' -->
+    <button class="btn btn-primary fa fa-search" (click)="addToInput(userInput.value)" type="button">Add to Search</button>
 </div>
 <div style = "text-align:center">
   <h1>
-    Showing {{inputAddr}} in {{city}}, {{county}} county, {{state}}
+    Showing "{{inputAddr}}"
   </h1>
 </div>
 
-<agm-map style="width: 500px; height: 500px" [latitude]="lat" [longitude]="long">
-    <agm-marker [latitude]="lat" [longitude]="long">
+<div class="search-container">
+  <button class="btn btn-primary" (click)="threeAddressTest()">Test for Three Addresses at a Time</button>
+</div>
+<!--
+<div class="search-container">
+  <button class="btn btn-primary" (click)="reveal()">Show Me in Console</button>
+</div>-->
+
+
+<agm-map style="width: 500px; height: 500px" [latitude] = "39.8283" [longitude] = "-98.5795" [zoom] = "3">
+    <agm-marker *ngFor="let location of locations; let i=index" [latitude]="location.lat" [longitude]="location.long">
       <agm-info-window>
 
-        According to all known laws of aviation, there is no way a bee should be able to fly.
-        Its wings are too small to get its fat little body off the ground.
-        The bee, of course, flies anyway because bees don't care what humans think is impossible.
-        {{crimeScore}}
+        {{locations[i].city}}
+        {{locations[i].crimeScore}}
 
       </agm-info-window>
     </agm-marker>
-    <!--<agm-circle [latitude]="lat" [longitude]="long" [radius]="radius" [fillColor]="'red'"
-    [circleDraggable]="true" [editable]="false" (dragEnd)="radiusDragEnd($event)"
-    (radiusChange)="event('radiusChange',$event)"></agm-circle> -->
-
-    <agm-circle [latitude]="lat" [longitude]="long" [radius]="radius" [fillColor]="'red'"></agm-circle>
+    <!--<agm-circle [radius]="radius" [fillColor]="'red'"></agm-circle>-->
 </agm-map>
 <!--
 <a href = {{zillowLink}}>[See houses this area]</a>
@@ -35,11 +39,15 @@
 
 <div>
   <h1>
-    The safe living score for this area is <b>{{crimeScore}}</b>
+    The safe living score for this area is: <b>{{crimeScore}}</b>
   </h1>
+  <ul>
+    <li *ngFor="let city of cityNameArray; let i=index">{{city}}: {{crimeScoreArray[i]}}</li>
+  </ul>
   <p> How do we get our safe living score? The current method of getting a score for each area is to take the ratio of the crime per
      capita of a city and the crime per capita of the state it resides in! </p>
-  <h1>
+
+ <!--<h1>
     County-wide Economic Stats
   </h1>
   <p>(2019 most recent data)</p>
@@ -47,7 +55,7 @@
     <li>Median Income: ${{censusMedIncome}}</li>
     <li>{{censusPovCount}} people in poverty</li>
     <li>{{censusPovRate}}% poverty rate</li>
-</ul>
+</ul>-->
 </div>
 <!--
 <div>

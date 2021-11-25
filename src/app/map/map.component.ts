@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { AddrInputService } from '../addr-input.service';
 import { AppService } from '../app.service';
@@ -15,12 +15,16 @@ import { HttpClient } from '@angular/common/http';
 export class MapComponent implements OnInit {
   lat: number;
   long: number;
+  latLongArray: any = [];
+  cityNameArray: any = [];
+  locations: any;
   radius: number;
 
   
   crimeScore: any;
+  crimeScoreArray: any = [];
 
-  zillowLink = ''
+  zillowLink = '';
 
   inputAddr: any;
   geoApiFile: any;
@@ -33,25 +37,12 @@ export class MapComponent implements OnInit {
   weatherApiFile: any;
   weatherData: any = []
 
-  censusEconDataFile: any = []
-  censusEconData: any = []
+  censusEconDataFile: any;
+  censusEconData: any;
+
   censusMedIncome: any;
   censusPovRate: any;
   censusPovCount: any;
-
-  // yearly weather values
-  avgTemp: any;
-  maxTemp: any;
-  minTemp: any;
-
-  avgWind: any;
-  
-  avgPrecip: any;
-
-
-
-
-  
 
   constructor(
     private route: ActivatedRoute,
@@ -59,6 +50,7 @@ export class MapComponent implements OnInit {
     private addrInputService: AddrInputService, 
     private router: Router,
     private http: HttpClient) {
+      this.router.routeReuseStrategy.shouldReuseRoute = () => false;
     // Dietler Commons: 36.1522971, -95.9481072
     this.lat = 0;
     this.long = 0;
@@ -81,72 +73,80 @@ export class MapComponent implements OnInit {
       this.censusPovCount = this.censusEconData[2]
       this.censusPovRate = this.censusEconData[3]
     });
-
-    /*
-    // Weather data api call
-    this.http.get("https://history.openweathermap.org/data/2.5/aggregated/year?lat=" + 36 + "&lon=" + -96 + "&appid=" + this.weatherApiKey).toPromise().then(data =>{
-      console.log(data);
-      this.weatherApiFile = data
-      this.weatherData = this.weatherApiFile.result
-
-      for (let i = 0; i < this.weatherData.length; i++){
-        // temperatures returned in kelvin, need to convert to fahrenheit
-        this.avgTemp += this.weatherData[i].temp.mean
-        this.maxTemp += this.weatherData[i].temp.average_max
-        this.minTemp += this.weatherData[i].temp.average_min
-
-        // wind speeds returned in m/s, need to convert to mph
-        this.avgWind += this.weatherData[i].wind.mean
-
-        // precipitation returned in mm, need to convert to inches
-        this.avgTemp += this.weatherData[i].precipitation.mean
-      }
-
-      // calculate the average from the data points
-      this.avgTemp = this.avgTemp / this.weatherData.length
-      this.maxTemp = this.maxTemp / this.weatherData.length
-      this.minTemp = this.minTemp / this.weatherData.length
-
-      this.avgWind = this.avgWind / this.weatherData.length
-
-      this.avgPrecip = this.avgPrecip / this.weatherData.length
-
-      // perform conversions
-      this.avgTemp = ((this.avgTemp - 273.15) * 9/5) + 32   // kelvin to Fahrenheit
-      this.maxTemp = ((this.maxTemp - 273.15) * 9/5) + 32
-      this.minTemp = ((this.minTemp - 273.15) * 9/5) + 32
-
-      this.avgWind = this.avgWind * 2.237                   // m/s to mph
-
-      this.avgPrecip = this.avgPrecip / 25.4                // mm to in
-    })*/
-
-
   }
 
   sendInput(value: string) {
-
-    
-
-
     this.inputAddr = value;
     // this.zillowLink = 'https://www.zillow.com/homes/' + this.inputAddr + '_rb/';
     console.log(this.inputAddr);
-    this.addrInputService.setAddr(this.inputAddr);
-    this.appService.callGeoApi(this.addrInputService.getAddr()).subscribe(
+    //this.addrInputService.setAddr(this.inputAddr);
+    this.appService.callGeoApi(value).subscribe(
       (data: any) => {
         this.geoApiFile = data;
         this.locationData = this.geoApiFile.results[0].locations[0];
         console.log(this.locationData);
-        this.lat = this.locationData.latLng.lat;
-        this.long = this.locationData.latLng.lng;
-        this.state = this.locationData.adminArea3;
-        this.county = this.locationData.adminArea4;
-        this.city = this.locationData.adminArea5;
-        this.router.navigate(['map'], {queryParams: {lat : this.lat, long : this.long}}).then(() => {this.crimeScore = "Loading... Please wait!";});
+        this.latLongArray = [this.locationData.latLng.lat, this.locationData.latLng.lng]
+        this.cityNameArray = [this.locationData.adminArea5];
+        this.router.navigate(['map'], {queryParams: {latLng : JSON.stringify(this.latLongArray), city : JSON.stringify(this.cityNameArray), addr : this.inputAddr}}).then(() => {this.crimeScore = "Loading... Please wait!";});
       },
       (err: any) => console.error(err),
       () => console.log('done loading coords : ' + this.addrInputService.getAddr() + " : " + this.geoApiFile)
+    );
+  }
+
+  addToInput(value: string) {
+    this.inputAddr += "|" + value
+    this.latLongArray = []
+    this.locations = []
+    this.cityNameArray = []
+
+    this.appService.callGeoApi(this.inputAddr).subscribe(
+      (data: any) => {
+        this.geoApiFile = data;
+        this.locationData = this.geoApiFile.results
+        console.log(this.locationData)
+        for (let i = 0; i < this.locationData.length; i++) {
+          this.latLongArray.push(this.locationData[i].locations[0].latLng.lat)
+          this.latLongArray.push(this.locationData[i].locations[0].latLng.lng)
+          this.cityNameArray.push(this.locationData[i].locations[0].adminArea5)
+        }
+
+        this.router.navigate(['map'], {queryParams: {latLng : JSON.stringify(this.latLongArray), city : JSON.stringify(this.cityNameArray), addr : this.inputAddr}}).then(() => {this.crimeScore = "Loading... Please wait!";});
+      },
+      (err: any) => console.error(err),
+      () => console.log()
+    );
+  }
+
+  reveal() {
+    console.log(this.crimeScoreArray)
+  }
+
+  // send an array of three addresses for the backend to process
+  // need to configure backend to process either single or multiple inputs (shouldn't be too hard)
+  // adds lat/long to an array as follows: [lat1, long1, lat2, long2, ..., lat{n}, long{n}]
+  // for addresses in order of address 1, address 2, ..., address {n}
+  threeAddressTest() {
+    this.inputAddr = "tulsa, ok|denver, co|austin, tx";
+    this.latLongArray = []
+    this.locations = []
+    this.cityNameArray = []
+
+    this.appService.callGeoApi(this.inputAddr).subscribe(
+      (data: any) => {
+        this.geoApiFile = data;
+        this.locationData = this.geoApiFile.results
+        console.log(this.locationData)
+        for (let i = 0; i < this.locationData.length; i++) {
+          this.latLongArray.push(this.locationData[i].locations[0].latLng.lat)
+          this.latLongArray.push(this.locationData[i].locations[0].latLng.lng)
+          this.cityNameArray.push(this.locationData[i].locations[0].adminArea5)
+        }
+
+        this.router.navigate(['map'], {queryParams: {latLng : JSON.stringify(this.latLongArray), city : JSON.stringify(this.cityNameArray), addr : this.inputAddr}}).then(() => {this.crimeScore = "Loading... Please wait!";});
+      },
+      (err: any) => console.error(err),
+      () => console.log()
     );
   }
                                                                                                                            
@@ -160,10 +160,19 @@ export class MapComponent implements OnInit {
     .subscribe(params => {
       this.lat = params['lat'] ? (parseFloat(params['lat']) ? parseFloat(params['lat']) : 0) : 0;
       this.long = params['long'] ? (parseFloat(params['long']) ? parseFloat(params['long']) : 0) : 0;
+      
+      this.inputAddr = params['addr']
+      
+      this.latLongArray = JSON.parse(params['latLng']); // accept the lat/long array for multiple locations
+      console.log(this.latLongArray)
+
+      this.cityNameArray = JSON.parse(params['city'])
+
+      /*
       if(params['lat'] != parseFloat(params['lat']) || params['long'] != parseFloat(params['long']))
       {
         this.router.navigate(['map'], {queryParams: {lat : this.lat, long : this.long}});
-      }
+      }*/
       console.log(this.lat + " : " + this.long)
       if(this.lat != 0 && this.long != 0){
         this.appService.getSafeLivingScoreAPI(this.long, this.lat, 1.0).subscribe(
@@ -174,7 +183,44 @@ export class MapComponent implements OnInit {
         );
         console.log(this.crimeScore);
       }
+
+      // if latLongArray is passed, find crimeScore for all the lat/long pairs in the array
+      // save to a crime score array (should be in order of searched locations)
+      if (this.latLongArray != null) {
+        let tempCSArray: any[] = []
+        for (let i = 0; i < this.latLongArray.length; i+=2) {
+          this.appService.getSafeLivingScoreAPI(this.latLongArray[i+1], this.latLongArray[i], 1.0).subscribe(
+            (data: any)=>{
+              this.crimeScore = data["safe-living-score"];
+              this.crimeScore = parseFloat((Math.round(this.crimeScore * 100) / 100).toFixed(2));
+              tempCSArray.push(this.crimeScore);
+            }
+          );
+        }
+        this.crimeScoreArray = tempCSArray
+        console.log(this.crimeScoreArray)
+      }
+
+      // add new location object based on number of returned coords
+      let temp: any = []
+      for (let i = 0; i < this.latLongArray.length; i+=2) {
+        temp.push(new Location(this.latLongArray[i], this.latLongArray[i+1], this.crimeScoreArray[i/2], this.cityNameArray[i/2]))
+      }
+      this.locations = temp
+      console.log(this.locations)
+      console.log(this.locations[0].lat)
       
     })
+  }
+}
+
+export class Location {
+
+  constructor(
+    public lat: number,
+    public long: number,
+    public crimeScore: number,
+    public city: any) {
+
   }
 }
