@@ -18,6 +18,7 @@ export class HomeComponent implements OnInit {
   latLongArray: any = [];
   cityNameArray: any = [];
   crimeScore: string | undefined;
+  stateNameArray: any = [];
 
   constructor(private route: ActivatedRoute,
   private appService: AppService,
@@ -27,7 +28,7 @@ export class HomeComponent implements OnInit {
 
   sendInput(value: string) {
     this.inputAddr = value;
-    // this.zillowLink = 'https://www.zillow.com/homes/' + this.inputAddr + '_rb/';
+    //this.zillowLinks.push('https://www.zillow.com/homes/' + value + '_rb/');
     console.log(this.inputAddr);
     //this.addrInputService.setAddr(this.inputAddr);
     this.appService.callGeoApi(value).subscribe(
@@ -37,7 +38,11 @@ export class HomeComponent implements OnInit {
         console.log(this.locationData);
         this.latLongArray = [this.locationData.latLng.lat, this.locationData.latLng.lng]
         this.cityNameArray = [this.locationData.adminArea5];
-        this.router.navigate(['map'], {queryParams: {latLng : JSON.stringify(this.latLongArray), city : JSON.stringify(this.cityNameArray), addr : this.inputAddr}}).then(() => {this.crimeScore = "Loading... Please wait!";});
+        this.stateNameArray = [this.locationData.adminArea3]
+        this.router.navigate(['map'], {queryParams: {latLng : JSON.stringify(this.latLongArray), 
+        city : JSON.stringify(this.cityNameArray), 
+        state : JSON.stringify(this.stateNameArray), 
+        addr : this.inputAddr}}).then(() => {this.crimeScore = "Loading... Please wait!";});
       },
       (err: any) => console.error(err),
       () => console.log('done loading coords : ' + this.addrInputService.getAddr() + " : " + this.geoApiFile)

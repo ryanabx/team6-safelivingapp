@@ -29,11 +29,10 @@
     </agm-marker>
     <!--<agm-circle [radius]="radius" [fillColor]="'red'"></agm-circle>-->
 </agm-map>
-<!--
-<a href = {{zillowLink}}>[See houses this area]</a>
--->
+
 <div>
-  <button class="btn btn-primary" (click)="zillowRoute()">Find Houses In This Area</button>
+  <button *ngFor= "let location of locations; let i=index" class="btn btn-primary" (click)="zillowRoute(i)">Find Houses In {{location.city}}</button>
+  <!--<a *ngFor="let link of zillowLinks; let i = index" href = {{link}}>[See houses in {{cityNameArray[i]}}]</a>-->
   <p>*Will take you off site to Zillow.com*</p>
 </div>
 

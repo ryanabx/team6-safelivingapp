@@ -17,14 +17,14 @@ export class MapComponent implements OnInit {
   long: number;
   latLongArray: any = [];
   cityNameArray: any = [];
+  stateNameArray: any = [];
   locations: any;
   radius: number;
-
   
   crimeScore: any;
   crimeScoreArray: any = [];
 
-  zillowLink = '';
+  zillowLinks: any = [];
 
   inputAddr: any;
   geoApiFile: any;
@@ -77,7 +77,7 @@ export class MapComponent implements OnInit {
 
   sendInput(value: string) {
     this.inputAddr = value;
-    // this.zillowLink = 'https://www.zillow.com/homes/' + this.inputAddr + '_rb/';
+    this.zillowLinks.push('https://www.zillow.com/homes/' + value + '_rb/');
     console.log(this.inputAddr);
     //this.addrInputService.setAddr(this.inputAddr);
     this.appService.callGeoApi(value).subscribe(
@@ -87,7 +87,11 @@ export class MapComponent implements OnInit {
         console.log(this.locationData);
         this.latLongArray = [this.locationData.latLng.lat, this.locationData.latLng.lng]
         this.cityNameArray = [this.locationData.adminArea5];
-        this.router.navigate(['map'], {queryParams: {latLng : JSON.stringify(this.latLongArray), city : JSON.stringify(this.cityNameArray), addr : this.inputAddr}}).then(() => {this.crimeScore = "Loading... Please wait!";});
+        this.stateNameArray = [this.locationData.adminArea3]
+        this.router.navigate(['map'], {queryParams: {latLng : JSON.stringify(this.latLongArray), 
+        city : JSON.stringify(this.cityNameArray), 
+        state : JSON.stringify(this.stateNameArray), 
+        addr : this.inputAddr}}).then(() => {this.crimeScore = "Loading... Please wait!";});
       },
       (err: any) => console.error(err),
       () => console.log('done loading coords : ' + this.addrInputService.getAddr() + " : " + this.geoApiFile)
@@ -95,10 +99,12 @@ export class MapComponent implements OnInit {
   }
 
   addToInput(value: string) {
-    this.inputAddr += "|" + value
-    this.latLongArray = []
-    this.locations = []
-    this.cityNameArray = []
+    this.inputAddr += "|" + value;
+    this.zillowLinks.push('https://www.zillow.com/homes/' + value + '_rb/');
+    this.latLongArray = [];
+    this.locations = [];
+    this.cityNameArray = [];
+    this.stateNameArray = []
 
     this.appService.callGeoApi(this.inputAddr).subscribe(
       (data: any) => {
@@ -109,10 +115,13 @@ export class MapComponent implements OnInit {
           this.latLongArray.push(this.locationData[i].locations[0].latLng.lat)
           this.latLongArray.push(this.locationData[i].locations[0].latLng.lng)
           this.cityNameArray.push(this.locationData[i].locations[0].adminArea5)
+          this.stateNameArray.push(this.locationData[i].locations[0].adminArea3)
         }
 
-        this.router.navigate(['map'], {queryParams: {latLng : JSON.stringify(this.latLongArray), city : JSON.stringify(this.cityNameArray), addr : this.inputAddr}}).then(() => {this.crimeScore = "Loading... Please wait!";});
-      },
+        this.router.navigate(['map'], {queryParams: {latLng : JSON.stringify(this.latLongArray), 
+          city : JSON.stringify(this.cityNameArray), 
+          state : JSON.stringify(this.stateNameArray), 
+          addr : this.inputAddr}}).then(() => {this.crimeScore = "Loading... Please wait!";});      },
       (err: any) => console.error(err),
       () => console.log()
     );
@@ -128,9 +137,13 @@ export class MapComponent implements OnInit {
   // for addresses in order of address 1, address 2, ..., address {n}
   threeAddressTest() {
     this.inputAddr = "tulsa, ok|denver, co|austin, tx";
-    this.latLongArray = []
-    this.locations = []
-    this.cityNameArray = []
+    this.zillowLinks.push('https://www.zillow.com/homes/tulsa, ok_rb/');
+    this.zillowLinks.push('https://www.zillow.com/homes/denver, co_rb/');
+    this.zillowLinks.push('https://www.zillow.com/homes/austin, tx_rb/');
+    this.latLongArray = [];
+    this.locations = [];
+    this.cityNameArray = [];
+    this.stateNameArray = [];
 
     this.appService.callGeoApi(this.inputAddr).subscribe(
       (data: any) => {
@@ -141,17 +154,21 @@ export class MapComponent implements OnInit {
           this.latLongArray.push(this.locationData[i].locations[0].latLng.lat)
           this.latLongArray.push(this.locationData[i].locations[0].latLng.lng)
           this.cityNameArray.push(this.locationData[i].locations[0].adminArea5)
+          this.stateNameArray.push(this.locationData[i].locations[0].adminArea3)
         }
 
-        this.router.navigate(['map'], {queryParams: {latLng : JSON.stringify(this.latLongArray), city : JSON.stringify(this.cityNameArray), addr : this.inputAddr}}).then(() => {this.crimeScore = "Loading... Please wait!";});
-      },
+        this.router.navigate(['map'], {queryParams: {latLng : JSON.stringify(this.latLongArray), 
+          city : JSON.stringify(this.cityNameArray), 
+          state : JSON.stringify(this.stateNameArray), 
+          addr : this.inputAddr}}).then(() => {this.crimeScore = "Loading... Please wait!";});      },
       (err: any) => console.error(err),
       () => console.log()
     );
   }
                                                                                                                            
-   zillowRoute(){
-    window.location.href = this.zillowLink;
+   zillowRoute(index: number){
+    window.location.href = 'https://www.zillow.com/homes/' + this.locations[index].city + ',' + this.locations[index].state + '_rb/'
+    //console.log(this.locations[index].city + ',' + this.locations[index].state)
   }
 
 
@@ -167,6 +184,7 @@ export class MapComponent implements OnInit {
       console.log(this.latLongArray)
 
       this.cityNameArray = JSON.parse(params['city'])
+      this.stateNameArray = JSON.parse(params['state'])
 
       /*
       if(params['lat'] != parseFloat(params['lat']) || params['long'] != parseFloat(params['long']))
@@ -204,7 +222,7 @@ export class MapComponent implements OnInit {
       // add new location object based on number of returned coords
       let temp: any = []
       for (let i = 0; i < this.latLongArray.length; i+=2) {
-        temp.push(new Location(this.latLongArray[i], this.latLongArray[i+1], this.crimeScoreArray[i/2], this.cityNameArray[i/2]))
+        temp.push(new Location(this.latLongArray[i], this.latLongArray[i+1], this.crimeScoreArray[i/2], this.cityNameArray[i/2], this.stateNameArray[i/2]))
       }
       this.locations = temp
       console.log(this.locations)
@@ -220,7 +238,8 @@ export class Location {
     public lat: number,
     public long: number,
     public crimeScore: number,
-    public city: any) {
+    public city: any,
+    public state: any) {
 
   }
 }
