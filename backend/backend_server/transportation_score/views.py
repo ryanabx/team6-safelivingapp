@@ -4,7 +4,7 @@ from django.http import JsonResponse
 
 # Create your views here.
 
-def getWalkScore(lon, lat, address):
+def getWalkScore(request, lat, lon, address):
     #IMPLEMENT THIS
     key = ''
     url = f'https://api.walkscore.com/score?format=json&address={address}&lat={lat}&lon={lon}&transit=0&bike=0&wsapikey={key}'

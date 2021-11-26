@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { analyzeAndValidateNgModules } from '@angular/compiler';
-import { Globals } from '../globals'
 
 @Component({
   selector: 'app-crimeapi',
@@ -70,7 +69,7 @@ export class CrimeapiComponent implements OnInit {
   specificcrimedata: object;
 
 
-  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router, public globals: Globals) {
+  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router) {
     this.returnedstuff = new Object;
     this.specificcrimedata = new Object;
     this.ori = '';
@@ -104,7 +103,7 @@ export class CrimeapiComponent implements OnInit {
         this.router.navigate(['crimeapi'], {queryParams: {ori: this.ori}}).then(()=>{window.location.reload()});
       }*/
     });
-    this.url = globals.backendUrl;
+    this.url = 'http://localhost:8000/';
     this.url += 'crimedata/api/';
     this.url += this.ori;
     this.url += '/';

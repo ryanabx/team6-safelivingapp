@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from django.http import response
 
 # Create your views here.
-def getStuff(request, inputAddr):
+def getGeocoding(request, inputAddr):
     key = 'c7qYTGBjRaRkGF7ucqOvpNy6L1Q857oD'
     addrList = []
 

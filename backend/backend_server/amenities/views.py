@@ -4,7 +4,7 @@ from django.http import JsonResponse
 
 # Create your views here.
 
-def getAmenities(request, lon, lat, radius, type):
+def getAmenities(request, lat, lon, radius, type):
     lon = float(lon)
     lat = float(lat)
     radius = float(radius)

@@ -64,7 +64,7 @@ stateCodes = {
     "WY": "56"
 }
 
-def getScore(request, lon, lat, radius):
+def getScore(request, lat, lon, radius):
     lon = float(lon)
     lat = float(lat)
     radius = float(radius)

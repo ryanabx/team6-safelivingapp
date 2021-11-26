@@ -8,8 +8,6 @@ import json
 
 # Create your views here.
 def getCostOfLiving(request, inputAddr):
-    lon = float(lon)
-    lat = float(lat)
     key = '6teph9uj3ztaa3'
     #url = f'/api/?api_key={key}&query={lon},{lat}&min_contributors=5&max_distance=10000'
     #cityName = 'Example'

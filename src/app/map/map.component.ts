@@ -217,7 +217,7 @@ export class MapComponent implements OnInit {
       if (this.latLongArray != null) {
         let tempCSArray: any[] = []
         for (let i = 0; i < this.latLongArray.length; i+=2) {
-          this.appService.getSafeLivingScoreAPI(this.latLongArray[i+1], this.latLongArray[i], 1.0).subscribe(
+          this.appService.getSafeLivingScoreAPI(this.latLongArray[i], this.latLongArray[i+1], 1.0).subscribe(
             (data: any)=>{
               this.crimeScore = data["safe-living-score"];
               this.crimeScore = parseFloat((Math.round(this.crimeScore * 100) / 100).toFixed(2));

@@ -16,7 +16,6 @@ import { CoordListComponent } from './coord-list/coord-list.component';
 import { AddrInputService } from './addr-input.service';
 import { AppService } from './app.service';
 import { FormsModule } from '@angular/forms';
-import { Globals } from './globals';
 import { UserService } from './user.service';
 import { CrimeapiComponent } from './crimeapi/crimeapi.component';
 
@@ -43,7 +42,7 @@ import { CrimeapiComponent } from './crimeapi/crimeapi.component';
     BrowserModule,
     HttpClientModule
   ],
-  providers: [AppService, AddrInputService, Globals, UserService],
+  providers: [AppService, AddrInputService, UserService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
