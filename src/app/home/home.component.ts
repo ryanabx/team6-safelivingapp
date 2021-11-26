@@ -27,6 +27,11 @@ export class HomeComponent implements OnInit {
 
 
   sendInput(value: string) {
+
+    if (value == '') {
+      return
+    }
+
     this.inputAddr = value;
     //this.zillowLinks.push('https://www.zillow.com/homes/' + value + '_rb/');
     console.log(this.inputAddr);

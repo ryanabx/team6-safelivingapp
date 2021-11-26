@@ -1,7 +1,7 @@
 <div class="search-container">
-    <input type="text" placeholder="Search Cities" name="'search'" id = "userInput" #userInput> <!-- id = "userInput" -->
+    <input type="text" placeholder="Search [City, State]" name="'search'" id = "userInput" #userInput> <!-- id = "userInput" -->
     <button class="btn btn-primary fa fa-search" (click)="sendInput(userInput.value)" type="button">Find</button> <!-- onclick = 'sendInput()' -->
-    <button class="btn btn-primary fa fa-search" (click)="addToInput(userInput.value)" type="button">Add to Search</button>
+    <button *ngIf="inputAddr != null" class="btn btn-primary fa fa-search" (click)="addToInput(userInput.value)" type="button">Add to Search</button>
 </div>
 <div *ngIf="inputAddr != null" style = "text-align:center">
   <h1>
