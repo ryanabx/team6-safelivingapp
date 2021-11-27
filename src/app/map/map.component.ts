@@ -44,6 +44,14 @@ export class MapComponent implements OnInit {
   censusPovRate: any;
   censusPovCount: any;
 
+  testPaths: any = [
+    
+    {lat: 0, lng: 0},
+    {lat: 30, lng: 0},
+    {lat: 30, lng: 30}
+
+  ];
+
   constructor(
     private route: ActivatedRoute,
     private appService: AppService,
