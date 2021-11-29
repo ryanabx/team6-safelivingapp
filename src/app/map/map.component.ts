@@ -44,6 +44,22 @@ export class MapComponent implements OnInit {
   censusPovRate: any;
   censusPovCount: any;
 
+  testPaths: any = [
+    
+    {lat: 30, lng: 30},
+    {lat: 60, lng: 30},
+    {lat: 60, lng: 60}
+
+  ];
+
+  labelOptions: any = {
+    color: 'white',
+    fontFamily: '',
+    fontSize: '14px',
+    fontWeight: 'bold',
+    text: '2'
+  };
+
   constructor(
     private route: ActivatedRoute,
     private appService: AppService,
@@ -58,7 +74,6 @@ export class MapComponent implements OnInit {
 
     this.crimeScore = "Loading... Please wait!";
     
-  
 
     //private mapsAPILoader: MapsAPILoader;
     
