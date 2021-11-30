@@ -42,4 +42,8 @@ export class AppService {
     return this.http.get(this.serverURL + "transportation/api/walkscore/" + lat + "/" + lon);
   }
 
+  getBoundaries(city: any, state: any, country: any) {
+    return this.http.get(this.serverURL + "boundaries/api/" + city + "/" + state + "/" + country);
+  }
+
 }

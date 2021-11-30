@@ -150,10 +150,25 @@ export class MapComponent implements OnInit {
       (err: any) => console.error(err),
       () => console.log()
     );
+
+    //TEMP CODE
+
+    this.boundariesToPath("owasso", "oklahoma");
+
+
   }
 
   reveal() {
     console.log(this.crimeScoreArray)
+
+  }
+
+  boundariesToPath(city: any, state: any) {
+    this.appService.getBoundaries(city, state, "United+States").subscribe(
+      (data:any) => {
+        this.testPaths = data.results;
+      }
+    );
   }
 
   // send an array of three addresses for the backend to process
