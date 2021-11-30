@@ -218,7 +218,7 @@ export class MapComponent implements OnInit {
       }*/
       console.log(this.lat + " : " + this.long)
       if(this.lat != 0 && this.long != 0){
-        this.appService.getSafeLivingScoreAPI(this.long, this.lat, 1.0).subscribe(
+        this.appService.getSafeLivingScoreAPI(this.long, this.lat, 2.0).subscribe(
           (data: any)=>{
             this.crimeScore = data["safe-living-score"];
             this.crimeScore = parseFloat((Math.round(this.crimeScore * 100) / 100).toFixed(2));
@@ -232,10 +232,12 @@ export class MapComponent implements OnInit {
       if (this.latLongArray != null) {
         let tempCSArray: any[] = []
         for (let i = 0; i < this.latLongArray.length; i+=2) {
-          this.appService.getSafeLivingScoreAPI(this.latLongArray[i], this.latLongArray[i+1], 1.0).subscribe(
+          this.appService.getSafeLivingScoreAPI(this.latLongArray[i], this.latLongArray[i+1], 2.0).subscribe(
             (data: any)=>{
               this.crimeScore = data["safe-living-score"];
-              this.crimeScore = parseFloat((Math.round(this.crimeScore * 100) / 100).toFixed(2));
+              if(!isNaN(parseFloat(this.crimeScore))){
+                this.crimeScore = parseFloat((Math.round(this.crimeScore * 100) / 100).toFixed(2));
+              }
               tempCSArray.push(this.crimeScore);
             }
           );
@@ -262,7 +264,7 @@ export class Location {
   constructor(
     public lat: number,
     public long: number,
-    public crimeScore: number,
+    public crimeScore: string,
     public city: any,
     public state: any) {
 
