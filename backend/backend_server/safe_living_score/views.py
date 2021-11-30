@@ -3,6 +3,9 @@ from django.shortcuts import render
 import requests
 from django.http import JsonResponse
 import json
+import requests_cache
+requests_cache.install_cache()
+
 
 from safe_living_score.ori_utils import FBI_wrapper
 
