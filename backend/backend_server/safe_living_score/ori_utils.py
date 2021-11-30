@@ -1,5 +1,7 @@
 import requests
 from requests.sessions import default_headers
+import requests_cache
+requests_cache.install_cache()
 import math
 import numbers
 import json
@@ -14,6 +16,7 @@ wrapper.getNearestByType(latitude, longitude, type)
 wrapper.getAgencies()
 wrapper.getAgenciesByCoordinates(latitude, longitude, range)
 """
+
 
 class RequestCreator:
 
@@ -55,15 +58,15 @@ class RequestCreator:
 		match regionName.lower():
 			case "u.s. territories":
 				return "U.S. Territories"
-			case("northwest"):
+			case "northwest" :
 				return "Northeast"
-			case("midwest"):
+			case "midwest" :
 				return "Midwest"
-			case("south"):
+			case "south" :
 				return "South"
-			case("west"):
+			case "west" :
 				return "West"
-			case("other"):
+			case "other" :
 				return "Other"
 			case _:
 				raise Exception("regionName not valid")
@@ -296,7 +299,8 @@ class FBI_wrapper:
 if __name__ == "__main__":
 	api_key = "nHym62MTPDELS0XgtAZLLw0fL3jNWoNvsY2kn315"
 
-	fbi = FBI_wrapper(api_key)
+	# fbi = FBI_wrapper(api_key)
+	fbi = FBI_wrapper()
 	# test = fbi.getAgenciesByCoordinates(36.5, -85.0)
 	# test = fbi.getNearestByType(101.8552, 33.5779, "City")
 	test = fbi.getNearestByType(33.5779, -101.8551665, "City")

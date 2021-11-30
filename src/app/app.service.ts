@@ -23,7 +23,7 @@ export class AppService {
   }
 
   getSafeLivingScoreAPI(lat: any, lon: any, radius: any){
-    return this.http.get(this.serverURL + "safelivingscore/api/" + lat + "/" + lon + "/" + radius + "/all/");
+    return this.http.get(this.serverURL + "safelivingscore/api/" + lat + "/" + lon + "/" + radius + "/");
   }
 
   getCrimeScoreAPIByType(lat: any, lon: any, radius: any, crimeType: any){
