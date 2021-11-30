@@ -1,7 +1,7 @@
 import requests
 from requests.sessions import default_headers
 import requests_cache
-requests_cache.install_cache()
+requests_cache.install_cache(expire_after=-1) #NOTE Currently cache does not expire. 
 import math
 import numbers
 import json
