@@ -39,6 +39,9 @@ Get longitude and latitude from location:
 
 Get the safe living score for an area: `/safelivingscore/api/{lat}/{lon}/{radius}`
 
+Alternatively get the safe living score for an area for a specific crime group: `/safelivingscore/api/{lat}/{lon}/{radius}/{crime_type}`
+> **_NOTE:_** The currently supported crime_type values are "all", "violent_crime", "non_violent_crime", and "theft".
+
 <details>
 <summary> Example response: </summary>
 

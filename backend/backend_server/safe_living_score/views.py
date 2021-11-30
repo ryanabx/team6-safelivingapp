@@ -67,7 +67,8 @@ stateCodes = {
     "WY": "56"
 }
 
-def getScore(request, lat, lon, radius):
+
+def getScore(request, lat, lon, radius, crime_type = "all"):
     lon = float(lon)
     lat = float(lat)
     radius = float(radius)
@@ -79,10 +80,11 @@ def getScore(request, lat, lon, radius):
     
     score_distance_tuple = {}
 
+    print(f'{result}\n')
+
     for k in result:
-        
-        res = getScorebyORI("", k["ori"])
-        print("Resulting dict: ", res)
+        res = getScorebyORI("", k["ori"], "all")
+        print(f'{k["ori"]} : {res}\n')
         if("agency is not a city" not in res):
             score_distance_tuple[k["ori"]] = {}
             score_distance_tuple[k["ori"]]["score"] = float(res['crime-ratio'])
@@ -90,6 +92,12 @@ def getScore(request, lat, lon, radius):
         
 
     print("Score distance tuple: ", score_distance_tuple)
+    if(not score_distance_tuple):
+        context = {
+            "safe-living-score": "There was a problem getting a score. No cities in range."
+        }
+        return JsonResponse(context)
+    
     crime_score = getCrimeScore(score_distance_tuple)
     
     context = {
@@ -97,9 +105,9 @@ def getScore(request, lat, lon, radius):
     }
     return JsonResponse(context)
 
-def getScorebyORI(request, ORI):
+def getScorebyORI(request, ORI, crime_type):
     key = 'nHym62MTPDELS0XgtAZLLw0fL3jNWoNvsY2kn315'
-    censuskey = '7c17ec871d6ede3e816aa8f92d3f7824215e2fa9'
+    #censuskey = '7c17ec871d6ede3e816aa8f92d3f7824215e2fa9'
     agency = ORI
     fromDate = 2020
     toDate = 2020
@@ -123,9 +131,17 @@ def getScorebyORI(request, ORI):
 
         population = -1
 
+        print(cityName)
+
+        for d in {" city", " City", " village", " Village"}:
+            if(d in cityName):
+                cityName = cityName[0:cityName.find(d)]
+
+        # print(cityName)
+
         for k in population_data:
             if(k[2] == stateCodes[state]):
-                if(cityName in k[0] and "city" in k[0]):
+                if(cityName in k[0]):
                     population = k[1]
         for k in state_population_data:
             if(k[2] == stateCodes[state]):
@@ -151,7 +167,27 @@ def getScorebyORI(request, ORI):
             numCrimes = 0
             stateNumCrimes = 0
 
-            for k in {"violent_crime", "homicide", "rape_legacy", "rape_revised", "robbery", "aggravated_assault", "property_crime", "burglary", "larceny", "motor_vehicle_theft", "arson"}:
+            relevant_crimes = {}
+
+            print(crime_type)
+
+            match crime_type:
+                case ("violent_crime"):
+                    print("Violent crime POG")
+                    relevant_crimes = {"violent_crime", "aggravated_assault", "homicide", "rape_legacy", "rape_revised", "arson"}
+                case ("nonviolent_crime"):
+                    print("NONVIOLENT_CRIME POG")
+                    relevant_crimes = {"robbery", "property_crime", "burglary", "larceny", "motor_vehicle_theft"}
+                case ("theft"):
+                    print("Theft POG")
+                    relevant_crimes = {"robbery", "property_crime", "burglary", "larceny", "motor_vehicle_theft"}
+                case _:
+                    print("Default POG")
+                    relevant_crimes = {"violent_crime", "homicide", "rape_legacy", "rape_revised", "robbery", "aggravated_assault", "property_crime", "burglary", "larceny", "motor_vehicle_theft", "arson"}
+
+                    
+
+            for k in relevant_crimes:
                 if(k in crimeList and k in stateCrimeList):
                     if(crimeList[k] is not None and stateCrimeList[k] is not None):
                         numCrimes += int(crimeList[k])
@@ -170,12 +206,14 @@ def getScorebyORI(request, ORI):
             }
             return context
         else:
+            print("Agency did not pass the population check.")
             context = {
                 'agency is not a city': 'true',
                 'crime-ratio': 0
             }
             return context
     else:
+        print("Agency did not pass the ORI type check")
         context = {
             'agency is not a city': 'true',
             'crime-ratio': 0
@@ -195,6 +233,8 @@ def getCrimeScore(scoreDistanceTupleList):
         sumWeights += weight
         locationScore += score * weight
     
+    if(sumWeights == 0):
+        return "There was a problem loading the crime score. No cities found in area."
     
     locationScore /= sumWeights
     
