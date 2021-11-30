@@ -18,19 +18,21 @@
 </div>-->
 
 
-<agm-map style="width: 500px; height: 500px" [latitude] = "39.8283" [longitude] = "-98.5795" [zoom] = "3"
-  (mapReady)="onMapReady($event)">
-    <agm-marker *ngFor="let location of locations; let i=index" [latitude]="location.lat" [longitude]="location.long">
+<agm-map style="width: 500px; height: 500px" [latitude] = "39.8283" [longitude] = "-98.5795" [zoom] = "3">
+    <agm-marker *ngFor="let location of locations; let i=index" [latitude]="location.lat" [longitude]="location.long"
+      [label]="labelOptions">
       <agm-info-window>
 
         {{locations[i].city}}
         {{locations[i].crimeScore}}
 
       </agm-info-window>
-    </agm-marker>
 
-    <!-- <agm-polygon [fillColor]="red" [fillOpacity]="0.5" [paths]={{testPaths}} [strokeColor]="blue" [strokeOpacity]="0.6" [strokeWeight]="2" [visible]="true" [zIndex]="1"> </agm-polygon> -->
+    </agm-marker>
     <!--<agm-circle [radius]="radius" [fillColor]="'red'"></agm-circle>-->
+
+    <agm-polygon [paths]="testPaths" [clickable]="false"></agm-polygon>
+
 </agm-map>
 
 <div *ngIf="inputAddr != null">

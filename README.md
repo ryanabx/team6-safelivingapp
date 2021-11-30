@@ -27,5 +27,11 @@ To build the software, run `ng serve`. Add `--open` at the end to open in the de
 ## Build/Test Software (Django Backend)
 To build the software, run `python manage.py runserver` in the backend/backend_server directory and navigate to `localhost:8000`.
 
+## Using/Modifying Searching Locations and Information Related to a Location
+If needing to use the geocoding API for any reason inside the code (to attain the lat/long of a location), please format input as "city, state" for a single request or multiple "city, state" pairings separated by a "|" for a batch call, as in "city, state|city, state|..."
+**_EXAMPLE:_** "tulsa, ok" or "tulsa, ok|denver, co|austin, tx"
+
+If implementing something that pertains to acquiring information for a given location, please add a variable to the constructor of the location object at the bottom of the Map component, that relates to what you are adding, and make sure you save it to its respective location when constructing each location object at the bottom of ngOnInit.
+
 ## Contributing
 To contribute, make a branch with any changes!

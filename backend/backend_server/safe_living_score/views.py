@@ -64,7 +64,10 @@ stateCodes = {
     "WY": "56"
 }
 
-def getScore(request, lat, lon, radius):
+def getScoreAll(request, lat, lon, radius):
+    return getScore(request, lat, lon, radius, "all")
+
+def getScore(request, lat, lon, radius, crime_type):
     lon = float(lon)
     lat = float(lat)
     radius = float(radius)
@@ -78,7 +81,7 @@ def getScore(request, lat, lon, radius):
 
     for k in result:
         
-        res = getScorebyORI("", k["ori"])
+        res = getScorebyORI("", k["ori"], crime_type)
         print("Resulting dict: ", res)
         if("agency is not a city" not in res):
             score_distance_tuple[k["ori"]] = {}
@@ -90,11 +93,41 @@ def getScore(request, lat, lon, radius):
     crime_score = getCrimeScore(score_distance_tuple)
     
     context = {
-        "safe-living-score": crime_score
+        "specific-crime-score": crime_score
     }
     return JsonResponse(context)
 
-def getScorebyORI(request, ORI):
+# def getScore(request, lat, lon, radius):
+#     lon = float(lon)
+#     lat = float(lat)
+#     radius = float(radius)
+#     d = FBI_wrapper()
+#     result = d.getAgenciesByCoordinates(lat, lon, radius)
+
+#     if(not result):
+#         result = d.getNearestByType(lat, lon, "City")
+    
+#     score_distance_tuple = {}
+
+#     for k in result:
+        
+#         res = getScorebyORI("", k["ori"], "all")
+#         print("Resulting dict: ", res)
+#         if("agency is not a city" not in res):
+#             score_distance_tuple[k["ori"]] = {}
+#             score_distance_tuple[k["ori"]]["score"] = float(res['crime-ratio'])
+#             score_distance_tuple[k["ori"]]["distance"] = float(k["distance"])
+        
+
+#     print("Score distance tuple: ", score_distance_tuple)
+#     crime_score = getCrimeScore(score_distance_tuple)
+    
+#     context = {
+#         "safe-living-score": crime_score
+#     }
+#     return JsonResponse(context)
+
+def getScorebyORI(request, ORI, crime_type):
     key = 'nHym62MTPDELS0XgtAZLLw0fL3jNWoNvsY2kn315'
     censuskey = '7c17ec871d6ede3e816aa8f92d3f7824215e2fa9'
     agency = ORI
@@ -148,7 +181,19 @@ def getScorebyORI(request, ORI):
             numCrimes = 0
             stateNumCrimes = 0
 
-            for k in {"violent_crime", "homicide", "rape_legacy", "rape_revised", "robbery", "aggravated_assault", "property_crime", "burglary", "larceny", "motor_vehicle_theft", "arson"}:
+            relevant_crimes = {}
+
+            match crime_type:
+                case "all":
+                    relevant_crimes = {"violent_crime", "homicide", "rape_legacy", "rape_revised", "robbery", "aggravated_assault", "property_crime", "burglary", "larceny", "motor_vehicle_theft", "arson"}
+                case "violent_crime":
+                    relevant_crimes = {"violent_crime", "aggravated_assault", "homicide", "rape_legacy", "rape_revised", "arson"}
+                case "nonviolent_crime":
+                    relevant_crimes = {"robbery", "property_crime", "burglary", "larceny", "motor_vehicle_theft"}
+                case "theft":
+                    relevant_crimes = {"robbery", "property_crime", "burglary", "larceny", "motor_vehicle_theft"}
+
+            for k in relevant_crimes:
                 if(k in crimeList and k in stateCrimeList):
                     if(crimeList[k] is not None and stateCrimeList[k] is not None):
                         numCrimes += int(crimeList[k])

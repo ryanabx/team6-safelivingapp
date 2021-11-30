@@ -7,8 +7,6 @@ import { MapsAPILoader } from '@agm/core';
 import { HttpClient } from '@angular/common/http';
 //import { stringify } from 'querystring';
 
-declare const google: any;
-
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
@@ -48,13 +46,19 @@ export class MapComponent implements OnInit {
 
   testPaths: any = [
     
-    {lat: 0, lng: 0},
-    {lat: 30, lng: 0},
-    {lat: 30, lng: 30}
+    {lat: 30, lng: 30},
+    {lat: 60, lng: 30},
+    {lat: 60, lng: 60}
 
   ];
 
-  //drawingManager: any = null;
+  labelOptions: any = {
+    color: 'white',
+    fontFamily: '',
+    fontSize: '14px',
+    fontWeight: 'bold',
+    text: '2'
+  };
 
   constructor(
     private route: ActivatedRoute,
@@ -69,7 +73,7 @@ export class MapComponent implements OnInit {
     this.radius = 5000
 
     this.crimeScore = "Loading... Please wait!";
-  
+    
 
     //private mapsAPILoader: MapsAPILoader;
     
@@ -191,30 +195,6 @@ export class MapComponent implements OnInit {
     window.location.href = 'https://www.zillow.com/homes/' + this.locations[index].city + ',' + this.locations[index].state + '_rb/'
     //console.log(this.locations[index].city + ',' + this.locations[index].state)
   }
-
-  onMapReady(map: any) {
-    this.initDrawingManager(map);
-  }
-
-  initDrawingManager = (map: any) => {
-
-    const options = {
-      drawingControl: true,
-      drawingControlOptions: {
-        draggable: true,
-        editable: true,
-      },
-      drawingMode: google.maps.drawing.OverlayType.POLYGON,};
-    };
-  
-    this.drawingManager = new google.maps.drawing.DrawingManager(options);
-    this.drawingManager.setMap(map);
-  
-
-
-  }
-
-
 
 
   ngOnInit(): void {
