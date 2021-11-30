@@ -40,16 +40,18 @@
 <div class = right>
   <div class = jumbotron>
     <div *ngIf="inputAddr != null">
-      <h1 style = "font-size:xx-large; text-align: center">
+      <h1 style = "font-size:xx-large">
         Showing "{{inputAddr}}"
       </h1>
       <h2>
-        The safe living score for this area is: <b>{{crimeScore}}</b>
+        <br>The safe living score for this area is: <b>{{crimeScore}}</b>
       </h2>
       <ul>
         <li *ngFor="let city of cityNameArray; let i=index">{{city}}: {{crimeScoreArray[i]}}</li>
       </ul>
-      <p style = "font-size: medium"> How do we get our safe living score? The current method of getting a score for each area is to take the ratio of the crime per
+      <p style = "font-size: medium"> 
+        How do we get our safe living score? 
+        <br>The current method of getting a score for each area is to take the ratio of the crime per
          capita of a city and the crime per capita of the state it resides in! 
       </p>
       <div *ngIf="inputAddr != null">
