@@ -22,12 +22,12 @@ export class AppService {
     return this.http.get(this.serverURL + 'geocoding/api/' + input + "/"); 
   }
 
-  getSafeLivingScoreAPI(lat: any, lon: any, radius: any){
-    return this.http.get(this.serverURL + "safelivingscore/api/" + lat + "/" + lon + "/" + radius + "/");
+  getSafeLivingScoreAPI(city: any, state: any){
+    return this.http.get(this.serverURL + "safelivingscore/api/" + city + "/" + state + "/");
   }
 
-  getCrimeScoreAPIByType(lat: any, lon: any, radius: any, crimeType: any){
-    return this.http.get(this.serverURL + "safelivingscore/api/" + lat + "/" + lon + "/" + radius + "/" + crimeType + "/");
+  getCrimeScoreAPIByType(city: any, state: any, crimeType: any){
+    return this.http.get(this.serverURL + "safelivingscore/api/" + city + "/" + state + "/" + crimeType + "/");
   }
 
   getCrimeAPI(ORI: any, fromDate: any, toDate: any){
