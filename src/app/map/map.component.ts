@@ -52,6 +52,8 @@ export class MapComponent implements OnInit {
 
   ];
 
+  //testGeoJson: any;
+
   labelOptions: any = {
     color: 'white',
     fontFamily: '',
@@ -274,6 +276,7 @@ export class MapComponent implements OnInit {
           this.appService.getBoundaries(this.cityNameArray[i], this.stateNameArray[i]).subscribe(
             (data: any) => {
               this.locations[i].setPath(this.parsePathData(data));
+              //this.testGeoJson = data;
               console.log(data);
             }
           )

@@ -11,12 +11,51 @@ def getBoundaries(request, city, state):
     p = 0
     for k2 in result:
         if 'boundary' in k2['class']:
-            for k in k2['geojson']['coordinates'][1][0]:
-                #context.append({})
-                #context[p]["lat"] = k[0]
-                #context[p]["lng"] = k[1]
-                #p+=1
+            if "MultiPolygon" in k2["geojson"]["type"]:
+                
+                #for coordinateSection in k2["geojson"]["coordinates"]:
+                    #for coordinateSubSection in coordinateSection:
+                #    coordinateSubSection = coordinateSection[0]
+                #    for k in coordinateSubSection:
+                #        context.append( [k[0],k[1]] )
+                
+                maxLength = -1
+                maxIndex = -1
+                curIdx = 0
+                
+                for coordinateSection in k2["geojson"]["coordinates"]: #Goes through all coordinateSections
+                    if len(coordinateSection) > maxLength:
+                        maxLength = len(coordinateSection)
+                        maxIndex = curIdx
+                    curIdx += 1
+                        
+                    #for coordinateSubSection in coordinateSection:
+                maxCoordinateSection = k2["geojson"]["coordinates"][maxIndex]
+                coordinateSubSection = maxCoordinateSection[0]
+                for k in coordinateSubSection:
+                    context.append( [k[0],k[1]] )
+            
+            
+            
+            
+            elif "Polygon" in k2["geojson"]["type"]:
+                for coordinate in k2["geojson"]["coordinates"][0]:
+                    context.append( [ coordinate[0], coordinate[1] ] )
+                
+            #for coordinateSection in k2["geojson"]["coordinates"]: #["coordinates"][1][0]
+            
+            #for k in k2['geojson']['coordinates'][0][0]:
+            #    context.append( [k[0],k[1]] )
+            
+            #for coordinateSection in k2['geojson']['coordinates']:
+            #    coordinateSubsection = coordinateSection[0]
+            #    for coordinate in coordinateSubsection:
+            #        context.append(coordinate[0], coordinate[1])
+                
 
-                context.append( [k[0],k[1]] )
+            #for k in coordinateGroup:
+
+
     
     return JsonResponse(context, safe = False)
+    #return JsonResponse(k2["geojson"], safe = False)
