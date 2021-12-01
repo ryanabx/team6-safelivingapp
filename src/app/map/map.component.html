@@ -32,7 +32,8 @@
     </agm-marker>
     <!--<agm-circle [radius]="radius" [fillColor]="'red'"></agm-circle>-->
 
-    <agm-polygon [paths]="testPaths" [clickable]="false"></agm-polygon>
+    <!--<agm-polygon *ngFor="let location of locations; let i=index" [paths]="location.testPaths" [clickable]="false"></agm-polygon>-->
+    <agm-polygon [paths]="locations[0].testPaths" [clickable]="false"></agm-polygon>
 
 </agm-map>
 </div>
