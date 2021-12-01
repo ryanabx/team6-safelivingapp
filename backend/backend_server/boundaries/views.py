@@ -9,9 +9,12 @@ def getBoundaries(request, city, state):
     result = r.json()
     context = []
     p = 0
-    for k in result[1]['geojson']['coordinates'][1][0]:
-        context.append({})
-        context[p]['lat'] = k[0]
-        context[p]['lng'] = k[1]
-        p+=1
+    for k2 in result:
+        if 'boundary' in k2['class']:
+            for k in k2['geojson']['coordinates'][1][0]:
+                context.append({})
+                context[p]['lat'] = k[0]
+                context[p]['lng'] = k[1]
+                p+=1
+    
     return JsonResponse(context, safe = False)

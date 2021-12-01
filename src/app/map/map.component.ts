@@ -227,6 +227,8 @@ export class MapComponent implements OnInit {
       this.cityNameArray = JSON.parse(params['city'])
       this.stateNameArray = JSON.parse(params['state'])
 
+
+
       /* deprecated / depreciated
       console.log(this.lat + " : " + this.long)
       if(this.lat != 0 && this.long != 0){
@@ -256,6 +258,14 @@ export class MapComponent implements OnInit {
         for (let i = 0; i < this.locations.length; i++) {
           this.locations[i].setCity(this.cityNameArray[i]);
           this.locations[i].setState(this.stateNameArray[i]);
+
+          console.log("got here")
+          this.appService.getBoundaries(this.cityNameArray[i], this.stateNameArray[i]).subscribe(
+            (data: any) => {
+              this.locations.setPath(data.results);
+              console.log(data.results)
+            }
+          )
         }
       }
       console.log("Locations initially created: " + this.locations)
@@ -322,5 +332,9 @@ export class Location {
 
   setState(state: any) {
     this.state = state;
+  }
+
+  setPath(path: any){
+    this.testPaths = path;
   }
 }

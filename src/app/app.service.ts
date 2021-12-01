@@ -31,19 +31,19 @@ export class AppService {
   }
 
   getCrimeAPI(ORI: any, fromDate: any, toDate: any){
-    return this.http.get(this.serverURL + "crimedata/api/" + ORI + "/" + fromDate + "/" + toDate);
+    return this.http.get(this.serverURL + "crimedata/api/" + ORI + "/" + fromDate + "/" + toDate + "/");
   }
 
   getAmenitiesAPI(lat: any, lon: any, radius: any){
-    return this.http.get(this.serverURL + "amenities/api/" + lat + "/" + lon + "/" + radius);
+    return this.http.get(this.serverURL + "amenities/api/" + lat + "/" + lon + "/" + radius + "/");
   }
 
   getWalkScoreAPI(lat: any, lon: any){
-    return this.http.get(this.serverURL + "transportation/api/walkscore/" + lat + "/" + lon);
+    return this.http.get(this.serverURL + "transportation/api/walkscore/" + lat + "/" + lon + "/");
   }
 
   getBoundaries(city: any, state: any) {
-    return this.http.get(this.serverURL + "boundaries/api/" + city + "/" + state);
+    return this.http.get(this.serverURL + "boundaries/api/" + city + "/" + state + "/");
   }
 
 }
