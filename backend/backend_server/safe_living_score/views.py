@@ -4,6 +4,7 @@ import requests
 from django.http import JsonResponse
 import json
 import requests_cache
+import loc_to_addr.views
 requests_cache.install_cache()
 
 
@@ -68,10 +69,17 @@ stateCodes = {
 }
 
 
-def getScore(request, lat, lon, radius, crime_type = "all"):
+def getScore(request, city, state, crime_type = "all"):
+    geocoding_key = 'c7qYTGBjRaRkGF7ucqOvpNy6L1Q857oD'
+    geocoding_url = f'http://www.mapquestapi.com/geocoding/v1/address?key={geocoding_key}&location={city}, {state}'
+    geocoding_data = requests.get(geocoding_url).json()
+    lon = geocoding_data['results'][0]['locations'][0]['latLng']['lng']
+    lat = geocoding_data['results'][0]['locations'][0]['latLng']['lat']
+
+
     lon = float(lon)
     lat = float(lat)
-    radius = float(radius)
+    radius = 100.0
     d = FBI_wrapper()
     result = d.getAgenciesByCoordinates(lat, lon, radius)
 
@@ -83,12 +91,15 @@ def getScore(request, lat, lon, radius, crime_type = "all"):
     print(f'{result}\n')
 
     for k in result:
-        res = getScorebyORI("", k["ori"], "all")
-        print(f'{k["ori"]} : {res}\n')
-        if("agency is not a city" not in res):
-            score_distance_tuple[k["ori"]] = {}
-            score_distance_tuple[k["ori"]]["score"] = float(res['crime-ratio'])
-            score_distance_tuple[k["ori"]]["distance"] = float(k["distance"])
+        if(city in k['agency_name']):
+            res = getScorebyORI("", k["ori"], "all")
+            print(f'{k["ori"]} : {res}\n')
+            if("agency is not a city" not in res):
+                score_distance_tuple[k["ori"]] = {}
+                score_distance_tuple[k["ori"]]["score"] = float(res['crime-ratio'])
+                score_distance_tuple[k["ori"]]["distance"] = float(k["distance"])
+                print(f'Score: {res["crime-ratio"]}. Distance: {k["distance"]}')
+        
         
 
     print("Score distance tuple: ", score_distance_tuple)
@@ -126,8 +137,8 @@ def getScorebyORI(request, ORI, crime_type):
         f = open('./safe_living_score/population_data.json')
         population_data = json.load(f)
 
-        f = open('./safe_living_score/state_population_data.json')
-        state_population_data = json.load(f)
+        f = open('./safe_living_score/national_data.json')
+        national_data = json.load(f)
 
         population = -1
 
@@ -141,11 +152,12 @@ def getScorebyORI(request, ORI, crime_type):
 
         for k in population_data:
             if(k[2] == stateCodes[state]):
-                if(cityName in k[0]):
+                if(cityName in k[0] and 'city' in k[0]):
                     population = k[1]
-        for k in state_population_data:
-            if(k[2] == stateCodes[state]):
-                statePopulation = k[1]
+        # for k in state_population_data:
+        #     if(k[2] == stateCodes[state]):
+        #         nationalPopulation = k[1]
+        nationalPopulation = 329484123
         
         if(population != -1):
             
@@ -153,8 +165,8 @@ def getScorebyORI(request, ORI, crime_type):
             for k in oriCrimeData["results"]:
                 crimeList[k["offense"]] = k["actual"]
 
-            stateCrimeList = {}
-            stateCrimeList = summarizedStateData["results"][0]
+            nationalCrimeList = {}
+            nationalCrimeList = national_data["results"][0]
 
             crimeList["rape_revised"] = crimeList["rape"]
             crimeList["rape_legacy"] = crimeList["rape-legacy"]
@@ -165,7 +177,7 @@ def getScorebyORI(request, ORI, crime_type):
 
 
             numCrimes = 0
-            stateNumCrimes = 0
+            nationalNumCrimes = 0
 
             relevant_crimes = {}
 
@@ -188,21 +200,24 @@ def getScorebyORI(request, ORI, crime_type):
                     
 
             for k in relevant_crimes:
-                if(k in crimeList and k in stateCrimeList):
-                    if(crimeList[k] is not None and stateCrimeList[k] is not None):
+                if(k in crimeList and k in nationalCrimeList):
+                    if(crimeList[k] is not None and nationalCrimeList[k] is not None):
                         numCrimes += int(crimeList[k])
-                        stateNumCrimes += int(stateCrimeList[k])
+                        nationalNumCrimes += int(nationalCrimeList[k])
                 
 
-            crimeRatio = (int(numCrimes) / int(population))/(int(stateNumCrimes) / int(statePopulation))
+            crimeRatio = (int(numCrimes) / int(population))/(int(nationalNumCrimes) / int(nationalPopulation))
+            crime_score = 100.0 - (crimeRatio - 0.5) / 5.0 * 100.0
+
+            print(f'For {cityName}: Number of crimes: {numCrimes}. Population: {population}. nationalNumCrimes: {nationalNumCrimes}. National Population: {nationalPopulation}')
 
             context = {
                 'city name': cityName,
                 'state': state,
                 'population': population,
                 'state code': stateCodes[state],
-                'state population': statePopulation,
-                'crime-ratio': crimeRatio
+                'national population': nationalPopulation,
+                'crime-ratio': crime_score
             }
             return context
         else:

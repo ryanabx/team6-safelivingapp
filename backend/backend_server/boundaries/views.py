@@ -15,5 +15,3 @@ def getBoundaries(request, city, state):
         context[p]['lng'] = k[1]
         p+=1
     return JsonResponse(context, safe = False)
-
-
