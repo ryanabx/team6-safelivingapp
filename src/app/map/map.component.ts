@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, SystemJsNgModuleLoader } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { AddrInputService } from '../addr-input.service';
 import { AppService } from '../app.service';
@@ -152,8 +152,7 @@ export class MapComponent implements OnInit {
     );
 
     //TEMP CODE
-
-    this.boundariesToPath("owasso", "oklahoma");
+    //this.boundariesToPath("owasso", "oklahoma");
 
 
   }
@@ -211,6 +210,18 @@ export class MapComponent implements OnInit {
     //console.log(this.locations[index].city + ',' + this.locations[index].state)
   }
 
+  parsePathData(path: any) {
+
+    let parsedData : any = [];
+
+    for(let idx = 0; idx < path.length; idx++) {
+      parsedData.push( { lat: path[idx][1], lng: path[idx][0] } );
+    }
+    console.log(parsedData);
+    return parsedData;
+
+  }
+
 
   ngOnInit(): void {
     this.route.queryParams
@@ -262,8 +273,8 @@ export class MapComponent implements OnInit {
           console.log("got here")
           this.appService.getBoundaries(this.cityNameArray[i], this.stateNameArray[i]).subscribe(
             (data: any) => {
-              this.locations.setPath(data.results);
-              console.log(data.results)
+              this.locations[i].setPath(this.parsePathData(data));
+              console.log(data);
             }
           )
         }
