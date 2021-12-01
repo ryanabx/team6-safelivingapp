@@ -88,12 +88,12 @@ def getScore(request, city, state, crime_type = "all"):
     
     score_distance_tuple = {}
 
-    print(f'{result}\n')
+    #print(f'{result}\n')
 
     for k in result:
         if(city in k['agency_name']):
             res = getScorebyORI("", k["ori"], "all")
-            print(f'{k["ori"]} : {res}\n')
+            #print(f'{k["ori"]} : {res}\n')
             if("agency is not a city" not in res):
                 score_distance_tuple[k["ori"]] = {}
                 score_distance_tuple[k["ori"]]["score"] = float(res['crime-ratio'])
@@ -102,7 +102,7 @@ def getScore(request, city, state, crime_type = "all"):
         
         
 
-    print("Score distance tuple: ", score_distance_tuple)
+    #print("Score distance tuple: ", score_distance_tuple)
     if(not score_distance_tuple):
         context = {
             "safe-living-score": "There was a problem getting a score. No cities in range."
@@ -142,7 +142,7 @@ def getScorebyORI(request, ORI, crime_type):
 
         population = -1
 
-        print(cityName)
+        #print(cityName)
 
         for d in {" city", " City", " village", " Village"}:
             if(d in cityName):
@@ -181,20 +181,20 @@ def getScorebyORI(request, ORI, crime_type):
 
             relevant_crimes = {}
 
-            print(crime_type)
+            #print(crime_type)
 
             match crime_type:
                 case ("violent_crime"):
-                    print("Violent crime POG")
+                    #print("Violent crime POG")
                     relevant_crimes = {"violent_crime", "aggravated_assault", "homicide", "rape_legacy", "rape_revised", "arson"}
                 case ("nonviolent_crime"):
-                    print("NONVIOLENT_CRIME POG")
+                    #print("NONVIOLENT_CRIME POG")
                     relevant_crimes = {"robbery", "property_crime", "burglary", "larceny", "motor_vehicle_theft"}
                 case ("theft"):
-                    print("Theft POG")
+                    #print("Theft POG")
                     relevant_crimes = {"robbery", "property_crime", "burglary", "larceny", "motor_vehicle_theft"}
                 case _:
-                    print("Default POG")
+                    #print("Default POG")
                     relevant_crimes = {"violent_crime", "homicide", "rape_legacy", "rape_revised", "robbery", "aggravated_assault", "property_crime", "burglary", "larceny", "motor_vehicle_theft", "arson"}
 
                     
