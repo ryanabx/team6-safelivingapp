@@ -4,7 +4,7 @@ import requests
 from django.http import JsonResponse
 import json
 import requests_cache
-requests_cache.install_cache()
+requests_cache.install_cache(expire_after=-1) #NOTE Currently cache does not expire. 
 
 
 from safe_living_score.ori_utils import FBI_wrapper
