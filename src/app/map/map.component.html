@@ -21,12 +21,12 @@
 <div class = left>
 <agm-map style="width: 500px; height: 500px" [latitude] = "39.8283" [longitude] = "-98.5795" [zoom] = "3">
     <agm-marker *ngFor="let location of locations; let i=index" [latitude]="location.lat" [longitude]="location.long"
-      [label]="labelOptions">
+      [label]="location.labelOptions">
       <agm-info-window>
-
-        {{locations[i].city}}
-        {{locations[i].crimeScore}}
-
+        <pre>
+          {{locations[i].city}}, {{locations[i].state}}
+        CrimeScore: {{locations[i].crimeScore}}
+        </pre>
       </agm-info-window>
 
     </agm-marker>

@@ -36,7 +36,8 @@ import { CrimeapiComponent } from './crimeapi/crimeapi.component';
     HttpClientModule,
     FormsModule,
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyD2QfpFioTBH5t8YSU_US-vDItosqF1Iv4'
+      apiKey: 'AIzaSyD2QfpFioTBH5t8YSU_US-vDItosqF1Iv4',
+      libraries: ['places', 'drawing', 'geometry']
     }),
     AppRoutingModule,
     BrowserModule,
