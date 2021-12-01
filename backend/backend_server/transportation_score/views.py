@@ -13,3 +13,4 @@ def getWalkScore(request, lat, lon, address):
     context = {
         "walkscore": data["walkscore"]
     }
+    return JsonResponse(context)
