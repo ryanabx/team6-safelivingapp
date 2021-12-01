@@ -29,6 +29,4 @@ urlpatterns = [
     path('api-token-auth/', obtain_jwt_token),
     path('api-token-refresh/', refresh_jwt_token),
     path('user/', include('user.urls')),
-    #path('boundaries/', include('city_boundaries.urls'))
-    path('boundaries/', include('boundaries.urls'))
 ]
