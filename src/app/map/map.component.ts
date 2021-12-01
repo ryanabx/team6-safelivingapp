@@ -164,7 +164,7 @@ export class MapComponent implements OnInit {
   }
 
   boundariesToPath(city: any, state: any) {
-    this.appService.getBoundaries(city, state, "United+States").subscribe(
+    this.appService.getBoundaries(city, state).subscribe(
       (data:any) => {
         this.testPaths = data.results;
       }
