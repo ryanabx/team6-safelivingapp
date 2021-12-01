@@ -18,7 +18,7 @@ export class MapComponent implements OnInit {
   latLongArray: any = [];
   cityNameArray: any = [];
   stateNameArray: any = [];
-  locations: any;
+  locations: any = [];
   radius: number;
   
   crimeScore: any;
@@ -200,8 +200,9 @@ export class MapComponent implements OnInit {
   ngOnInit(): void {
     this.route.queryParams
     .subscribe(params => {
-      this.lat = params['lat'] ? (parseFloat(params['lat']) ? parseFloat(params['lat']) : 0) : 0;
-      this.long = params['long'] ? (parseFloat(params['long']) ? parseFloat(params['long']) : 0) : 0;
+      // deprecated / depreciated
+      //this.lat = params['lat'] ? (parseFloat(params['lat']) ? parseFloat(params['lat']) : 0) : 0;
+      //this.long = params['long'] ? (parseFloat(params['long']) ? parseFloat(params['long']) : 0) : 0;
       
       this.inputAddr = params['addr']
       
@@ -211,11 +212,7 @@ export class MapComponent implements OnInit {
       this.cityNameArray = JSON.parse(params['city'])
       this.stateNameArray = JSON.parse(params['state'])
 
-      /*
-      if(params['lat'] != parseFloat(params['lat']) || params['long'] != parseFloat(params['long']))
-      {
-        this.router.navigate(['map'], {queryParams: {lat : this.lat, long : this.long}});
-      }*/
+      /* deprecated / depreciated
       console.log(this.lat + " : " + this.long)
       if(this.lat != 0 && this.long != 0){
         this.appService.getSafeLivingScoreAPI(this.long, this.lat, 2.0).subscribe(
@@ -225,33 +222,48 @@ export class MapComponent implements OnInit {
           }
         );
         console.log(this.crimeScore);
+      }*/
+
+      // create the location objects for each lat/long pair
+      // save their respective lat/long
+      // add location to the array
+      if (this.latLongArray != null) {
+        for (let i = 0; i < this.latLongArray.length; i+=2) {
+          let newLoc: Location = new Location()
+          console.log(this.latLongArray[i], this.latLongArray[i+1])
+          newLoc.setLatLong(this.latLongArray[i], this.latLongArray[i+1])
+          this.locations.push(newLoc)
+        }
       }
 
+      // set the respective city and state name to each location in locations array
+      if (this.cityNameArray != null || this.stateNameArray != null) {
+        for (let i = 0; i < this.locations.length; i++) {
+          this.locations[i].setCity(this.cityNameArray[i]);
+          this.locations[i].setState(this.stateNameArray[i]);
+        }
+      }
+      console.log("Locations initially created: " + this.locations)
+
       // if latLongArray is passed, find crimeScore for all the lat/long pairs in the array
-      // save to a crime score array (should be in order of searched locations)
+      // save the crimeScore to each location it belongs to, done inside the call, so asynchronicity is no longer a problem
       if (this.latLongArray != null) {
         let tempCSArray: any[] = []
-        for (let i = 0; i < this.latLongArray.length; i+=2) {
-          this.appService.getSafeLivingScoreAPI(this.latLongArray[i], this.latLongArray[i+1], 2.0).subscribe(
+        for (let i = 0; i < this.locations.length; i++) {
+          this.appService.getSafeLivingScoreAPI(this.locations[i].lat, this.locations[i].long, 2.0).subscribe(
             (data: any)=>{
               this.crimeScore = data["safe-living-score"];
               if(!isNaN(parseFloat(this.crimeScore))){
                 this.crimeScore = parseFloat((Math.round(this.crimeScore * 100) / 100).toFixed(2));
               }
-              tempCSArray.push(this.crimeScore);
+              this.locations[i].setCrimeScore(this.crimeScore);
+              this.crimeScoreArray.push(this.crimeScore);
             }
           );
         }
-        this.crimeScoreArray = tempCSArray
-        console.log(this.crimeScoreArray)
+        console.log(this.locations)
       }
 
-      // add new location object based on number of returned coords
-      let temp: any = []
-      for (let i = 0; i < this.latLongArray.length; i+=2) {
-        temp.push(new Location(this.latLongArray[i], this.latLongArray[i+1], this.crimeScoreArray[i/2], this.cityNameArray[i/2], this.stateNameArray[i/2]))
-      }
-      this.locations = temp
       console.log(this.locations)
       console.log(this.locations[0].lat)
       
@@ -261,12 +273,39 @@ export class MapComponent implements OnInit {
 
 export class Location {
 
-  constructor(
-    public lat: number,
-    public long: number,
-    public crimeScore: string,
-    public city: any,
-    public state: any) {
+  public lat: number = 0;
+  public long: number = 0;
+  public crimeScore: string = "";
+  public city: any;
+  public state: any;
+  public labelOptions: any = {
+    color: 'white',
+    fontFamily: '',
+    fontSize: '14px',
+    fontWeight: 'bold',
+    text: '?'
+  };
+  public testPaths: any = [];
 
+  constructor() {
+
+  }
+
+  setLatLong(lat: number, long: number) {
+    this.lat = lat;
+    this.long = long;
+  }
+
+  setCrimeScore(score: string) {
+    //this.labelOptions.text = score;
+    this.crimeScore = score;
+  }
+
+  setCity(city: any) {
+    this.city = city;
+  }
+
+  setState(state: any) {
+    this.state = state;
   }
 }
