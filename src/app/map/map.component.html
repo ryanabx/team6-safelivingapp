@@ -65,7 +65,7 @@
         <li>Gasoline Per Gallon: <b>${{location.costOfLiving.gas}}</b></li>
       </ul>
       <div *ngIf="inputAddr != null">
-        <br><button *ngFor= "let location of locations; let i=index" class="btn btn-primary" (click)="zillowRoute(i)">Find Houses In {{location.city}}</button>
+        <br><button class="btn btn-primary" (click)="zillowRoute(i)">Find Houses In {{location.city}}</button>
         <!--<a *ngFor="let link of zillowLinks; let i = index" href = {{link}}>[See houses in {{cityNameArray[i]}}]</a>-->
         <p style = "font-size: small">*Will take you off site to Zillow.com*</p>
       </div>
