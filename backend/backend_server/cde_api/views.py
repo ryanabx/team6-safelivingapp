@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.views.generic import TemplateView
 import requests
 from django.http import JsonResponse
 
@@ -19,12 +18,7 @@ def getStuff(request, agency, fromDate, toDate):
         return JsonResponse(return_value)
     key = 'nHym62MTPDELS0XgtAZLLw0fL3jNWoNvsY2kn315'
     url = f'https://api.usa.gov/crime/fbi/sapi//api/summarized/agencies/{agency}/offenses/{fromDate}/{toDate}?api_key={key}'
-    template_name = 'cdedata.html'
+    #url = f'https://api.usa.gov/crime/fbi/sapi/api/nibrs/offenses/agencies/{agency}?api_key={key}'
     r = requests.get(url)
     stuff = r.json()
-    context = {
-        'cdedata': r.json(),
-        'yed': 'yeaaaa' 
-    }
-    #return render(request, template_name, context)
     return JsonResponse(stuff)

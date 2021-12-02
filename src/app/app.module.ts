@@ -18,6 +18,7 @@ import { AppService } from './app.service';
 import { FormsModule } from '@angular/forms';
 import { UserService } from './user.service';
 import { CrimeapiComponent } from './crimeapi/crimeapi.component';
+import { UserBookmarksComponent } from './user-bookmarks/user-bookmarks.component';
 
 @NgModule({
   declarations: [
@@ -29,14 +30,16 @@ import { CrimeapiComponent } from './crimeapi/crimeapi.component';
     HomeComponent,
     PropertyViewerComponent,
     PropertyBrowserComponent,
-    CrimeapiComponent
+    CrimeapiComponent,
+    UserBookmarksComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     FormsModule,
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyD2QfpFioTBH5t8YSU_US-vDItosqF1Iv4'
+      apiKey: 'AIzaSyD2QfpFioTBH5t8YSU_US-vDItosqF1Iv4',
+      libraries: ['places', 'drawing', 'geometry']
     }),
     AppRoutingModule,
     BrowserModule,

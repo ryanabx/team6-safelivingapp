@@ -37,6 +37,7 @@ export class UserBookmarksComponent implements OnInit {
   constructor(private appService: AppService,
     private addrInputService: AddrInputService, 
     private router: Router,
+<<<<<<< HEAD
     private _userService: UserService) {
     // this._userService.username; <-- current logged-in user; null if none
     //this.bookmarks = this.appService.getBookmarks(this._userService.username);
@@ -44,6 +45,10 @@ export class UserBookmarksComponent implements OnInit {
       (data:any) => {
         this.bookmarks = data.results;
       })
+=======
+    public _userService: UserService) {
+    // this._userService.username; <-- current logged-in user; null if none
+>>>>>>> main
   }
 
   openBookmark(value: string) {

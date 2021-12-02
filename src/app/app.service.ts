@@ -22,24 +22,32 @@ export class AppService {
     return this.http.get(this.serverURL + 'geocoding/api/' + input + "/"); 
   }
 
-  getSafeLivingScoreAPI(lat: any, lon: any, radius: any){
-    return this.http.get(this.serverURL + "safelivingscore/api/" + lat + "/" + lon + "/" + radius + "/");
+  getSafeLivingScoreAPI(city: any, state: any){
+    return this.http.get(this.serverURL + "safelivingscore/api/" + city + "/" + state + "/");
   }
 
-  getCrimeScoreAPIByType(lat: any, lon: any, radius: any, crimeType: any){
-    return this.http.get(this.serverURL + "safelivingscore/api/" + lat + "/" + lon + "/" + radius + "/" + crimeType + "/");
+  getCrimeScoreAPIByType(city: any, state: any, crimeType: any){
+    return this.http.get(this.serverURL + "safelivingscore/api/" + city + "/" + state + "/" + crimeType + "/");
   }
 
   getCrimeAPI(ORI: any, fromDate: any, toDate: any){
-    return this.http.get(this.serverURL + "crimedata/api/" + ORI + "/" + fromDate + "/" + toDate);
+    return this.http.get(this.serverURL + "crimedata/api/" + ORI + "/" + fromDate + "/" + toDate + "/");
   }
 
   getAmenitiesAPI(lat: any, lon: any, radius: any){
-    return this.http.get(this.serverURL + "amenities/api/" + lat + "/" + lon + "/" + radius);
+    return this.http.get(this.serverURL + "amenities/api/" + lat + "/" + lon + "/" + radius + "/");
   }
 
   getWalkScoreAPI(lat: any, lon: any){
-    return this.http.get(this.serverURL + "transportation/api/walkscore/" + lat + "/" + lon);
+    return this.http.get(this.serverURL + "transportation/api/walkscore/" + lat + "/" + lon + "/");
+  }
+
+  getBoundaries(city: any, state: any) {
+    return this.http.get(this.serverURL + "boundaries/api/" + city + "/" + state + "/");
+  }
+
+  getCostOfLiving(city: any, state: any) {
+    return this.http.get(this.serverURL + "costofliving/api/" + city + "/" + state + "/");
   }
 
   getBookmarks(user: any) {
