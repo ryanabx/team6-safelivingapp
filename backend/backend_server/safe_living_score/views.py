@@ -152,7 +152,7 @@ def getScorebyORI(request, ORI, crime_type):
 
         for k in population_data:
             if(k[2] == stateCodes[state]):
-                if(cityName in k[0] and 'city' in k[0]):
+                if(f'{cityName} city' in k[0] or f'{cityName} village' in k[0]):
                     population = k[1]
         # for k in state_population_data:
         #     if(k[2] == stateCodes[state]):
