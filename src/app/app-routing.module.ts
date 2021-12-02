@@ -8,6 +8,7 @@ import { MapComponent } from './map/map.component';
 import { CrimeapiComponent } from './crimeapi/crimeapi.component';
 import { AboutComponent } from './about/about.component';
 import { ContactComponent } from './contact/contact.component';
+import { UserBookmarksComponent } from "./user-bookmarks/user-bookmarks.component";
 
 const routes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -19,6 +20,7 @@ const routes: Routes = [
     ]},
     { path: 'crimeapi', component: CrimeapiComponent},
     { path: 'about', component: AboutComponent },
+    { path: 'bookmarks', component: UserBookmarksComponent },
     { path: 'contact', component: ContactComponent }
 ]
 

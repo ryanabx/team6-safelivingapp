@@ -1,1 +1,7 @@
-<p>user-bookmarks works!</p>
+<ul class="list-group">
+    <li *ngFor="let bookmark of bookmarks; let i = index" class="list-group-item">
+      <button class="btn btn-info" (click)="openBookmark(bookmark.address)">
+          Go To: {{ bookmark.address }}
+      </button>
+    </li>
+</ul>
