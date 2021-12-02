@@ -18,6 +18,7 @@ import { AppService } from './app.service';
 import { FormsModule } from '@angular/forms';
 import { UserService } from './user.service';
 import { CrimeapiComponent } from './crimeapi/crimeapi.component';
+import { UserBookmarksComponent } from './user-bookmarks/user-bookmarks.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { CrimeapiComponent } from './crimeapi/crimeapi.component';
     HomeComponent,
     PropertyViewerComponent,
     PropertyBrowserComponent,
-    CrimeapiComponent
+    CrimeapiComponent,
+    UserBookmarksComponent
   ],
   imports: [
     BrowserModule,

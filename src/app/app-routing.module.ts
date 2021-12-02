@@ -17,7 +17,7 @@ const routes: Routes = [
         { path: '', component: PropertyBrowserComponent },
         { path: ':id', component: PropertyViewerComponent }
     ]},
-    {path: 'crimeapi', component: CrimeapiComponent},
+    { path: 'crimeapi', component: CrimeapiComponent},
     { path: 'about', component: AboutComponent },
     { path: 'contact', component: ContactComponent }
 ]
