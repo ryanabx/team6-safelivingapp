@@ -1,7 +1,7 @@
 <ul class="list-group">
     <li *ngFor="let bookmark of bookmarks; let i = index" class="list-group-item">
       <button class="btn btn-info" (click)="openBookmark(bookmark.address)">
-          Go To: {{ bookmark.address }}
+          Go To: {{ whatIsBookmark(i) }}
       </button>
     </li>
 </ul>

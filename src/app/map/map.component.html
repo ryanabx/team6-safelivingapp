@@ -13,6 +13,23 @@
 <div class="search-container">
   <button class="btn btn-primary" (click)="threeAddressTest()">Test for Three Addresses at a Time</button>
 </div>
+<!-- <ng-template *ngIf="this._userService.username != null"> -->
+  <ng-template [ngIf]="!this.bookmarked">
+    <div>
+      <button class="btn btn-success" (click)="addBookmark()">
+        Add Bookmark
+      </button>
+    </div>
+  </ng-template>
+  <ng-template [ngIf]="this.bookmarked">
+    <div>
+      <button class="btn btn-danger" (click)="delBookmark()">
+        Remove Bookmark
+      </button>
+    </div>
+  </ng-template>
+<!-- </ng-template> -->
+
 
 
 <!--
@@ -74,6 +91,7 @@
         <li>Average Apartment Rent Per Month Range: <b>${{location.costOfLiving.apartmentLow}} - ${{location.costOfLiving.apartmentHigh}}</b></li>
         <li>Gasoline Per Gallon: <b>${{location.costOfLiving.gas}}</b></li>
       </ul>
+
       <!--
       <ul>
         <li *ngFor="let city of cityNameArray; let i=index">{{city}}: {{crimeScoreArray[i]}}</li>
