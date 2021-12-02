@@ -54,9 +54,10 @@
         <li *ngFor="let city of cityNameArray; let i=index">{{city}}: {{crimeScoreArray[i]}}</li>
       </ul>
       <p style = "font-size: medium"> 
-        How do we get our safe living score? 
-        <br>The current method of getting a score for each area is to take the ratio of the crime per
-         capita of a city and the crime per capita of the state it resides in! 
+        What does the safe living score mean?
+        <br>We created the safe living score based off of crime in an area!
+        We factor in the crime per capita of a town compared to the national crime per capita.
+        A higher score is better!
       </p>
       <div *ngIf="inputAddr != null">
         <button *ngFor= "let location of locations; let i=index" class="btn btn-primary" (click)="zillowRoute(i)">Find Houses In {{location.city}}</button>
