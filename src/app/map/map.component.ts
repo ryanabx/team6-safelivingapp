@@ -280,6 +280,13 @@ export class MapComponent implements OnInit {
               console.log(data);
             }
           )
+
+          this.appService.getCostOfLiving(this.cityNameArray[i], this.stateNameArray[i]).subscribe(
+            (data: any) => {
+              this.locations[i].setCostOfLiving(data.prices);
+              console.log(data.prices);
+            }
+          )
         }
       }
       console.log("Locations initially created: " + this.locations)
@@ -314,9 +321,15 @@ export class Location {
 
   public lat: number = 0;
   public long: number = 0;
-  public crimeScore: string = "";
+  public crimeScore: string = "Loading... Please Wait :)";
   public city: any;
   public state: any;
+  public costOfLiving: any = {
+    salary: '',
+    apartmentLow: '',
+    apartmentHigh: '',
+    gas: ''
+  };
   public labelOptions: any = {
     color: 'white',
     fontFamily: '',
@@ -336,7 +349,7 @@ export class Location {
   }
 
   setCrimeScore(score: string) {
-    //this.labelOptions.text = score;
+    this.labelOptions.text = score;
     this.crimeScore = score;
   }
 
@@ -350,5 +363,13 @@ export class Location {
 
   setPath(path: any){
     this.testPaths = path;
+  }
+
+  setCostOfLiving(col: any) {
+    console.log(col[40].average_price)
+    this.costOfLiving.salary = parseFloat(col[40].average_price).toFixed(2).toString();
+    this.costOfLiving.apartmentLow = parseFloat(col[22].average_price).toFixed(2).toString();
+    this.costOfLiving.apartmentHigh = parseFloat(col[23].average_price).toFixed(2).toString();
+    this.costOfLiving.gas = parseFloat(col[14].average_price).toFixed(2).toString();
   }
 }

@@ -46,4 +46,8 @@ export class AppService {
     return this.http.get(this.serverURL + "boundaries/api/" + city + "/" + state + "/");
   }
 
+  getCostOfLiving(city: any, state: any) {
+    return this.http.get(this.serverURL + "costofliving/api/" + city + "/" + state + "/");
+  }
+
 }
