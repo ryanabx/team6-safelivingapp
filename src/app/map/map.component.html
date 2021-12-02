@@ -4,15 +4,12 @@
     <button class="btn btn-primary fa fa-search" (click)="sendInput(userInput.value)" type="button">Find</button> <!-- onclick = 'sendInput()' -->
     <button *ngIf="inputAddr != null" class="btn btn-primary fa fa-search" (click)="addToInput(userInput.value)" type="button">Add to Search</button>
 </div>
-<div *ngIf="inputAddr != null" style = "text-align:center">
-  <!--<h1>
-    Showing "{{inputAddr}}"
-  </h1>-->
-</div>
 
-<div class="search-container">
+<!--<div class="search-container">
   <button class="btn btn-primary" (click)="threeAddressTest()">Test for Three Addresses at a Time</button>
-</div>
+</div>-->
+
+
 <!--
 <div class="search-container">
   <button class="btn btn-primary" (click)="reveal()">Show Me in Console</button>
@@ -24,9 +21,10 @@
       [label]="location.labelOptions">
       <agm-info-window>
         <pre>
-          {{locations[i].city}}, {{locations[i].state}}
+        {{locations[i].city}}, {{locations[i].state}}
         CrimeScore: {{locations[i].crimeScore}}
-        </pre>
+      </pre>
+          
       </agm-info-window>
 
     </agm-marker>
@@ -39,30 +37,43 @@
 
 
 </agm-map>
+
 </div>
 
+
 <div class = right>
-  <div class = jumbotron>
+  <div *ngFor="let location of locations; let i=index" class = jumbotron>
     <div *ngIf="inputAddr != null">
-      <h1 style = "font-size:xx-large">
-        Showing "{{inputAddr}}"
-      </h1>
       <h2>
-        <br>The safe living score for this area is: <b>{{crimeScore}}</b>
+        <b>{{location.city}}, {{location.state}}</b>
       </h2>
-      <ul>
-        <li *ngFor="let city of cityNameArray; let i=index">{{city}}: {{crimeScoreArray[i]}}</li>
-      </ul>
+      <h2>
+        <br>The safe living score for this area is: <b>{{location.crimeScore}}</b>
+      </h2>
       <p style = "font-size: medium"> 
-        How do we get our safe living score? 
-        <br>The current method of getting a score for each area is to take the ratio of the crime per
-         capita of a city and the crime per capita of the state it resides in! 
+        What does the safe living score mean?
+        <br>We created the safe living score based off of crime in an area!
+        We factor in the crime per capita of a town compared to the national crime per capita.
+        A higher score is better!
       </p>
+      <h2 style="text-align:center">
+        Cost of Living Information:
+      </h2>
+      <ul style="text-align:left">
+        <li>Average Monthly Net Salary (After Tax): <b>${{location.costOfLiving.salary}}</b></li>
+        <li>Average Apartment Rent Per Month Range: <b>${{location.costOfLiving.apartmentLow}} - ${{location.costOfLiving.apartmentHigh}}</b></li>
+        <li>Gasoline Per Gallon: <b>${{location.costOfLiving.gas}}</b></li>
+      </ul>
       <div *ngIf="inputAddr != null">
-        <button *ngFor= "let location of locations; let i=index" class="btn btn-primary" (click)="zillowRoute(i)">Find Houses In {{location.city}}</button>
+        <br><button *ngFor= "let location of locations; let i=index" class="btn btn-primary" (click)="zillowRoute(i)">Find Houses In {{location.city}}</button>
         <!--<a *ngFor="let link of zillowLinks; let i = index" href = {{link}}>[See houses in {{cityNameArray[i]}}]</a>-->
         <p style = "font-size: small">*Will take you off site to Zillow.com*</p>
       </div>
+      <!--
+      <ul>
+        <li *ngFor="let city of cityNameArray; let i=index">{{city}}: {{crimeScoreArray[i]}}</li>
+      </ul>
+      -->
     
      <!--<h1>
         County-wide Economic Stats
