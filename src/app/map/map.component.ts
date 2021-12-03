@@ -98,27 +98,25 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   amIBookmarked(bookmarks: any): boolean {
     let addr = this.inputAddr;
-    var bookmark: any;
-    for(bookmark in bookmarks)
+    for(let i = 0; i < bookmarks.length; i++)
     {
-      console.log(bookmark.address + " : " + addr + " = " + (bookmark.address == addr));
+      let bookmark = bookmarks[i];
       if(bookmark.address == addr) {
         this.bookmarked = true;
         return true;
       }
     }
-    // console.log("false");
     this.bookmarked = false;
     return false;
   }
 
   addBookmark() {
-    this.appService.addBookmark("user1", this.inputAddr).subscribe();
+    this.appService.addBookmark("johndoe", this.inputAddr).subscribe();
     this.bookmarked = !this.bookmarked;
   }
 
   delBookmark() {
-    this.appService.delBookmark("user1", this.inputAddr).subscribe();
+    this.appService.delBookmark("johndoe", this.inputAddr).subscribe();
     this.bookmarked = !this.bookmarked;
   }
 
@@ -255,7 +253,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   getBookmarks() {
-    this.appService.getBookmarks("user1").subscribe(
+    this.appService.getBookmarks("johndoe").subscribe(
       (data: any) => {
         this.amIBookmarked(data);
       });

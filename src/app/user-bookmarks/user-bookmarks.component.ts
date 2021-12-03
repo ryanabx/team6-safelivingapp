@@ -41,7 +41,7 @@ export class UserBookmarksComponent implements OnInit {
     private _userService: UserService) {
     // this._userService.username; <-- current logged-in user; null if none
     //this.bookmarks = this.appService.getBookmarks(this._userService.username);
-    this.appService.getBookmarks("user1").subscribe(
+    this.appService.getBookmarks("johndoe").subscribe(
       (data:any) => {
         this.bookmarks = data;
         // console.log(data);
