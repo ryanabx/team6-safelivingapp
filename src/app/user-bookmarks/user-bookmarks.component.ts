@@ -42,7 +42,7 @@ export class UserBookmarksComponent implements OnInit {
     //this.bookmarks = this.appService.getBookmarks(this._userService.username);
     this.appService.getBookmarks(this._userService.username).subscribe(
       (data:any) => {
-        this.bookmarks = data.results;
+        this.bookmarks = data;
       })
   }
 

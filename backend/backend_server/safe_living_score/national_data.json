@@ -1,0 +1,25 @@
+{
+  "results" : [ {
+    "state_id" : null,
+    "state_abbr" : null,
+    "year" : 2020,
+    "population" : 329484123,
+    "violent_crime" : 1313105,
+    "homicide" : 21570,
+    "rape_legacy" : null,
+    "rape_revised" : 126430,
+    "robbery" : 243600,
+    "aggravated_assault" : 921505,
+    "property_crime" : 6452038,
+    "burglary" : 1035314,
+    "larceny" : 4606324,
+    "motor_vehicle_theft" : 810400,
+    "arson" : 43602
+  } ],
+  "pagination" : {
+    "count" : 1,
+    "page" : 0,
+    "pages" : 1,
+    "per_page" : 0
+  }
+}
