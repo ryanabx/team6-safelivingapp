@@ -57,7 +57,8 @@
 
 
 <div class = right>
-  <div *ngFor="let location of locations; let i=index" class = jumbotron>
+  <div class = "jumbotron">
+  <div *ngFor="let location of locations; let i=index">
     <div *ngIf="inputAddr != null">
       <h2>
         <b>{{location.city}}, {{location.state}}</b>
@@ -100,6 +101,7 @@
         <li>{{censusPovRate}}% poverty rate</li>
     </ul>-->
     </div>
+  </div>
   </div>
 </div>
 
