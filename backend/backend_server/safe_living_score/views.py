@@ -158,7 +158,7 @@ def getScore(request, city, state, crime_type = "all"):
 
     for k in population_data:
         if(k[2] == stateCodes[state]):
-            if(f'{city_name} city' in k[0] or f'{city_name} village' in k[0]):
+            if(k[0].find(f'{city_name} city') == 0 or k[0].find(f'{city_name} village') == 0):
                 population = int(k[1])
     
     if population == -1:
@@ -170,7 +170,7 @@ def getScore(request, city, state, crime_type = "all"):
             if k[2] == stateCodes[state]:
                 for k in population_data:
                     if(k[2] == stateCodes[state]):
-                        if(f'{city_name} city' in k[0] or f'{city_name} village' in k[0]):
+                        if(k[0].find(f'{city_name} city') == 0 or k[0].find(f'{city_name} village')):
                             population = int(k[1])
     
     
@@ -180,6 +180,8 @@ def getScore(request, city, state, crime_type = "all"):
         }
     else:
         nat_pop = 329484123
+
+        print(f'{city_name}: {population}')
 
         f = open('./safe_living_score/national_data.json')
         national_data = json.load(f)
