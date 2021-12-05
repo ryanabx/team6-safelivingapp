@@ -8,7 +8,7 @@
 <!-- <div class="search-container">
   <button class="btn btn-primary" (click)="threeAddressTest()">Test for Three Addresses at a Time</button>
 </div> -->
-<!-- <ng-template *ngIf="this._userService.username != null"> -->
+<div *ngIf="this._userService.username != null">
   <ng-template [ngIf]="!this.bookmarked">
     <div>
       <button class="btn btn-success" (click)="addBookmark()">
@@ -23,7 +23,7 @@
       </button>
     </div>
   </ng-template>
-<!-- </ng-template> -->
+</div>
 
 <!--
 <div class="search-container">

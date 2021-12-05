@@ -58,4 +58,8 @@ export class HomeComponent implements OnInit {
     console.log(this.inputAddr)
   }
 
+  sendToContact(): void {
+    this.router.navigate(['contact'])
+  }
+
 }

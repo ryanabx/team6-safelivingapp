@@ -56,7 +56,7 @@ export class UserService {
     return this.http.get("http://localhost:8000/user/change_password/" + username + "/" + password + "/" + newpassword + "/");
   }
 
-  public register(username: string, email:string, password: string) {
+  public register(email:string, username: string, password: string) {
     return this.http.get("http://localhost:8000/user/new_user/" + username + "/" + email + "/" + password + "/");
   }
  

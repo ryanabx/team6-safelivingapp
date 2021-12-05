@@ -111,12 +111,12 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   addBookmark() {
-    this.appService.addBookmark("johndoe", this.inputAddr).subscribe();
+    this.appService.addBookmark(this._userService.username, this.inputAddr).subscribe();
     this.bookmarked = !this.bookmarked;
   }
 
   delBookmark() {
-    this.appService.delBookmark("johndoe", this.inputAddr).subscribe();
+    this.appService.delBookmark(this._userService.username, this.inputAddr).subscribe();
     this.bookmarked = !this.bookmarked;
   }
 
@@ -253,7 +253,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   getBookmarks() {
-    this.appService.getBookmarks("johndoe").subscribe(
+    this.appService.getBookmarks(this._userService.username).subscribe(
       (data: any) => {
         this.amIBookmarked(data);
       });
