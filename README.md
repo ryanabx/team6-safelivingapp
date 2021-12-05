@@ -17,7 +17,7 @@ To build the software, run `ng serve`. Add `--open` at the end to open in the de
 1. Ensure that Python 3.10 is installed.
 2. Clone the repository to a local directory.
 3. In a shell or command line, navigate to the "backend" directory and create a virtual python environment inside of it.
-> **_EXAMPLES:_** For Powershell users: `py -m venv venv`
+> **_EXAMPLES:_** For Powershell users: `py -m venv venv` For MacOS users install virtualenv using `python -m pip install virtualenv` and then use `python -m virtualenv venv`
 4. Activate the environment by running the activate script inside of venv/Scripts.
 > **_EXAMPLES:_** Example for VSCode with built in Powershell terminal: `& './venv/Scripts/Activate.ps1'`
 5. Set your preferred Python interpreter to be the one inside of venv/Scripts.
