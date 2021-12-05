@@ -152,9 +152,7 @@ def getScore(request, city, state, crime_type = "all"):
 
     
 
-    for d in {" city", " City", " village", " Village"}:
-        if(d in city_name):
-            city_name = city_name[0:city_name.find(d)]
+    
     
     population = -1
 
@@ -162,6 +160,19 @@ def getScore(request, city, state, crime_type = "all"):
         if(k[2] == stateCodes[state]):
             if(f'{city_name} city' in k[0] or f'{city_name} village' in k[0]):
                 population = int(k[1])
+    
+    if population == -1:
+        for d in {" city", " City", " village", " Village"}:
+            if(d in city_name):
+                city_name = city_name[0:city_name.find(d)]
+        
+        for k in population_data:
+            if k[2] == stateCodes[state]:
+                for k in population_data:
+                    if(k[2] == stateCodes[state]):
+                        if(f'{city_name} city' in k[0] or f'{city_name} village' in k[0]):
+                            population = int(k[1])
+    
     
     if population == -1:
         context = {
