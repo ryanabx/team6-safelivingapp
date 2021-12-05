@@ -12,8 +12,8 @@
         <p class="lead mb-5">A service that helps you find the best and safest place to live.</p>
 
         <form class="form-inline justify-content-center mb-5">
-          <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-          <button class="btn my-2 my-sm-0" type="submit">Search »</button>
+          <input class="form-control mr-sm-2" type="search" placeholder="Search [City, State]" aria-label="Search" id = "userInput" #userInput>
+          <button class="btn btn-primary fa fa-search" (click)="sendInput(userInput.value)" type="button">Find</button>
         </form>
       </div>
 

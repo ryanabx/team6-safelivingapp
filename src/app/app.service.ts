@@ -50,4 +50,15 @@ export class AppService {
     return this.http.get(this.serverURL + "costofliving/api/" + city + "/" + state + "/");
   }
 
+  getBookmarks(user: any) {
+    return this.http.get(this.serverURL + "user/api/get_bookmarks/" + user + "/");
+  }
+
+  addBookmark(user: any, address: any) {
+    return this.http.get(this.serverURL + "user/api/add_bookmark/" + user + "/" + address + "/");
+  }
+
+  delBookmark(user: any, address: any) {
+    return this.http.get(this.serverURL + "user/api/del_bookmark/" + user + "/" + address + "/");
+  }
 }

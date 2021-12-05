@@ -1,10 +1,11 @@
-import { Component, Input, OnInit, SystemJsNgModuleLoader } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit, SystemJsNgModuleLoader } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { AddrInputService } from '../addr-input.service';
 import { AppService } from '../app.service';
 
 import { MapsAPILoader } from '@agm/core';
 import { HttpClient } from '@angular/common/http';
+import { UserService } from '../user.service';
 //import { stringify } from 'querystring';
 
 @Component({
@@ -12,7 +13,7 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css']
 })
-export class MapComponent implements OnInit {
+export class MapComponent implements AfterViewInit, OnInit {
   lat: number;
   long: number;
   latLongArray: any = [];
@@ -20,6 +21,8 @@ export class MapComponent implements OnInit {
   stateNameArray: any = [];
   locations: any = [];
   radius: number;
+
+  bookmarked: boolean = false;
   
   crimeScore: any;
   crimeScoreArray: any = [];
@@ -33,9 +36,9 @@ export class MapComponent implements OnInit {
   county: any;
   city: any;
 
-  weatherApiKey: any = "2883471b37ffc685d279ad06d302d7f5"
+  weatherApiKey: any = "2883471b37ffc685d279ad06d302d7f5";
   weatherApiFile: any;
-  weatherData: any = []
+  weatherData: any = [];
 
   censusEconDataFile: any;
   censusEconData: any;
@@ -67,7 +70,8 @@ export class MapComponent implements OnInit {
     private appService: AppService,
     private addrInputService: AddrInputService, 
     private router: Router,
-    private http: HttpClient) {
+    private http: HttpClient,
+    public _userService: UserService) {
       this.router.routeReuseStrategy.shouldReuseRoute = () => false;
     // Dietler Commons: 36.1522971, -95.9481072
     this.lat = 0;
@@ -90,6 +94,30 @@ export class MapComponent implements OnInit {
       this.censusPovCount = this.censusEconData[2]
       this.censusPovRate = this.censusEconData[3]
     });
+  }
+
+  amIBookmarked(bookmarks: any): boolean {
+    let addr = this.inputAddr;
+    for(let i = 0; i < bookmarks.length; i++)
+    {
+      let bookmark = bookmarks[i];
+      if(bookmark.address == addr) {
+        this.bookmarked = true;
+        return true;
+      }
+    }
+    this.bookmarked = false;
+    return false;
+  }
+
+  addBookmark() {
+    this.appService.addBookmark("johndoe", this.inputAddr).subscribe();
+    this.bookmarked = !this.bookmarked;
+  }
+
+  delBookmark() {
+    this.appService.delBookmark("johndoe", this.inputAddr).subscribe();
+    this.bookmarked = !this.bookmarked;
   }
 
   sendInput(value: string) {
@@ -224,6 +252,16 @@ export class MapComponent implements OnInit {
 
   }
 
+  getBookmarks() {
+    this.appService.getBookmarks("johndoe").subscribe(
+      (data: any) => {
+        this.amIBookmarked(data);
+      });
+  }
+
+  ngAfterViewInit(): void {
+    this.getBookmarks();
+  }
 
   ngOnInit(): void {
     this.route.queryParams

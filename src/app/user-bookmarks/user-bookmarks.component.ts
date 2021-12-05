@@ -22,23 +22,34 @@ export class UserBookmarksComponent implements OnInit {
   crimeScore: string | undefined;
   stateNameArray: any = [];
 
-  bookmarks = [
-    {
-      address: "Tulsa, OK"
-    }, 
-    {
-      address: "Broken Arrow, OK"
-    },
-    {
-      address: "Kansas, OK"
-    },
-  ];
+  bookmarks: any = []
+  // bookmarks = [
+  //   {
+  //     address: "Tulsa, OK"
+  //   }, 
+  //   {
+  //     address: "Broken Arrow, OK"
+  //   },
+  //   {
+  //     address: "Kansas, OK"
+  //   },
+  // ];
 
   constructor(private appService: AppService,
     private addrInputService: AddrInputService, 
     private router: Router,
-    public _userService: UserService) {
+    private _userService: UserService) {
     // this._userService.username; <-- current logged-in user; null if none
+    //this.bookmarks = this.appService.getBookmarks(this._userService.username);
+    this.appService.getBookmarks("johndoe").subscribe(
+      (data:any) => {
+        this.bookmarks = data;
+        // console.log(data);
+      })
+  }
+
+  whatIsBookmark(value: number) {
+    return this.bookmarks[value] ? this.bookmarks[value].address : null;
   }
 
   openBookmark(value: string) {

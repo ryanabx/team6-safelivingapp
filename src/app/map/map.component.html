@@ -5,10 +5,25 @@
     <button *ngIf="inputAddr != null" class="btn btn-primary fa fa-search" (click)="addToInput(userInput.value)" type="button">Add to Search</button>
 </div>
 
-<!--<div class="search-container">
+<!-- <div class="search-container">
   <button class="btn btn-primary" (click)="threeAddressTest()">Test for Three Addresses at a Time</button>
-</div>-->
-
+</div> -->
+<!-- <ng-template *ngIf="this._userService.username != null"> -->
+  <ng-template [ngIf]="!this.bookmarked">
+    <div>
+      <button class="btn btn-success" (click)="addBookmark()">
+        Add Bookmark
+      </button>
+    </div>
+  </ng-template>
+  <ng-template [ngIf]="this.bookmarked">
+    <div>
+      <button class="btn btn-danger" (click)="delBookmark()">
+        Remove Bookmark
+      </button>
+    </div>
+  </ng-template>
+<!-- </ng-template> -->
 
 <!--
 <div class="search-container">
@@ -40,9 +55,9 @@
 
 </div>
 
-
+<div>
 <div class = right>
-  <div *ngFor="let location of locations; let i=index" class = jumbotron>
+  <div *ngFor="let location of locations; let i=index" class = "jumbotron">
     <div *ngIf="inputAddr != null">
       <h2>
         <b>{{location.city}}, {{location.state}}</b>
@@ -65,7 +80,7 @@
         <li>Gasoline Per Gallon: <b>${{location.costOfLiving.gas}}</b></li>
       </ul>
       <div *ngIf="inputAddr != null">
-        <br><button *ngFor= "let location of locations; let i=index" class="btn btn-primary" (click)="zillowRoute(i)">Find Houses In {{location.city}}</button>
+        <br><button class="btn btn-primary" (click)="zillowRoute(i)">Find Houses In {{location.city}}</button>
         <!--<a *ngFor="let link of zillowLinks; let i = index" href = {{link}}>[See houses in {{cityNameArray[i]}}]</a>-->
         <p style = "font-size: small">*Will take you off site to Zillow.com*</p>
       </div>
@@ -86,6 +101,7 @@
     </ul>-->
     </div>
   </div>
+</div>
 </div>
 
 <!--

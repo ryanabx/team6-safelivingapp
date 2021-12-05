@@ -25,6 +25,9 @@ To build the software, run `ng serve`. Add `--open` at the end to open in the de
 7. Make sure to read tutorials for how to do things in Django!
 
 ## Build/Test Software (Django Backend)
+1. Make sure you are in the virtual environment. You will see a (venv) in your shell if you are in the virtual environment.
+> **_NOTE:_** To enter a virtual environment: For Windows from powershell `venv/Scripts/Activate.ps1`. For MacOS from backend directory: `source venv/bin/activate`
+2. Go to backend/backend_server directory and use the build software command below.
 To build the software, run `python manage.py runserver` in the backend/backend_server directory and navigate to `localhost:8000`.
 
 ## Using/Modifying Searching Locations and Information Related to a Location

@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'cde_api',
     'loc_to_addr',
-    'user',
+    'user.apps.UserConfig',
 ]
 
 MIDDLEWARE = [
