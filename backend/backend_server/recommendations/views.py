@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from safe_living_score.views import getScore
+#from loc_to_addr.views import getGeocoding
 
 
 
@@ -44,10 +46,26 @@ def getCoordinates(city):
 # GIVEN --> POPULATION OPTION (SMALL/MED/LARGE/ETC.)
 # RETURN --> POPULATION MIN/MAX TUPLE
 
-
+# UTLIZES NCES CLASSIFICATIONS
+# FORMAT: (>= Lower Bound, < Upper Bound)
 
 def getPopulationScale(populationDescriptor):
-    return -1
+    
+    match populationDescriptor:
+        
+        case "town":
+            return( (0, 50_000) )
+        
+        case "small":
+            return( (50_001, 100_000) )
+        
+        case "medium":
+            return( (100_000, 250_000) )
+        
+        case "large":
+            return( (250,000, float("inf")) )
+
+    return (-1, -1)
 
 
 
@@ -79,5 +97,3 @@ def getCitiesOfPopulationInRange(coordinates, populationRange, radius):
 def getCrimeScore(cityName):
     return -1
 
-
-# Create your views here.
