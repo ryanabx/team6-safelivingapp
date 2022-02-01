@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from safe_living_score.views import getScore
-#from loc_to_addr.views import getGeocoding
+from loc_to_addr.views import getGeocoding
 
 
 
@@ -32,16 +32,16 @@ def recommendCity(initialCity, radiusValue, populationPreference):
 
 
 
-# TODO: Should get long+lat of city, calling API
+# Get long+lat of city, calling API
 
-# GIVEN --> CITY NAME
+# GIVEN --> CITY NAME AND STATE NAME
 # RETURN --> LONG/LAT TUPLE
 
-def getCoordinates(city):
-    return -1
+def getCoordinates(city, state):
+    return getGeocoding("" + city + ", " + state)
 
 
-# TODO: Should get min and max of population given descriptor
+# Get min and max of population given descriptor
 
 # GIVEN --> POPULATION OPTION (SMALL/MED/LARGE/ETC.)
 # RETURN --> POPULATION MIN/MAX TUPLE
@@ -76,7 +76,7 @@ def getPopulationScale(populationDescriptor):
 # RETURN --> MAPQUEST RADIUS SCALE
 
 def getRadius(radiusValue):
-    return -1
+    return radiusValue
 
 
 # TODO: Should get cities within the radius that fits the population criteria
@@ -89,11 +89,11 @@ def getCitiesOfPopulationInRange(coordinates, populationRange, radius):
 
 
 
-# TODO: Should get Score of city, calling another app (somehow)
+# Get Score of city, calling another app (somehow)
 
-# GIVEN --> CITY NAME
+# GIVEN --> CITY NAME AND STATE NAME
 # RETURN --> CALUCLATED CRIME SCORE
 
-def getCrimeScore(cityName):
-    return -1
+def getCrimeScore(city, state):
+    return getScore(city, state)
 
