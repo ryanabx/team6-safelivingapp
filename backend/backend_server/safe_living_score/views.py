@@ -98,6 +98,10 @@ relevant_crimes_nat = {
 }
 
 def getScore(request, city, state, crime_type = "all"):
+    
+    return JsonResponse( score(city, state, crime_type) )
+
+def score(city, state, crime_type = "all"):
     geocoding_key = 'c7qYTGBjRaRkGF7ucqOvpNy6L1Q857oD'
     geocoding_url = f'http://www.mapquestapi.com/geocoding/v1/address?key={geocoding_key}&location={city}, {state}'
     geocoding_data = requests.get(geocoding_url).json()
@@ -139,7 +143,8 @@ def getScore(request, city, state, crime_type = "all"):
         context = {
             "safe-living-score": "There was a problem getting a score. No cities in range."
         }
-        return JsonResponse(context)
+        #return JsonResponse(context)
+        return context
     
     crime_score = 0
     for p in scores:
@@ -202,7 +207,9 @@ def getScore(request, city, state, crime_type = "all"):
         context = {
             "safe-living-score": crime_score
         }
-    return JsonResponse(context)
+
+    #return JsonResponse(context)
+    return context
 
 def getScorebyORI2(ORI, crime_type, city_name, state):
     key = 'nHym62MTPDELS0XgtAZLLw0fL3jNWoNvsY2kn315'

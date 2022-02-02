@@ -1,7 +1,7 @@
 from math import sqrt
 from django.shortcuts import render
-from safe_living_score.views import getScore
-from loc_to_addr.views import getGeocoding
+from safe_living_score.views import score
+from loc_to_addr.views import geocoding
 from django.http import JsonResponse
 
 import csv
@@ -18,7 +18,7 @@ import requests
 
 def recommendCity(request, initialAddress, radiusValue, populationPreference="any"):
 
-    startingCoordinates = getCoordinates(request, initialAddress)
+    startingCoordinates = getCoordinates(initialAddress)
     populationScale = getPopulationScale(populationPreference)
     radius = getRadius(radiusValue)
 
@@ -28,13 +28,19 @@ def recommendCity(request, initialAddress, radiusValue, populationPreference="an
     recommendedCity = None
 
     for city in cities: # Basic min/max calculation, but works (for now)
-        curScore = getCrimeScore(city["city"], city["state"])
+        print(city)
+        curScore = getCrimeScore(city["city"], city["state_id"])
+        print("curScore = ", curScore)
         
         if curScore > maxCrimeScore:
             maxCrimeScore = curScore 
             recommendedCity = city
+
+    context = {
+        "recommendation" : ( "" + recommendedCity["city"] + ", " + recommendedCity["state"] )
+    }
     
-    return ("" + recommendedCity["city"] + ", " + recommendedCity["state"])
+    return JsonResponse(context)
 
 
 
@@ -44,26 +50,25 @@ def recommendCity(request, initialAddress, radiusValue, populationPreference="an
 # GIVEN --> CITY NAME AND STATE NAME
 # RETURN --> LONG/LAT TUPLE
 
-def getCoordinates(request, address):
+def getCoordinates(address):
     #mapQuestDict = json.load( getGeocoding(request, address) )
     #response = requests.get( getGeocoding(request, address) )
     #response = getGeocoding(request, address)
+    response = geocoding(address)
+    #mapQuestDict = json.loads(response)
     #mapQuestDict = json.loads( response.json() )
-    #data = response["results"][0]["locations"][0]
+    data = response["results"][0]["locations"][0]["latLng"]
+
+    latitude = data["lat"]
+    longitude = data["lng"]
+
+    print(latitude, " ", longitude)
+
+    return( (float(latitude), float(longitude)) )
+
+    
+
     return -1
-
-
-
-  #getCoords() {
-   # this.appService.callGeoApi(this.addrInputService.getAddr()).subscribe(
- #     (data: any) => {this.apiFile = data
-  #    this.locationData = this.apiFile.results[0].locations[0]
-  #    this.latitude = this.locationData.latLng.lat
- #     this.longitude = this.locationData.latLng.lng
- #     },
-  #    (err: any) => console.error(err),
- #     () => console.log('done loading coords : ' + this.addrInputService.getAddr() + " : " + this.apiFile)
-
 
 
 # Get min and max of population given descriptor
@@ -110,7 +115,7 @@ def populationInRange(population, range):
 # RETURN --> MAPQUEST RADIUS SCALE
 
 def getRadius(radiusValue):
-    return int(radiusValue) * 1000
+    return int(radiusValue) / 1000
 
 
 # TODO: Should get cities within the radius that fits the population criteria
@@ -121,14 +126,14 @@ def getRadius(radiusValue):
 def getCitiesOfPopulationInRange(coordinates, populationRange, radius):
     #cityDictionaryAll = csv.DictReader( open("us_cities.csv") )
     cityDictionaryAll = csv.DictReader( open("./recommendations/us_cities.csv") )
-    iLong = coordinates[0]
-    iLat = coordinates[1]
+    iLong = coordinates[1]
+    iLat = coordinates[0]
 
     cityDictionaryFinal = []
 
     for city in cityDictionaryAll:
-        longDif = abs(int(city["lng"]) - iLong)
-        latDif = abs(int(city["lat"]) - iLat)
+        longDif = abs( float(city["lng"]) - iLong )
+        latDif = abs( float(city["lat"]) - iLat )
 
         if(longDif <= radius and latDif <= radius):
             distance = sqrt( longDif**2 + latDif**2 )
@@ -146,5 +151,16 @@ def getCitiesOfPopulationInRange(coordinates, populationRange, radius):
 # RETURN --> CALUCLATED CRIME SCORE
 
 def getCrimeScore(city, state):
-    return getScore(city, state)
+
+    crimeScore = score(city, state)["safe-living-score"] 
+
+
+    #url = ("https://localhost:8000/safelivingscore/api/", city, "/", state, "/")192.168.2.68
+    #url = ("http://192.168.137.1:8000/safelivingscore/api/", city, "/", state, "/")
+    #crimeScore = json.loads( requests.get(url) )
+
+    if(crimeScore == "There was a problem getting a score. No cities in range."):
+        return -2
+
+    return float(crimeScore)
 
