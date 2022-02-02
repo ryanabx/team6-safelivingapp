@@ -75,7 +75,7 @@ def getPopulationScale(populationDescriptor):
     return (-1, -1)
 
 def populationInRange(population, range):
-    if( int(population) >= range[0] and int(population) < range[1]):
+    if( int(population) >= range[0] and int(population) < range[1] ):
         return True
 
     return False
@@ -105,11 +105,11 @@ def getCitiesOfPopulationInRange(coordinates, populationRange, radius):
     cityDictionaryFinal = []
 
     for city in cityDictionaryAll:
-        long = city["lng"]
-        lat = city["lat"]
+        longDif = abs(int(city["lng"]) - iLong)
+        latDif = abs(int(city["lat"]) - iLat)
 
-        if(long <= radius and lat <= radius):
-            distance = sqrt( (iLong - long)**2 + (iLat - lat)**2 )
+        if(longDif <= radius and latDif <= radius):
+            distance = sqrt( longDif**2 + latDif**2 )
             
             if( distance <= radius and populationInRange(city["population"], populationRange) ):
                 cityDictionaryFinal.append(city)
