@@ -14,6 +14,12 @@ import { UserService } from '../user.service';
   styleUrls: ['./map.component.css']
 })
 export class MapComponent implements AfterViewInit, OnInit {
+
+  //star rating
+  max = 5;
+  rate = 2;
+  isReadonly = false;
+  
   lat: number;
   long: number;
   latLongArray: any = [];

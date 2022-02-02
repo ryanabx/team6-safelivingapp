@@ -21,6 +21,7 @@ import { CrimeapiComponent } from './crimeapi/crimeapi.component';
 import { UserBookmarksComponent } from './user-bookmarks/user-bookmarks.component';
 import { CreateComponent } from './create/create.component';
 import { LoginComponent } from './login/login.component';
+import {RatingModule} from 'ngx-bootstrap/rating'
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { LoginComponent } from './login/login.component';
   imports: [
     BrowserModule,
     HttpClientModule,
+    RatingModule.forRoot(),
     FormsModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyD2QfpFioTBH5t8YSU_US-vDItosqF1Iv4',

@@ -84,6 +84,32 @@
         <!--<a *ngFor="let link of zillowLinks; let i = index" href = {{link}}>[See houses in {{cityNameArray[i]}}]</a>-->
         <p style = "font-size: small">*Will take you off site to Zillow.com*</p>
       </div>
+      
+      <!-- star rating -->
+      <div class="col-md-4 mt-4">
+        <h2>Rate This City</h2>
+        <rating  style="color: #0275d8;font-size: 40px;" [(ngModel)]="rate" [max]="max" [readonly]="isReadonly">
+        </rating>
+
+        <div class="card">
+          <pre class="card-block card-header" style="margin:15px 0;">
+            Rate: <b>{{rate}}</b>
+          </pre>
+        </div>
+
+      </div>
+
+
+      <!-- Comment Section -->
+      <div class="row justify-content-center mt-3">
+        <label for="exampleFormControlTextarea1" class="text-center">Comments</label>
+      </div>
+      <div class="row justify-content-center mt-1" style="margin-right: 35%; margin-left: 35%;">
+      <textarea class="form-check" id="exampleFormControlTextarea1" rows="8" placeholder="Type here..." style="min-width:100%; font-family:  Georgia, serif; font-weight:  bold; margin-bottom: 2%;"></textarea>
+      </div>
+      <div class="row justify-content-center" style="margin-right: 40%; margin-left: 40%;">
+        <button type="submit" class="btn mt-3" style="min-width:100%; background-color: #FFD580;">Submit</button>
+      </div>
       <!--
       <ul>
         <li *ngFor="let city of cityNameArray; let i=index">{{city}}: {{crimeScoreArray[i]}}</li>
