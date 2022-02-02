@@ -2,8 +2,11 @@ from math import sqrt
 from django.shortcuts import render
 from safe_living_score.views import getScore
 from loc_to_addr.views import getGeocoding
+from django.http import JsonResponse
 
 import csv
+import json
+import requests
 #csv.DictReader(file)
 
 
@@ -15,7 +18,7 @@ import csv
 
 def recommendCity(request, initialAddress, radiusValue, populationPreference="any"):
 
-    startingCoordinates = getCoordinates(initialAddress)
+    startingCoordinates = getCoordinates(request, initialAddress)
     populationScale = getPopulationScale(populationPreference)
     radius = getRadius(radiusValue)
 
@@ -36,13 +39,31 @@ def recommendCity(request, initialAddress, radiusValue, populationPreference="an
 
 
 
-# Get long+lat of city, calling API
+# TODO: Get long+lat of city, calling API
 
 # GIVEN --> CITY NAME AND STATE NAME
 # RETURN --> LONG/LAT TUPLE
 
-def getCoordinates(address):
-    return getGeocoding(address)
+def getCoordinates(request, address):
+    #mapQuestDict = json.load( getGeocoding(request, address) )
+    #response = requests.get( getGeocoding(request, address) )
+    #response = getGeocoding(request, address)
+    #mapQuestDict = json.loads( response.json() )
+    #data = response["results"][0]["locations"][0]
+    return -1
+
+
+
+  #getCoords() {
+   # this.appService.callGeoApi(this.addrInputService.getAddr()).subscribe(
+ #     (data: any) => {this.apiFile = data
+  #    this.locationData = this.apiFile.results[0].locations[0]
+  #    this.latitude = this.locationData.latLng.lat
+ #     this.longitude = this.locationData.latLng.lng
+ #     },
+  #    (err: any) => console.error(err),
+ #     () => console.log('done loading coords : ' + this.addrInputService.getAddr() + " : " + this.apiFile)
+
 
 
 # Get min and max of population given descriptor
@@ -98,7 +119,8 @@ def getRadius(radiusValue):
 # RETURN --> LIST OF CITIES
 
 def getCitiesOfPopulationInRange(coordinates, populationRange, radius):
-    cityDictionaryAll = csv.DictReader( open("us_cities.csv") )
+    #cityDictionaryAll = csv.DictReader( open("us_cities.csv") )
+    cityDictionaryAll = csv.DictReader( open("./recommendations/us_cities.csv") )
     iLong = coordinates[0]
     iLat = coordinates[1]
 
