@@ -4,10 +4,11 @@
     <button class="btn btn-primary fa fa-search" (click)="sendInput(userInput.value)" type="button">Find</button> <!-- onclick = 'sendInput()' -->
     <button *ngIf="inputAddr != null" class="btn btn-primary fa fa-search" (click)="addToInput(userInput.value)" type="button">Add to Search</button>
 </div>
-
+<!--Test button to send a review to backend-->
  <div class="search-container">
   <button class="btn btn-primary" (click)="sendTestReview()">Send a Test Review of Broken Arrow to db</button>
 </div> 
+<!--End of test button-->
 <div *ngIf="this._userService.username != null">
   <ng-template [ngIf]="!this.bookmarked">
     <div>

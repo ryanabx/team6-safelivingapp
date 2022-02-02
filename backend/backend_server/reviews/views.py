@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from django.core import serializers
 
 
+# enter a review into the db of [city, state, rating, and text(comments)]
 def submitReview(request, city, state, rating, text):
 
     rating = int(rating)
@@ -24,6 +25,7 @@ def submitReview(request, city, state, rating, text):
         print ("incorrect data type for a field(s)")
         return JsonResponse({"city": city, "state": state, "rating": rating, "text": text, "success": False})
 
+# retrieve all reviews from db that corresponds to the [city, state]
 def getReview(request, city, state):
 
     # debug statement for retrieving review

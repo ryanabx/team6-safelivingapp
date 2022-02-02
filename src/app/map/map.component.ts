@@ -201,6 +201,7 @@ export class MapComponent implements AfterViewInit, OnInit {
     );
   }
 
+  // method call to submit a test review to backend for the city of Broken Arrow
   sendTestReview() {
     let c = "Broken Arrow";
     let s = "OK";
@@ -338,12 +339,14 @@ export class MapComponent implements AfterViewInit, OnInit {
               console.log(data.prices);
             }
           )
-            console.log("trying to retrieve a review")
+
+          // for each location, collect all reviews from the backend that pertain to it
           this.appService.getReview(this.cityNameArray[i], this.stateNameArray[i]).subscribe(
             (data: any) => {
               console.log("got here")
+
+              // save them into its location object
               this.locations[i].setReviews(data);
-              //this.testGeoJson = data;
               console.log("Review(s) Returned: " + data);
             }
           )
@@ -427,6 +430,8 @@ export class Location {
     this.testPaths = path;
   }
 
+  // called to save the returned array of json objects containing the reviews
+  // reminder, the format of a returned review is {"city": city, "state": state, "rating": rating, "text": text/comments}
   setReviews(reviews: any) { 
     this.reviews = reviews;
   }
