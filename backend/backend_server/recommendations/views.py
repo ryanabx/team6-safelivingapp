@@ -1,17 +1,21 @@
+from math import sqrt
 from django.shortcuts import render
 from safe_living_score.views import getScore
 from loc_to_addr.views import getGeocoding
+
+import csv
+#csv.DictReader(file)
 
 
 
 # PROTOTYPE REQUIREMENTS:
 
-# GIVEN --> CITY, RADIUS, POPULATION SCALE
+# GIVEN --> CITY, STATE, RADIUS, POPULATION SCALE
 # RETURN --> CITY WITH HIGHEST SAFETY SCORE
 
-def recommendCity(initialCity, radiusValue, populationPreference):
+def recommendCity(request, initialAddress, radiusValue, populationPreference="any"):
 
-    startingCoordinates = getCoordinates(initialCity)
+    startingCoordinates = getCoordinates(initialAddress)
     populationScale = getPopulationScale(populationPreference)
     radius = getRadius(radiusValue)
 
@@ -21,13 +25,13 @@ def recommendCity(initialCity, radiusValue, populationPreference):
     recommendedCity = None
 
     for city in cities: # Basic min/max calculation, but works (for now)
-        curScore = getCrimeScore(city)
+        curScore = getCrimeScore(city["city"], city["state"])
         
         if curScore > maxCrimeScore:
             maxCrimeScore = curScore 
             recommendedCity = city
     
-    return recommendedCity
+    return ("" + recommendedCity["city"] + ", " + recommendedCity["state"])
 
 
 
@@ -37,8 +41,8 @@ def recommendCity(initialCity, radiusValue, populationPreference):
 # GIVEN --> CITY NAME AND STATE NAME
 # RETURN --> LONG/LAT TUPLE
 
-def getCoordinates(city, state):
-    return getGeocoding("" + city + ", " + state)
+def getCoordinates(address):
+    return getGeocoding(address)
 
 
 # Get min and max of population given descriptor
@@ -57,15 +61,24 @@ def getPopulationScale(populationDescriptor):
             return( (0, 50_000) )
         
         case "small":
-            return( (50_001, 100_000) )
+            return( (50_000, 100_000) )
         
         case "medium":
             return( (100_000, 250_000) )
         
         case "large":
             return( (250,000, float("inf")) )
+        
+        case "any":
+            return( (0, float("inf")) )
 
     return (-1, -1)
+
+def populationInRange(population, range):
+    if( int(population) >= range[0] and int(population) < range[1]):
+        return True
+
+    return False
 
 
 
@@ -76,7 +89,7 @@ def getPopulationScale(populationDescriptor):
 # RETURN --> MAPQUEST RADIUS SCALE
 
 def getRadius(radiusValue):
-    return radiusValue
+    return int(radiusValue) * 1000
 
 
 # TODO: Should get cities within the radius that fits the population criteria
@@ -85,7 +98,23 @@ def getRadius(radiusValue):
 # RETURN --> LIST OF CITIES
 
 def getCitiesOfPopulationInRange(coordinates, populationRange, radius):
-    return -1
+    cityDictionaryAll = csv.DictReader( open("us_cities.csv") )
+    iLong = coordinates[0]
+    iLat = coordinates[1]
+
+    cityDictionaryFinal = []
+
+    for city in cityDictionaryAll:
+        long = city["lng"]
+        lat = city["lat"]
+
+        if(long <= radius and lat <= radius):
+            distance = sqrt( (iLong - long)**2 + (iLat - lat)**2 )
+            
+            if( distance <= radius and populationInRange(city["population"], populationRange) ):
+                cityDictionaryFinal.append(city)
+
+    return cityDictionaryFinal
 
 
 
