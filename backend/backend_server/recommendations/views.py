@@ -17,6 +17,10 @@ import requests
 # RETURN --> CITY WITH HIGHEST SAFETY SCORE
 
 def recommendCity(request, initialAddress, radiusValue, populationPreference="any"):
+    return JsonResponse( recommend(initialAddress, radiusValue, populationPreference) )
+
+
+def recommend(initialAddress, radiusValue, populationPreference="any"):
 
     startingCoordinates = getCoordinates(initialAddress)
     populationScale = getPopulationScale(populationPreference)
@@ -32,15 +36,25 @@ def recommendCity(request, initialAddress, radiusValue, populationPreference="an
         curScore = getCrimeScore(city["city"], city["state_id"])
         print("curScore = ", curScore)
         
-        if curScore > maxCrimeScore:
+        if curScore >= maxCrimeScore:
             maxCrimeScore = curScore 
             recommendedCity = city
-
-    context = {
-        "recommendation" : ( "" + recommendedCity["city"] + ", " + recommendedCity["state"] )
-    }
     
-    return JsonResponse(context)
+    if(recommendedCity == None):
+
+        context = {
+            "city" : "No City Found"
+    }
+    else:
+
+        context = {
+            #"recommendation" : ( "" + recommendedCity["city"] + ", " + recommendedCity["state"] )
+            "city" : recommendedCity["city"],
+            "state" : recommendedCity["state"],
+            "crimeScore" : maxCrimeScore
+        }
+    
+    return context
 
 
 
@@ -93,7 +107,7 @@ def getPopulationScale(populationDescriptor):
             return( (100_000, 250_000) )
         
         case "large":
-            return( (250,000, float("inf")) )
+            return( (250_000, float("inf")) )
         
         case "any":
             return( (0, float("inf")) )
@@ -160,7 +174,7 @@ def getCrimeScore(city, state):
     #crimeScore = json.loads( requests.get(url) )
 
     if(crimeScore == "There was a problem getting a score. No cities in range."):
-        return -2
+        return -1
 
     return float(crimeScore)
 
