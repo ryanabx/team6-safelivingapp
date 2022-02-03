@@ -13,6 +13,64 @@ from safe_living_score.ori_utils import FBI_wrapper
 GEOCODING_KEY = 'c7qYTGBjRaRkGF7ucqOvpNy6L1Q857oD'
 NATIONAL_POPULATION = 329484123
 
+codestoState = {
+    "02": "AK",
+    "01": "AL",
+    "05": "AR",
+    "60": "AS",
+    "04": "AZ",
+    "06": "CA",
+    "08": "CO",
+    "09": "CT",
+    "11": "DC",
+    "10": "DE",
+    "12": "FL",
+    "13": "GA",
+    "66": "GU",
+    "15": "HI",
+    "19": "IA",
+    "16": "ID",
+    "17": "IL",
+    "18": "IN",
+    "20": "KS",
+    "21": "KY",
+    "22": "LA",
+    "25": "MA",
+    "24": "MD",
+    "23": "ME",
+    "26": "MI",
+    "27": "MN",
+    "29": "MO",
+    "28": "MS",
+    "30": "MT",
+    "37": "NC",
+    "38": "ND",
+    "31": "NE",
+    "33": "NH",
+    "34": "NJ",
+    "35": "NM",
+    "32": "NV",
+    "36": "NY",
+    "39": "OH",
+    "40": "OK",
+    "41": "OR",
+    "42": "PA",
+    "72": "PR",
+    "44": "RI",
+    "45": "SC",
+    "46": "SD",
+    "47": "TN",
+    "48": "TX",
+    "49": "UT",
+    "51": "VA",
+    "78": "VI",
+    "50": "VT",
+    "53": "WA",
+    "55": "WI",
+    "54": "WV",
+    "56": "WY"
+}
+
 stateCodes = {
     "AK": "02",
     "AL": "01",
@@ -101,15 +159,26 @@ relevant_crimes_nat = {
     }
 }
 
-#Score types: safe_living, violent_crime_score, property_crime_score, crime_score
+#Score types: safe_living_score, violent_crime_score, property_crime_score, crime_score
 
 # Multiplexer function for all of the safe living scores
 def get_score(request, city, state, score_type = "all", crime_type = "all"):
     match score_type:
         case "all":
-            pass
-        case "safe_living":
-            score = get_safe_living_score(city, state, crime_type)
+            score = get_safe_living_score(city, state)
+            property_crime_score = get_crime_score(city, state, "property_crime")
+            violent_crime_score = get_crime_score(city, state, "violent_crime")
+            crime_score = (property_crime_score + violent_crime_score) / 2
+            crime_score = round(crime_score)
+            context = {
+                "safe-living-score": score,
+                "crime-score": crime_score,
+                "violent-crime-score": violent_crime_score,
+                "property-crime-score": property_crime_score
+            }
+            return JsonResponse(context)
+        case "safe_living_score":
+            score = get_safe_living_score(city, state)
             if score > 0:
                 context = {
                     "safe-living-score": score
@@ -156,7 +225,7 @@ def get_crime_score(city, state, crime_type = "all"):
         
         for agency in agencies_by_coordinates:
             if city in agency['agency_name'] and "City" in agency['agency_type_name']:
-                agency_crime_score_data = getScorebyORI2(agency['ori'], crime_type, agency['agency_name'], agency['state_abbr'])
+                agency_crime_score_data = get_crime_count(agency['ori'], agency['agency_name'], agency['state_abbr'], crime_type)
                 if "not_a_city" not in agency_crime_score_data:
                     crime_numbers.append(int(agency_crime_score_data['num-crimes']))
                     #print(f'number of crimes for {agency["agency_name"]}: {agency_crime_score_data["num-crimes"]}')
@@ -172,7 +241,7 @@ def get_crime_score(city, state, crime_type = "all"):
     
     city_population = 0
 
-    f = open('./safe_living_score/population_data.json')
+    f = open('./datasets/population_data.json')
     POPULATION_DATA = json.load(f)
 
     for city_data in POPULATION_DATA:
@@ -180,6 +249,8 @@ def get_crime_score(city, state, crime_type = "all"):
             if(city_data[0].find(f'{city} city') == 0 or city_data[0].find(f'{city} village') == 0):
                 city_population = int(city_data[1])
     
+    city_name = city
+
     if city_population == 0:
         for suffix in {" city", " City", " village", " Village"}:
             if(suffix in city_name):
@@ -195,7 +266,7 @@ def get_crime_score(city, state, crime_type = "all"):
     if city_population == 0:
         return -1
     
-    f = open('./safe_living_score/national_data.json')
+    f = open('./datasets/national_data.json')
     NATIONAL_CRIME_JSON = json.load(f)
 
     NATIONAL_CRIME_DATA = NATIONAL_CRIME_JSON["results"][0]
@@ -212,133 +283,150 @@ def get_crime_score(city, state, crime_type = "all"):
     print(f'(Number of crimes: {num_crimes} / City Pop: {city_population}) / (National crimes: {national_crimes} / National Pop: {NATIONAL_POPULATION})')
 
     print()
+    vcrime1 = 0.02
+    vcrime2 = 8.8
+    pcrime1 = 0.1
+    pcrime2 = 4.75
+
+    acrime1 = (vcrime1 + pcrime1) / 2
+    acrime2 = (vcrime2 + pcrime2) / 2
+
     #Test normalization
-    score = score * 100
+    match crime_type:
+        case "all":
+            score = (score - acrime1) / (acrime2 - acrime1) * 100
+            score = round(score)
+        case "violent_crime":
+            score = (score - vcrime1) / (vcrime2 - vcrime1) * 100
+            score = round(score)
+        case "property_crime":
+            score = (score - pcrime1) / (pcrime2 - pcrime1) * 100
+            score = round(score)
+    
 
     return score
 
 # Gets the safe living score for a given city and state.
-def get_safe_living_score(city, state, crime_type = "all"):
-    score = get_crime_score(city, state, crime_type)
+def get_safe_living_score(city, state):
+    v_score = get_crime_score(city, state, "violent_crime")
+    p_score = get_crime_score(city, state, "property_crime")
+    score = (v_score + p_score) / 2
     score = 100 - score
+    score = round(score)
     return score
 
 # Gets the safe living score for a given city and state.
-def get_safe_living_score_old(city, state, crime_type = "all"):
-    geocoding_url = f'http://www.mapquestapi.com/geocoding/v1/address?key={GEOCODING_KEY}&location={city}, {state}'
-    geocoding_data = requests.get(geocoding_url).json()
-    lon = geocoding_data['results'][0]['locations'][0]['latLng']['lng']
-    lat = geocoding_data['results'][0]['locations'][0]['latLng']['lat']
+# def get_safe_living_score_old(city, state, crime_type = "all"):
+#     geocoding_url = f'http://www.mapquestapi.com/geocoding/v1/address?key={GEOCODING_KEY}&location={city}, {state}'
+#     geocoding_data = requests.get(geocoding_url).json()
+#     lon = geocoding_data['results'][0]['locations'][0]['latLng']['lng']
+#     lat = geocoding_data['results'][0]['locations'][0]['latLng']['lat']
 
-    lon = float(lon)
-    lat = float(lat)
-    radius = 100.0
-    d = FBI_wrapper()
-    result = d.getAgenciesByCoordinates(lat, lon, radius)
+#     lon = float(lon)
+#     lat = float(lat)
+#     radius = 100.0
+#     d = FBI_wrapper()
+#     result = d.getAgenciesByCoordinates(lat, lon, radius)
 
-    if(not result):
-        result = d.getNearestByType(lat, lon, "City")
+#     if(not result):
+#         result = d.getNearestByType(lat, lon, "City")
     
-    score_distance_tuple = {}
+#     score_distance_tuple = {}
 
-    #print(f'{result}\n')
+#     #print(f'{result}\n')
 
-    scores = []
+#     scores = []
 
-    city_name = city
+#     city_name = city
 
-    for city_data in result:
-        if(city in city_data['agency_name'] and 'City' in city_data['agency_type_name']):
-            res = getScorebyORI2(city_data['ori'], crime_type, city_data['agency_name'], city_data['state_abbr'])
-            #print(f'{city_data["ori"]} : {res}\n')
-            if("agency is not a city" not in res):
-                right_index = city_data["agency_name"].find(" Police")
-                #city_name = city_data["agency_name"][0:right_index]
-                scores.append(int(res['num-crimes']))
-                print(f'number of crimes for {city_data["agency_name"]}: {res["num-crimes"]}')
+#     for city_data in result:
+#         if(city in city_data['agency_name'] and 'City' in city_data['agency_type_name']):
+#             res = getScorebyORI2(city_data['ori'], crime_type, city_data['agency_name'], city_data['state_abbr'])
+#             #print(f'{city_data["ori"]} : {res}\n')
+#             if("agency is not a city" not in res):
+#                 right_index = city_data["agency_name"].find(" Police")
+#                 #city_name = city_data["agency_name"][0:right_index]
+#                 scores.append(int(res['num-crimes']))
+#                 print(f'number of crimes for {city_data["agency_name"]}: {res["num-crimes"]}')
         
     
 
-    #print("Score distance tuple: ", score_distance_tuple)
-    if(not scores):
-        context = {
-            "safe-living-score": "There was a problem getting a score. No cities in range."
-        }
-        return JsonResponse(context)
+#     #print("Score distance tuple: ", score_distance_tuple)
+#     if(not scores):
+#         context = {
+#             "safe-living-score": "There was a problem getting a score. No cities in range."
+#         }
+#         return JsonResponse(context)
     
-    crime_score = 0
-    for p in scores:
-        crime_score += p
+#     crime_score = 0
+#     for p in scores:
+#         crime_score += p
     
-    #Population stuff!
+#     #Population stuff!
     
-    f = open('./safe_living_score/population_data.json')
-    population_data = json.load(f)
+#     f = open('./datasets/population_data.json')
+#     population_data = json.load(f)
 
     
 
     
     
-    population = -1
+#     population = -1
 
-    for city_data in population_data:
-        if(city_data[2] == stateCodes[state]):
-            if(city_data[0].find(f'{city_name} city') == 0 or city_data[0].find(f'{city_name} village') == 0):
-                population = int(city_data[1])
+#     for city_data in population_data:
+#         if(city_data[2] == stateCodes[state]):
+#             if(city_data[0].find(f'{city_name} city') == 0 or city_data[0].find(f'{city_name} village') == 0):
+#                 population = int(city_data[1])
     
-    if population == -1:
-        for d in {" city", " City", " village", " Village"}:
-            if(d in city_name):
-                city_name = city_name[0:city_name.find(d)]
+#     if population == -1:
+#         for d in {" city", " City", " village", " Village"}:
+#             if(d in city_name):
+#                 city_name = city_name[0:city_name.find(d)]
         
-        for city_data in population_data:
-            if city_data[2] == stateCodes[state]:
-                for city_data in population_data:
-                    if(city_data[2] == stateCodes[state]):
-                        if(city_data[0].find(f'{city_name} city') == 0 or city_data[0].find(f'{city_name} village')):
-                            population = int(city_data[1])
+#         for city_data in population_data:
+#             if city_data[2] == stateCodes[state]:
+#                 for city_data in population_data:
+#                     if(city_data[2] == stateCodes[state]):
+#                         if(city_data[0].find(f'{city_name} city') == 0 or city_data[0].find(f'{city_name} village')):
+#                             population = int(city_data[1])
     
     
-    if population == -1:
-        context = {
-            "safe-living-score": "There was a problem getting the safe living score for this location. Population not found."
-        }
-    else:
-        nat_pop = 329484123
+#     if population == -1:
+#         context = {
+#             "safe-living-score": "There was a problem getting the safe living score for this location. Population not found."
+#         }
+#     else:
+#         nat_pop = 329484123
 
-        print(f'{city_name}: {population}')
+#         print(f'{city_name}: {population}')
 
-        f = open('./safe_living_score/national_data.json')
-        national_data = json.load(f)
+#         f = open('./datasets/national_data.json')
+#         national_data = json.load(f)
 
-        national_crimes_list = {}
-        national_crimes_list = national_data["results"][0]
+#         national_crimes_list = {}
+#         national_crimes_list = national_data["results"][0]
 
-        nat_crimes = 0
+#         nat_crimes = 0
 
-        for city_data in relevant_crimes_nat[crime_type]:
-            if city_data in national_crimes_list and national_crimes_list[city_data]:
-                nat_crimes += national_crimes_list[city_data]
+#         for city_data in relevant_crimes_nat[crime_type]:
+#             if city_data in national_crimes_list and national_crimes_list[city_data]:
+#                 nat_crimes += national_crimes_list[city_data]
         
-        crime_score /= population
-        crime_score /= (nat_crimes / nat_pop)
+#         crime_score /= population
+#         crime_score /= (nat_crimes / nat_pop)
 
-        crime_score = 100.0 - (crime_score - 0.5) * 20.0
-        context = {
-            "safe-living-score": crime_score
-        }
-    return JsonResponse(context)
+#         crime_score = 100.0 - (crime_score - 0.5) * 20.0
+#         context = {
+#             "safe-living-score": crime_score
+#         }
+#     return JsonResponse(context)
 
-def getScorebyORI2(ORI, crime_type, city_name, state):
-    key = 'nHym62MTPDELS0XgtAZLLw0fL3jNWoNvsY2kn315'
-
-    fromDate = 2020
-    toDate = 2020
-    url = f'https://api.usa.gov/crime/fbi/sapi//api/summarized/agencies/{ORI}/offenses/{fromDate}/{toDate}?api_key={key}'
-    ori_crime_data = requests.get(url).json()
+# Gets the number of crimes for a certain ORI
+def get_crime_count(ORI, city_name, state_abbr, crime_type = "all"):
+    CRIME_DATA = json.load(open('./datasets/crime_data_sorted.json'))
 
     crime_list = {}
-    for city_data in ori_crime_data["results"]:
+    for city_data in CRIME_DATA[state_abbr][ORI]["results"]:
         crime_list[city_data["offense"]] = city_data["actual"]
     
     
