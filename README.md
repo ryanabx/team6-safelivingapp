@@ -1,5 +1,9 @@
 # Save Living App
-This project is being developed for CS-4503 Senior Software Project at the University of Tulsa.
+
+<img src="./src/SL_Logo_NoBkg.png" width = 256 align="right">
+The Safe Living App Website is a website which can help you compare many factors when determining your next place to live! The website compares FBI Crime Data along with several other data points in order to find the best match for a user's ideal city!
+
+(This project is being developed for CS-4503 and CS-4513 Senior Software Project at the University of Tulsa.)
 
 ## Setup and Installation (Angular Frontend)
 1. Install [Node.js](https://nodejs.org/en/).
