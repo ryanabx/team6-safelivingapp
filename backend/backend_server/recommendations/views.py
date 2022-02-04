@@ -1,6 +1,6 @@
 from math import sqrt
 from django.shortcuts import render
-from safe_living_score.views import score
+import safe_living_score.views
 from loc_to_addr.views import geocoding
 from django.http import JsonResponse
 
@@ -166,7 +166,7 @@ def getCitiesOfPopulationInRange(coordinates, populationRange, radius):
 
 def getCrimeScore(city, state):
 
-    crimeScore = score(city, state)["safe-living-score"] 
+    crimeScore = safe_living_score.views.get_score_dict(city, state)["safe-living-score"] 
 
 
     #url = ("https://localhost:8000/safelivingscore/api/", city, "/", state, "/")192.168.2.68

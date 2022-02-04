@@ -169,6 +169,12 @@ def get_score(request, city, state):
     score_list["state"] = state
     return JsonResponse(score_list)
 
+def get_score_dict(city, state):
+    score_list = get_safe_living_score(city, state)
+    score_list["city"] = city
+    score_list["state"] = state
+    return score_list
+
 # Gets the crime score for a given city and state
 # City should be the full city name, state should be the abbreviation (Ex: Tulsa, OK)
 def get_crime_score(city, state, POPULATION_DATA = json.load(open('./datasets/population_data_fixed.json')), NATIONAL_CRIME_DATA = json.load(open('./datasets/national_data.json'))["results"][0], CRIME_DATA = json.load(open('./datasets/crime_data_sorted.json'))):
