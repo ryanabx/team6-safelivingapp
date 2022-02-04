@@ -225,6 +225,19 @@ def get_crime_score(city, state, POPULATION_DATA = json.load(open('./datasets/po
                         if(city_data[0].find(f'{city_name} city') == 0 or city_data[0].find(f'{city_name} village')):
                             city_population = int(city_data[1])
 
+    for city_data in POPULATION_DATA:
+        if(city_data[2] == stateCodes[state]):
+            if(city_data[0].find(f'{city} CDP') == 0):
+                city_population = int(city_data[1])
+    
+    if city_population == 0:
+        for city_data in POPULATION_DATA:
+            if city_data[2] == stateCodes[state]:
+                for city_data in POPULATION_DATA:
+                    if(city_data[2] == stateCodes[state]):
+                        if(city_data[0].find(f'{city_name} city') == 0 or city_data[0].find(f'{city_name} village')):
+                            city_population = int(city_data[1])
+
     if city_population == 0:
         return {}
     
