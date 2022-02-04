@@ -205,6 +205,8 @@ def get_crime_score(city, state, POPULATION_DATA = json.load(open('./datasets/po
                         crime_numbers[crime_type].append(int(agency_crime_score_data[crime_type]))
                     #print(f'number of crimes for {agency["agency_name"]}: {agency_crime_score_data["num-crimes"]}')
         
+        agencies_by_coordinates = NULL
+
         if tolerance > 300.0:
             return {}
 

@@ -2,13 +2,12 @@ from django.db import models
 
 class City(models.Model):
 	name = models.CharField("name", max_length=128)
-	state = models.CharField("state", 16)
-	safelivingscore = models.DecimalField("safelivingscore", max_digits=10, decimal_place=4)
+	state = models.CharField("state", max_length=16)
+	safelivingscore = models.DecimalField("safelivingscore", max_digits=10, decimal_places=4)
 	crimescore = models.DecimalField("crimescore", max_digits=10, decimal_places=4)
 	latitude = models.DecimalField("latitude", max_digits=8, decimal_places=4)
 	longitude = models.DecimalField("longitude", max_digits=8, decimal_places=4)
 	population = models.IntegerField("population")
-
 	propertycrimescore = models.DecimalField("propertycrimescore", max_digits=10, decimal_places=4)
 	violentcrimescore = models.DecimalField("violentcrimescore", max_digits=10, decimal_places=4)
 
