@@ -196,12 +196,12 @@ class FBI_wrapper:
 				result.append(state[agencyName].copy())
 		return result
 
-	def getAgenciesByCoordinates(self, latitude, longitude, range = 50):
+	def getAgenciesByCoordinates(self, latitude, longitude, range = 50, data = json.load(open('./datasets/agencies.json'))):
 		self.rc.checkValidRange(range)
 		self.rc.checkValidCoordinates(latitude, longitude)
 
-		response = self.rc.getAgencies()
-		data = response.json()
+		# response = self.rc.getAgencies()
+		# data = response.json()
 
 		agencies = []
 		for stateName in data.keys():

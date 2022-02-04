@@ -105,6 +105,29 @@ def refresh_crime_scores(request = ""):
         json.dump(SCORE_DATA, outfile)
     print("Successfully compiled scores dataset")
 
+def fix_population_dataset(request = ""):
+    POPULATION_DATA = json.load(open('./datasets/population_data.json'))
+    NEW_POPULATION_DATA = {}
+    for city in POPULATION_DATA:
+        if "NAME" in city[0]:
+            continue
+        city_name = city[0][0:city[0].index(',')]
+        for x in [" city", " village", " CDP"]:
+            if x in city_name:
+                city_name = city_name[0:city_name.index(f"{x}")]
+                city_type = x
+        state_abbr = safe_living_score.views.codestoState[city[2]]
+        if state_abbr not in NEW_POPULATION_DATA:
+            NEW_POPULATION_DATA[state_abbr] = {}
+        NEW_POPULATION_DATA[state_abbr][city_name] = {
+            "Population": int(city[1]),
+            "Type": city_type
+        }
+    with open("./datasets/population_data_fixed.json", "w") as outfile:
+        json.dump(NEW_POPULATION_DATA, outfile)
+    print("Successfully compiled population dataset!")
+    return JsonResponse({"complete": True})
+
 # def  main():
 #     print(os.getcwd())
 #     refresh_crime_scores()
