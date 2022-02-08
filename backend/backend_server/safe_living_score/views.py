@@ -194,6 +194,7 @@ def get_crime_score(city, state, POPULATION_DATA = json.load(open('./datasets/po
     AGENCIES = json.load(open('./datasets/agencies.json'))
     while (not crime_numbers["all"]):
         while (not agencies_by_coordinates):
+            print(f'HERE: {tolerance}')
             agencies_by_coordinates = fbi_wrapper.getAgenciesByCoordinates(lat, lon, tolerance, AGENCIES)
             tolerance += 10.0
         
@@ -205,8 +206,10 @@ def get_crime_score(city, state, POPULATION_DATA = json.load(open('./datasets/po
                         crime_numbers[crime_type].append(int(agency_crime_score_data[crime_type]))
                     #print(f'number of crimes for {agency["agency_name"]}: {agency_crime_score_data["num-crimes"]}')
         
+        agencies_by_coordinates = NULL
+
         if tolerance > 300.0:
-            return {}
+            return {"all": -1, "violent_crime": -1, "property_crime": 1} #TODO: Look at get_crime_score to find how it handles error data
 
     num_crimes = {"all": 0, "violent_crime": 0, "property_crime": 0}
     for type in CRIME_TYPES:
@@ -224,7 +227,7 @@ def get_crime_score(city, state, POPULATION_DATA = json.load(open('./datasets/po
         if city_name in POPULATION_DATA[state]:
             city_population = int(POPULATION_DATA[state][city_name]["Population"])
         else:
-            return {}
+            return {"all": -1, "violent_crime": -1, "property_crime": -1}
 
     # for city_data in POPULATION_DATA:
     #     if(city_data[2] == stateCodes[state] and (city_data[0].find(f'{city} city') == 0 or city_data[0].find(f'{city} village') == 0 or city_data[0].find(f'{city} CDP') == 0)):
@@ -280,7 +283,10 @@ def get_crime_score(city, state, POPULATION_DATA = json.load(open('./datasets/po
 # Gets the safe living score for a given city and state.
 def get_safe_living_score(city, state, POPULATION_DATA = json.load(open('./datasets/population_data_fixed.json')), NATIONAL_CRIME_DATA = json.load(open('./datasets/national_data.json'))["results"][0], CRIME_DATA = json.load(open('./datasets/crime_data_sorted.json'))):
     score = get_crime_score(city, state, POPULATION_DATA, NATIONAL_CRIME_DATA, CRIME_DATA)
-    score["safe-living-score"] = 100 - score["all"]
+    if score["all"] == -1:
+        score["safe-living-score"] = -1
+    else:
+        score["safe-living-score"] = 100 - score["all"]
     return score
 
 # Gets the safe living score for a given city and state.
