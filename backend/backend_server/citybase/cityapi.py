@@ -51,7 +51,7 @@ population=None, crimescore=None, propertycrimescore=None, violentcrimescore=Non
 	if not cityQuery.exists():
 		return addCity(city, state, safelivingscore, latitude, longitude, population,
 					crimescore, propertycrimescore, violentcrimescore)
-	cities = serializers.serialize('python', cityQuery)
+	cities = list(cityQuery)
 	if len(cities) >= 2:
 		sys.stderr.write(f"City {city}, {state} has 2 or more entries in the database!\n")
 		return False

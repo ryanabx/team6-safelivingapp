@@ -1,4 +1,5 @@
 from email.policy import default
+import time
 from citybase.models import City
 from django.shortcuts import render
 from django.http import JsonResponse
@@ -16,16 +17,17 @@ class Command(BaseCommand):
 
 	def add_arguments(self, parser: argparse.ArgumentParser):
 		parser.description = "Updates city data. Use \"update\" or \"clean\""
-		parser.add_argument('operation', type=str)
+		parser.add_argument('operation', type=str, choices=["update", "clean"])
+		parser.add_argument('--v', action="store_true")
 
 	def handle(self, **options):
+		verbose = options['v']
 		if options["operation"] == "update":
-			update()
+			update(verbose)
 		elif options["operation"] == "clean":
-			clean()
+			clean(verbose)
 		else:
 			print("Call with argument \"update\" or \"clean\"")	
-
 
 def loadCities():
 	states = json.load(open("datasets/population_data_fixed.json"))
@@ -39,30 +41,36 @@ def loadCities():
 			})
 	return cities
 
-def update():
-	print('check1')
+def update(verbose):
 	cities = loadCities()
-	print('check2')
+	total = len(cities)
 	i = 0
+	percent = 0
+	start_time = time.time()
+	last_i_time = start_time
+	this_i_time = 0
 	POPULTION_DATA = json.load(open('./datasets/population_data_fixed.json'))
-	NATIONAL_CRIME_DATA = json.load(open('./datasets/national_data.json'))["results"][0]
 	CRIME_DATA = json.load(open('./datasets/crime_data_sorted.json'))
 	for city in cities:
-		print('check3')
-		print(city['city'], city['state'])
-		scores = safe_living_score.views.get_safe_living_score(city["city"], city["state"], POPULATION_DATA=POPULTION_DATA, NATIONAL_CRIME_DATA=NATIONAL_CRIME_DATA, CRIME_DATA=CRIME_DATA)
-		print('check4')
+		if verbose:
+			this_i_time = time.time()
+			seconds = this_i_time - start_time
+			print(f"{i:5}/{total:5} {int(seconds/3600):02}:{int((seconds/60)%60):02}:{int(seconds%60):02} Adding {city['city']}, {city['state']}")
+			last_i_time = this_i_time
+		elif int(i*100/total) > percent:
+			percent = int(i*100/total)
+			this_i_time = time.time()
+			seconds = this_i_time - start_time
+			print(f"{int(i*100/total):3}% {int(seconds/3600):02}:{int((seconds/60)%60):02}:{int(seconds%60):02}")
+			last_i_time = this_i_time
+		scores = safe_living_score.views.get_safe_living_score(city["city"], city["state"], POPULATION_DATA=POPULTION_DATA, CRIME_DATA=CRIME_DATA)
 		city["safelivingscore"] = scores["safe-living-score"]
-		print('check5')
 		cityapi.updateCity(**city)
-		print('check6')
-		if i % 20 == 0:
-			print(f"City {i} updated.")
 		i += 1
 	
 	print(f"Updates complete! {i} cities updated.")
 		
-def clean():
+def clean(verbose):
 	cities = loadCities()
 
 	cityQueries = City.objects.all()
