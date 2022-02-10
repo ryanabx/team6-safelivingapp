@@ -21,7 +21,8 @@ import { CrimeapiComponent } from './crimeapi/crimeapi.component';
 import { UserBookmarksComponent } from './user-bookmarks/user-bookmarks.component';
 import { CreateComponent } from './create/create.component';
 import { LoginComponent } from './login/login.component';
-import {RatingModule} from 'ngx-bootstrap/rating'
+import { RatingModule } from 'ngx-bootstrap/rating';
+import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import {RatingModule} from 'ngx-bootstrap/rating'
     CrimeapiComponent,
     UserBookmarksComponent,
     CreateComponent,
-    LoginComponent
+    LoginComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,

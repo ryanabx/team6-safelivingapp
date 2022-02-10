@@ -1,4 +1,14 @@
-    .container{text-align: center;}
+    .information {text-align: center;
+          justify-content: center;
+          margin: auto;
+          padding-top: 3%;
+          padding-left: auto;
+          padding-right: auto;
+          padding-bottom: 3%;
+          height: auto;
+          width: 100%;
+          overflow: hidden;
+    }
 
     .jumbotron {
       background-image: url(cityPanorama.png);
@@ -8,7 +18,9 @@
       text-shadow: black 0 0 15px;
       font-family: Georgia, serif;
       font-weight: bold;
-
+      margin: 0;
+      position: absolute;
+      overflow: hidden;
     }
 
     .display-4{
@@ -41,4 +53,10 @@
       position: relative;
       border:  0;
       background-size: cover;
+    }
+
+    .hr {
+      padding: 0;
+      margin: 0;
+      border: 0;
     }
