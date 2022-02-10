@@ -29,6 +29,6 @@ urlpatterns = [
     path('api-token-auth/', obtain_jwt_token),
     path('api-token-refresh/', refresh_jwt_token),
     path('user/', include('user.urls')),
-    path('dataset_utils/', include('dataset_utils.urls')),
+    path('datasets/', include('dataset_utils.urls')),
     path('recommendations/', include('recommendations.urls')),
 ]
