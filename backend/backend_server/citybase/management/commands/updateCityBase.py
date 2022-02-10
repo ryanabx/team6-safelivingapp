@@ -44,14 +44,17 @@ def update():
 	cities = loadCities()
 	print('check2')
 	i = 0
+	POPULTION_DATA = json.load(open('./datasets/population_data_fixed.json'))
+	NATIONAL_CRIME_DATA = json.load(open('./datasets/national_data.json'))["results"][0]
+	CRIME_DATA = json.load(open('./datasets/crime_data_sorted.json'))
 	for city in cities:
 		print('check3')
 		print(city['city'], city['state'])
-		scores = safe_living_score.views.get_score_dict(city["city"], city["state"])
+		scores = safe_living_score.views.get_safe_living_score(city["city"], city["state"], POPULATION_DATA=POPULTION_DATA, NATIONAL_CRIME_DATA=NATIONAL_CRIME_DATA, CRIME_DATA=CRIME_DATA)
 		print('check4')
 		city["safelivingscore"] = scores["safe-living-score"]
 		print('check5')
-		cityapi.updateCity(city["city"], city["state"], **city)
+		cityapi.updateCity(**city)
 		print('check6')
 		if i % 20 == 0:
 			print(f"City {i} updated.")
