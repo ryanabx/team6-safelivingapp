@@ -146,7 +146,6 @@ relevant_crimes = {
 
 # Function to retrieve all of the safe living scores
 def get_score(request, city, state):
-    print("HELLO")
     score_list = get_safe_living_score(city, state)
     score_list["city"] = city
     score_list["state"] = state
@@ -169,16 +168,19 @@ CITY_ORI = json.load(open('./datasets/city_ori.json'))
 ):
     crime_numbers = {"all": [], "violent_crime": [], "property_crime": []}
 
-    if state in CITY_ORI and city in CITY_ORI[state]:
-        if CITY_ORI[state][city]:
-            for agency in CITY_ORI[state][city]:
-                crime_count = get_crime_count(agency, state, CRIME_DATA)
-                for crime_type in CRIME_TYPES:
-                    crime_numbers[crime_type].append(int(crime_count[crime_type]))
+    if state in CITY_ORI:
+        if city in CITY_ORI[state]:
+            if CITY_ORI[state][city]:
+                for agency in CITY_ORI[state][city]:
+                    crime_count = get_crime_count(agency, state, CRIME_DATA)
+                    for crime_type in CRIME_TYPES:
+                        crime_numbers[crime_type].append(int(crime_count[crime_type]))
+            else:
+                return {"all": -1, "violent_crime": -1, "property_crime": -1, "error_code": 3, "error_message": "No Agencies found for specified city."}
         else:
-            return {"all": -1, "violent_crime": -1, "property_crime": -1, "error_code": 3, "error_message": "No Agencies found for specified city."}
+            return {"all": -1, "violent_crime": -1, "property_crime": -1, "error_code": 1, "error_message": "City not found."}
     else:
-        return {"all": -1, "violent_crime": -1, "property_crime": -1, "error_code": 1, "error_message": "City not found."}
+        return {"all": -1, "violent_crime": -1, "property_crime": -1, "error_code": 4, "error_message": "State not found."}
 
     num_crimes = {"all": 0, "violent_crime": 0, "property_crime": 0}
     for type in CRIME_TYPES:

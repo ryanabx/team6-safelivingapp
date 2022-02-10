@@ -9,6 +9,16 @@ Each backend GET request begins with the backend URL. For testing purposes this 
 ```
 > Using `object["some"]` should return `"json"`. Javascript might use `object.some` instead so find out which one works.
 
+## Error Reporting (WORK IN PROGRESS)
+Errors will now be reported in a similar format across all backend API calls, where the dictionary response from the API will include these fields:
+```javascript
+{"error_code": 0,
+"error_message": "",}
+```
+`error_code` Is meant to be used to interpret the error that is being thrown. Each error has a unique code.
+
+`error_message` Is a string which gives an interpretation of the error being thrown. For example, an error message might say `"City not found."` if a retrieval of a safe living score does not find a city with the name given.
+
 ## Crime Data (From Crime Data Explorer (CDE))
 Get number of crimes committed in an ORI with a date range:
 `/crimedata/api/{ORI}/{fromDate}{toDate}`
