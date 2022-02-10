@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'loc_to_addr',
     'user.apps.UserConfig',
     'reviews.apps.ReviewsConfig',
+    'citybase.apps.CitybaseConfig'
 ]
 
 MIDDLEWARE = [

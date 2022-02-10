@@ -4,7 +4,11 @@ from django.http import JsonResponse
 from django.http import response
 
 # Create your views here.
+
 def getGeocoding(request, inputAddr):
+    return JsonResponse( geocoding(inputAddr) )
+
+def geocoding(inputAddr):
     key = 'c7qYTGBjRaRkGF7ucqOvpNy6L1Q857oD'
     addrList = []
 
@@ -51,5 +55,8 @@ def getGeocoding(request, inputAddr):
     # perform api call with constructed url
     #print (url)
     r = requests.get(url)
-    stuff = r.json()
-    return JsonResponse(stuff)
+
+    return r.json()
+
+    #stuff = r.json()
+    #return JsonResponse(stuff)
