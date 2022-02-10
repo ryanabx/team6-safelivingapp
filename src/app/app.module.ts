@@ -21,6 +21,7 @@ import { CrimeapiComponent } from './crimeapi/crimeapi.component';
 import { UserBookmarksComponent } from './user-bookmarks/user-bookmarks.component';
 import { CreateComponent } from './create/create.component';
 import { LoginComponent } from './login/login.component';
+import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { LoginComponent } from './login/login.component';
     CrimeapiComponent,
     UserBookmarksComponent,
     CreateComponent,
-    LoginComponent
+    LoginComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,

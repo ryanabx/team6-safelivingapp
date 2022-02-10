@@ -1,1 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
+body {
+    margin: 0 !important;
+    border: 0 px !important;
+    padding: 0 !important;
+}

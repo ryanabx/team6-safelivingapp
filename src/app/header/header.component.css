@@ -2,12 +2,6 @@
     src: url(SL_Logo_NoBkg.png);
     font-weight: bold;
     font-size: large;
-}
-
-#footer {
-    bottom: 0;
-    height: 2em;
-    left: 0;
-    position: relative;
-    font-size: small;
+    padding: 0;
+    margin: 0;
 }
