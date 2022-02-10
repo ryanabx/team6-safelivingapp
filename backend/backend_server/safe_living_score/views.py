@@ -167,18 +167,6 @@ CRIME_DATA = json.load(open('./datasets/crime_data_sorted.json')),
 AGENCIES = json.load(open('./datasets/agencies.json')),
 CITY_ORI = json.load(open('./datasets/city_ori.json'))
 ):
-    # geocoding_url = f'http://www.mapquestapi.com/geocoding/v1/address?key={GEOCODING_KEY}&location={city}, {state}'
-    # geocoding_data = requests.get(geocoding_url).json()
-
-    # #print(f'Starting crime score calculation for {city}, {state}')
-
-    # lon = geocoding_data['results'][0]['locations'][0]['latLng']['lng']
-    # lat = geocoding_data['results'][0]['locations'][0]['latLng']['lat']
-    # lon = float(lon)
-    # lat = float(lat)
-    # fbi_wrapper = FBI_wrapper()
-    
-    # agencies_by_coordinates = None
     crime_numbers = {"all": [], "violent_crime": [], "property_crime": []}
 
     if state in CITY_ORI and city in CITY_ORI[state]:
@@ -188,26 +176,9 @@ CITY_ORI = json.load(open('./datasets/city_ori.json'))
                 for crime_type in CRIME_TYPES:
                     crime_numbers[crime_type].append(int(crime_count[crime_type]))
         else:
-            return {"all": -1, "violent_crime": -1, "property_crime": -1}
+            return {"all": -1, "violent_crime": -1, "property_crime": -1, "error_code": 1, "error_message": "City not found."}
     else:
-        return {"all": -1, "violent_crime": -1, "property_crime": -1}
-
-    # agencies_by_coordinates = fbi_wrapper.getAgenciesByCoordinates(lat, lon, 300.0, AGENCIES)
-    # if not agencies_by_coordinates:
-    #     return {"all": -1, "violent_crime": -1, "property_crime": -1}
-
-    # for agency in agencies_by_coordinates:
-    #     if city in agency['agency_name'] and "City" in agency['agency_type_name']:
-    #         agency_crime_score_data = get_crime_count(agency['ori'], agency['state_abbr'], CRIME_DATA)
-    #         if "not_a_city" not in agency_crime_score_data:
-    #             for crime_type in CRIME_TYPES:
-    #                 crime_numbers[crime_type].append(int(agency_crime_score_data[crime_type]))
-    #             #print(f'{agency["agency_name"]}, {agency["state_abbr"]}, {agency["ori"]}: {agency_crime_score_data["all"]}')
-    
-    # agencies_by_coordinates = None
-
-    # if not crime_numbers["all"]:
-    #     return {"all": -1, "violent_crime": -1, "property_crime": -1}
+        return {"all": -1, "violent_crime": -1, "property_crime": -1, "error_code": 1, "error_message": "City not found."}
 
     num_crimes = {"all": 0, "violent_crime": 0, "property_crime": 0}
     for type in CRIME_TYPES:
@@ -215,7 +186,7 @@ CITY_ORI = json.load(open('./datasets/city_ori.json'))
             num_crimes[type] += x
 
     if num_crimes["all"] < 10:
-        return {"all": -1, "violent_crime": -1, "property_crime": -1}
+        return {"all": -1, "violent_crime": -1, "property_crime": -1, "error_code": 1, "error_message": "Less than 10 crimes reported. Data for this city is incomplete."}
 
     city_population = 0
 
@@ -228,10 +199,10 @@ CITY_ORI = json.load(open('./datasets/city_ori.json'))
         if city_name in POPULATION_DATA[state]:
             city_population = int(POPULATION_DATA[state][city_name]["Population"])
         else:
-            return {"all": -1, "violent_crime": -1, "property_crime": -1}
+            return {"all": -1, "violent_crime": -1, "property_crime": -1, "error_code": 1, "error_message": "City not found."}
     
     if city_population == 0:
-        return {"all": -1, "violent_crime": -1, "property_crime": -1}
+        return {"all": -1, "violent_crime": -1, "property_crime": -1, "error_code": 1, "error_message": "City not found."}
     
     #print("HI")
     national_crimes = {"all": 7765143, "violent_crime": 1313105, "property_crime": 6452038}
@@ -270,9 +241,11 @@ CITY_ORI = json.load(open('./datasets/city_ori.json'))
 ):
     #print(f'Get safe living score for {city}, {state}')
     score = get_crime_score(city, state, POPULATION_DATA, CRIME_DATA, AGENCIES, CITY_ORI)
-    if score["all"] == -1:
+    if "error_code" in score:
         score["safe-living-score"] = -1
     else:
+        score["error_code"] = 0
+        score["error_message"] = ""
         score["safe-living-score"] = 100 - score["all"]
     return score
 
