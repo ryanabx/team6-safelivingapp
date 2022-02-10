@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'cde_api',
     'loc_to_addr',
     'user.apps.UserConfig',
+    'citybase.apps.CitybaseConfig'
 ]
 
 MIDDLEWARE = [

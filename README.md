@@ -1,5 +1,9 @@
 # Save Living App
-This project is being developed for CS-4503 Senior Software Project at the University of Tulsa.
+
+<img src="./src/SL_Logo_NoBkg.png" width = 256 align="right">
+The Safe Living App Website is a website which can help you compare many factors when determining your next place to live! The website compares FBI Crime Data along with several other data points in order to find the best match for a user's ideal city!
+
+(This project is being developed for CS-4503 and CS-4513 Senior Software Project at the University of Tulsa.)
 
 ## Setup and Installation (Angular Frontend)
 1. Install [Node.js](https://nodejs.org/en/).
@@ -17,7 +21,7 @@ To build the software, run `ng serve`. Add `--open` at the end to open in the de
 1. Ensure that Python 3.10 is installed.
 2. Clone the repository to a local directory.
 3. In a shell or command line, navigate to the "backend" directory and create a virtual python environment inside of it.
-> **_EXAMPLES:_** For Powershell users: `py -m venv venv`
+> **_EXAMPLES:_** For Powershell users: `py -m venv venv` For MacOS users install virtualenv using `python -m pip install virtualenv` and then use `python -m virtualenv venv`
 4. Activate the environment by running the activate script inside of venv/Scripts.
 > **_EXAMPLES:_** Example for VSCode with built in Powershell terminal: `& './venv/Scripts/Activate.ps1'`
 5. Set your preferred Python interpreter to be the one inside of venv/Scripts.
