@@ -230,6 +230,13 @@ CITY_ORI = json.load(open('./datasets/city_ori.json'))
     score["property_crime"]= round(score["property_crime"])
     score["all"] = round(score["all"])
 
+    score["error_code"] = 0
+    score["error_message"] = ""
+
+    for crime_type in CRIME_TYPES:
+        if score[crime_type] < 0 or score[crime_type] > 100:
+            return {"all": -1, "violent_crime": -1, "property_crime": -1, "error_code": 2, "error_message": "Score is out of normal range."}
+
     return score
 
 # Gets the safe living score for a given city and state.
@@ -241,7 +248,7 @@ CITY_ORI = json.load(open('./datasets/city_ori.json'))
 ):
     #print(f'Get safe living score for {city}, {state}')
     score = get_crime_score(city, state, POPULATION_DATA, CRIME_DATA, AGENCIES, CITY_ORI)
-    if "error_code" in score:
+    if "error_code" in score and score["error_code"] != 0:
         score["safe-living-score"] = -1
     else:
         score["error_code"] = 0
