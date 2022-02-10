@@ -176,7 +176,7 @@ CITY_ORI = json.load(open('./datasets/city_ori.json'))
                 for crime_type in CRIME_TYPES:
                     crime_numbers[crime_type].append(int(crime_count[crime_type]))
         else:
-            return {"all": -1, "violent_crime": -1, "property_crime": -1, "error_code": 1, "error_message": "City not found."}
+            return {"all": -1, "violent_crime": -1, "property_crime": -1, "error_code": 3, "error_message": "No Agencies found for specified city."}
     else:
         return {"all": -1, "violent_crime": -1, "property_crime": -1, "error_code": 1, "error_message": "City not found."}
 
@@ -230,12 +230,12 @@ CITY_ORI = json.load(open('./datasets/city_ori.json'))
     score["property_crime"]= round(score["property_crime"])
     score["all"] = round(score["all"])
 
-    score["error_code"] = 0
-    score["error_message"] = ""
-
     for crime_type in CRIME_TYPES:
         if score[crime_type] < 0 or score[crime_type] > 100:
             return {"all": -1, "violent_crime": -1, "property_crime": -1, "error_code": 2, "error_message": "Score is out of normal range."}
+
+    score["error_code"] = 0
+    score["error_message"] = ""
 
     return score
 
