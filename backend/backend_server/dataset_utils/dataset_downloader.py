@@ -3,7 +3,7 @@ import json
 import os
 
 from django.http import JsonResponse
-import safe_living_score
+#import safe_living_score
 
 # import importlib.util
 # spec = importlib.util.spec_from_file_location("safe_living_app", "C:/Users/Ryan/Documents/GitHub/team6-safelivingapp/backend/backend_server/safe_living_score")
@@ -71,6 +71,25 @@ def sort_crime_data_by_state(request):
     with open("./datasets/crime_data_sorted.json", "w") as outfile:
         json.dump(SORTED_CRIME_DATA, outfile)
     print("Successfully sorted crime dataset")
+
+def make_city_state_to_ori_dataset():
+    AGENCY_DATA = json.load(open('./backend/backend_server/datasets/agencies.json'))
+    POPULATION_DATA = json.load(open('./backend/backend_server/datasets/population_data_fixed.json'))
+
+    CITY_STATE_ORI_DATA = {}
+
+    for state in POPULATION_DATA:
+        print(state)
+        CITY_STATE_ORI_DATA[state] = {}
+        for city in POPULATION_DATA[state]:
+            CITY_STATE_ORI_DATA[state][city] = []
+            for agency in AGENCY_DATA[state]:
+                if city in AGENCY_DATA[state][agency]['agency_name'] and "City" in AGENCY_DATA[state][agency]['agency_type_name']:
+                    CITY_STATE_ORI_DATA[state][city].append(AGENCY_DATA[state][agency]["ori"])
+
+    with open("./backend/backend_server/datasets/city_ori.json", "w") as outfile:
+        json.dump(CITY_STATE_ORI_DATA, outfile)
+    print("DONE!")
 
 # Utility function to save crime scores to a dataset
 def refresh_crime_scores(request):
@@ -155,9 +174,9 @@ def fix_population_dataset(request = ""):
     print("Successfully compiled population dataset!")
     return JsonResponse({"complete": True})
 
-# def  main():
-#     print(os.getcwd())
-#     refresh_crime_scores()
+def  main():
+    print(os.getcwd())
+    make_city_state_to_ori_dataset()
 
-# if __name__ == "__main__":
-#     main()
+if __name__ == "__main__":
+    main()
