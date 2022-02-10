@@ -9,7 +9,8 @@ def getGeocoding(request, inputAddr):
     return JsonResponse( geocoding(inputAddr) )
 
 def geocoding(inputAddr):
-    key = 'c7qYTGBjRaRkGF7ucqOvpNy6L1Q857oD'
+    key2 = 'c7qYTGBjRaRkGF7ucqOvpNy6L1Q857oD'
+    key = 'sG51Do5TgLBaELz4ZP8JAI0wWWa0QwsS'
     addrList = []
 
     #print(type(inputAddr)) # note, inputAddr always comes in as a string :(
