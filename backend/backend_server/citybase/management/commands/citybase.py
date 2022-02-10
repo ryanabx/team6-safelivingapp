@@ -17,7 +17,7 @@ class Command(BaseCommand):
 
 	def add_arguments(self, parser: argparse.ArgumentParser):
 		parser.description = "Updates city data. Use \"update\" or \"clean\""
-		parser.add_argument('operation', type=str, choices=["update", "clean"])
+		parser.add_argument('operation', type=str, choices=["update", "clean", "clear"])
 		parser.add_argument('--v', action="store_true")
 
 	def handle(self, **options):
@@ -26,8 +26,10 @@ class Command(BaseCommand):
 			update(verbose)
 		elif options["operation"] == "clean":
 			clean(verbose)
+		elif options["operation"] == "clear":
+			clear(verbose)
 		else:
-			print("Call with argument \"update\" or \"clean\"")	
+			print("Call with argument \"update\", \"clean\", or \"clear\"")	
 
 def loadCities():
 	states = json.load(open("datasets/population_data_fixed.json"))
@@ -51,6 +53,7 @@ def update(verbose):
 	this_i_time = 0
 	POPULTION_DATA = json.load(open('./datasets/population_data_fixed.json'))
 	CRIME_DATA = json.load(open('./datasets/crime_data_sorted.json'))
+
 	for city in cities:
 		if verbose:
 			this_i_time = time.time()
@@ -72,13 +75,48 @@ def update(verbose):
 		
 def clean(verbose):
 	cities = loadCities()
+	total = len(cities)
+	i = 0
+	percent = 0
+	start_time = time.time()
+	last_i_time = start_time
+	this_i_time = 0
 
 	cityQueries = City.objects.all()
+	current_cities = list(cityQueries)
 
 	for city in cities:
-		cityQueries = cityQueries.exclude(name=city["city"], state=city["state"])
+		if verbose:
+			this_i_time = time.time()
+			seconds = this_i_time - start_time
+			print(f"{i:5}/{total:5} {int(seconds/3600):02}:{int((seconds/60)%60):02}:{int(seconds%60):02} Checking {city['city']}, {city['state']}")
+			last_i_time = this_i_time
+		elif int(i*100/total) > percent:
+			percent = int(i*100/total)
+			this_i_time = time.time()
+			seconds = this_i_time - start_time
+			print(f"{int(i*100/total):3}% {int(seconds/3600):02}:{int((seconds/60)%60):02}:{int(seconds%60):02}")
+			last_i_time = this_i_time
+		cityQuery = list(City.objects.all().filter(name=city["city"], state=city["state"]))
+		for c in cityQuery:
+			current_cities.remove(c)
+		i += 1
 	
-	leftover = cityQueries.count()
-	cityQueries.delete()
+	leftover = len(current_cities)
+	for c in current_cities:
+		print(f"Deleting {c.name}, {c.state}")
+		c.delete()
+	
 	print(f"{leftover} entries deleted.")
 	
+def clear(verbose):
+	total = City.objects.all().count()
+	start_time = time.time()
+	this_i_time = 0
+
+	cityQueries = City.objects.all()
+	print(f"Deleting {total} cities")
+	cityQueries.delete()
+	this_i_time = time.time()
+	seconds = this_i_time - start_time
+	print(f"Clear finished. Took {int(seconds/3600):02}:{int((seconds/60)%60):02}:{int(seconds%60):02}")
