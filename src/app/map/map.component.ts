@@ -6,6 +6,7 @@ import { AppService } from '../app.service';
 import { MapsAPILoader } from '@agm/core';
 import { HttpClient } from '@angular/common/http';
 import { UserService } from '../user.service';
+import { analyzeAndValidateNgModules } from '@angular/compiler';
 //import { stringify } from 'querystring';
 
 @Component({
@@ -206,6 +207,20 @@ export class MapComponent implements AfterViewInit, OnInit {
     );
   }
 
+  // method call to submit a test review to backend for the city of Broken Arrow
+  sendTestReview() {
+    let c = "Broken Arrow";
+    let s = "OK";
+    let rating = 5;
+    let text = "Great place to live";
+
+    this.appService.submitReview(c, s, rating, text).subscribe(
+      (data:any) => {
+        console.log(data.success)
+      }
+    )
+  }
+
   // send an array of three addresses for the backend to process
   // need to configure backend to process either single or multiple inputs (shouldn't be too hard)
   // adds lat/long to an array as follows: [lat1, long1, lat2, long2, ..., lat{n}, long{n}]
@@ -286,7 +301,7 @@ export class MapComponent implements AfterViewInit, OnInit {
 
 
 
-      /* deprecated / depreciated
+      /* deprecated
       console.log(this.lat + " : " + this.long)
       if(this.lat != 0 && this.long != 0){
         this.appService.getSafeLivingScoreAPI(this.long, this.lat, 2.0).subscribe(
@@ -310,13 +325,12 @@ export class MapComponent implements AfterViewInit, OnInit {
         }
       }
 
-      // set the respective city and state name to each location in locations array
+      // set the respective variables to each location in locations array
       if (this.cityNameArray != null || this.stateNameArray != null) {
         for (let i = 0; i < this.locations.length; i++) {
           this.locations[i].setCity(this.cityNameArray[i]);
           this.locations[i].setState(this.stateNameArray[i]);
 
-          console.log("got here")
           this.appService.getBoundaries(this.cityNameArray[i], this.stateNameArray[i]).subscribe(
             (data: any) => {
               this.locations[i].setPath(this.parsePathData(data));
@@ -331,6 +345,18 @@ export class MapComponent implements AfterViewInit, OnInit {
               console.log(data.prices);
             }
           )
+
+          // for each location, collect all reviews from the backend that pertain to it
+          this.appService.getReview(this.cityNameArray[i], this.stateNameArray[i]).subscribe(
+            (data: any) => {
+              console.log("got here")
+
+              // save them into its location object
+              this.locations[i].setReviews(data);
+              console.log("Review(s) Returned: " + data);
+            }
+          )
+
         }
       }
       console.log("Locations initially created: " + this.locations)
@@ -374,6 +400,7 @@ export class Location {
     apartmentHigh: '',
     gas: ''
   };
+  public reviews: any;
   public labelOptions: any = {
     color: 'white',
     fontFamily: '',
@@ -407,6 +434,12 @@ export class Location {
 
   setPath(path: any){
     this.testPaths = path;
+  }
+
+  // called to save the returned array of json objects containing the reviews
+  // reminder, the format of a returned review is {"city": city, "state": state, "rating": rating, "text": text/comments}
+  setReviews(reviews: any) { 
+    this.reviews = reviews;
   }
 
   setCostOfLiving(col: any) {

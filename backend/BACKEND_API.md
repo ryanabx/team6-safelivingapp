@@ -35,23 +35,28 @@ Get longitude and latitude from location:
 
 </details>
 
-## Safe Living Score
+## Safe Living Score, Crime Score, Related Scores
 
-Get the safe living score for an area: `/safelivingscore/api/{city}/{state}/{radius}`
-
-Alternatively get the safe living score for an area for a specific crime group: `/safelivingscore/api/{city}/{state}/{crime_type}`
-> **_NOTE:_** The currently supported crime_type values are "all", "violent_crime", "non_violent_crime", and "theft".
+Get the scores for an area: `/safelivingscore/api/{city}/{state}/`
 
 <details>
 <summary> Example response: </summary>
 
 ```javascript
-{"safe-living-score": 1.0875484221676692}
+{"safe-living-score": 47,"all": 53,"violent_crime": 48, "property_crime": 58}
 ```
 
 </details>
 
-Get the crime score for an ORI: `/safelivingscore/api/{ORI}`
+## Dataset Utilities API (Not for frontend use!)
+
+Update datasets base url `/dataset_utils/api/updatedataset/`
+
+Update crime data: `crime`
+
+Update crime score dataset (NOT IN USE YET): `scores`
+
+Fix population dataset: `population`
 
 ## Amenities API
 Get a list of shopping places in an area: `/amenities/api/{lat}/{lon}/{radius}`
