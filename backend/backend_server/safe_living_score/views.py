@@ -163,7 +163,6 @@ def get_score_dict(city, state):
 def get_crime_score(city, state,
 POPULATION_DATA = json.load(open('./datasets/population_data_fixed.json')),
 CRIME_DATA = json.load(open('./datasets/crime_data_sorted.json')),
-AGENCIES = json.load(open('./datasets/agencies.json')),
 CITY_ORI = json.load(open('./datasets/city_ori.json'))
 ):
     crime_numbers = {"all": [], "violent_crime": [], "property_crime": []}
@@ -245,7 +244,6 @@ CITY_ORI = json.load(open('./datasets/city_ori.json'))
 def get_safe_living_score(city, state,
 POPULATION_DATA = json.load(open('./datasets/population_data_fixed.json')),
 CRIME_DATA = json.load(open('./datasets/crime_data_sorted.json')),
-AGENCIES = json.load(open('./datasets/agencies.json')),
 CITY_ORI = json.load(open('./datasets/city_ori.json'))
 ):
     #print(f'Get safe living score for {city}, {state}')
