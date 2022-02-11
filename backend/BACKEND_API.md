@@ -60,13 +60,17 @@ Get the scores for an area: `/safelivingscore/api/{city}/{state}/`
 
 ## Dataset Utilities API (Not for frontend use!)
 
-Update datasets base url `/dataset_utils/api/updatedataset/`
+Update datasets base url `/datasets/api/update/`
 
 Update crime data: `crime`
 
-Update crime score dataset (NOT IN USE YET): `scores`
+Update crime score dataset: `scores`
+
+Sort crime scores: `sortcrime`
 
 Fix population dataset: `population`
+
+> **_NOTE:_** There are a few dataset functions that are not attached to the API that are also useful -- Check dataset_downloader.py
 
 ## Amenities API
 Get a list of shopping places in an area: `/amenities/api/{lat}/{lon}/{radius}`
