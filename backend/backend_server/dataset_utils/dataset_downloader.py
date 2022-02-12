@@ -3,7 +3,7 @@ import json
 import os
 
 from django.http import JsonResponse
-import safe_living_score
+#import safe_living_score
 
 # import importlib.util
 # spec = importlib.util.spec_from_file_location("safe_living_app", "C:/Users/Ryan/Documents/GitHub/team6-safelivingapp/backend/backend_server/safe_living_score")
@@ -49,9 +49,9 @@ def download_newest_crime_data(request = ""):
         print("Saved what could be saved")
 
 # Utility function to sort the downloaded crime dataset by state for (hopefully) faster read times.
-def sort_crime_data_by_state(request = ""):
+def sort_crime_data_by_state(request):
     try:
-        f = open("./backend/backend_server/datasets/crime_data.json")
+        f = open("./datasets/crime_data.json")
     except FileNotFoundError:
         print("Crime dataset not found. Please download that first.")
     else:
@@ -60,6 +60,9 @@ def sort_crime_data_by_state(request = ""):
     SORTED_CRIME_DATA = {}
     
     for agency in CRIME_DATA:
+        if agency[0:2] == "NE":
+            print("NEBRASKA")
+
         if not agency[0:2] in SORTED_CRIME_DATA:
             SORTED_CRIME_DATA[agency[0:2]] = {agency: CRIME_DATA[agency]}
         else:
@@ -69,33 +72,76 @@ def sort_crime_data_by_state(request = ""):
         json.dump(SORTED_CRIME_DATA, outfile)
     print("Successfully sorted crime dataset")
 
+def make_city_state_to_ori_dataset():
+    AGENCY_DATA = json.load(open('./backend/backend_server/datasets/agencies.json'))
+    POPULATION_DATA = json.load(open('./backend/backend_server/datasets/population_data_fixed.json'))
+
+    CITY_STATE_ORI_DATA = {}
+
+    for state in POPULATION_DATA:
+        print(state)
+        CITY_STATE_ORI_DATA[state] = {}
+        for city in POPULATION_DATA[state]:
+            CITY_STATE_ORI_DATA[state][city] = []
+            for agency in AGENCY_DATA[state]:
+                if city in AGENCY_DATA[state][agency]['agency_name'] and "City" in AGENCY_DATA[state][agency]['agency_type_name']:
+                    CITY_STATE_ORI_DATA[state][city].append(AGENCY_DATA[state][agency]["ori"])
+
+    with open("./backend/backend_server/datasets/city_ori.json", "w") as outfile:
+        json.dump(CITY_STATE_ORI_DATA, outfile)
+    print("DONE!")
+
 # Utility function to save crime scores to a dataset
-def refresh_crime_scores(request = ""):
-    try:
-        f = open("./datasets/geocodes.json")
-    except FileNotFoundError:
-        print("Could not find the population dataset")
-        GEOCODES_DATA = {}
-    else:
-        GEOCODES_DATA = json.load(f)
+def refresh_crime_scores(request):
     
     try:
-        f = open("./datasets/scores.json")
+        SCORE_DATA = json.load(open("./datasets/score.json"))
     except FileNotFoundError:
         print("Could not find the scores dataset")
         SCORE_DATA = {}
-    else:
-        SCORE_DATA = json.load(f)
     
     try:
-        for town in GEOCODES_DATA:
-            if "city" in town["F"] and town["F"] not in SCORE_DATA:
-                print(f"Calculating scores for {town['F']}")
-                scores = safe_living_score.views.get_score("", town["F"][0:town["F"].index("city")], safe_living_score.views.codestoState[town["A"]], "all")
-                SCORE_DATA[town["F"]] = {
-                    "scores": scores,
-                    "state-code": safe_living_score.views.codestoState[town["A"]]
-                }
+        POPULATION_DATA = json.load(open("./datasets/population_data_fixed.json"))
+    except FileNotFoundError:
+        print("Could not find the population dataset")
+        POPULATION_DATA = {}
+    
+    try:
+        NAT_CRIME_DATA = json.load(open("./datasets/national_data.json"))
+    except FileNotFoundError:
+        print("Could not find the national crime dataset")
+        NAT_CRIME_DATA = {}
+    
+    try:
+        CRIME_DATA = json.load(open("./datasets/crime_data_sorted.json"))
+    except FileNotFoundError:
+        print("Could not find the crime dataset")
+        CRIME_DATA = {}
+    
+    try:
+        AGENCY_DATA = json.load(open("./datasets/agencies.json"))
+    except FileNotFoundError:
+        print("Could not find the crime dataset")
+        AGENCY_DATA = {}
+    
+    count = 0
+
+    try:
+        for state in POPULATION_DATA:
+            print(state)
+            for town in POPULATION_DATA[state]:
+                if int(POPULATION_DATA[state][town]["Population"]) > 500 and town not in SCORE_DATA:
+                    #print(f"Calculating scores for {town}, {state}")
+                    scores = safe_living_score.views.get_safe_living_score(town, state, POPULATION_DATA, CRIME_DATA, AGENCY_DATA)
+                    SCORE_DATA[town] = {
+                        "scores": scores,
+                        "town-name": town,
+                        "state-code": state,
+                        "town-type": POPULATION_DATA[state][town]["Type"]
+                    }
+                count += 1
+                if(count % 10 == 0):
+                    print(f'{count}')
     except KeyboardInterrupt:
         with open("./datasets/scores.json", "w") as outfile:
             json.dump(SCORE_DATA, outfile)
@@ -128,9 +174,9 @@ def fix_population_dataset(request = ""):
     print("Successfully compiled population dataset!")
     return JsonResponse({"complete": True})
 
-# def  main():
-#     print(os.getcwd())
-#     refresh_crime_scores()
+def  main():
+    print(os.getcwd())
+    make_city_state_to_ori_dataset()
 
-# if __name__ == "__main__":
-#     main()
+if __name__ == "__main__":
+    main()
