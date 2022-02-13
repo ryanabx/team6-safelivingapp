@@ -136,7 +136,7 @@
     </div>
     <hr>
     <div *ngFor="let rev of location.reviews; let i = index">
-      <div *ngIf="rev.text != 'undefined'" class="jumbotron mt-3">
+      <div *ngIf="rev.text !== 'undefined'" class="jumbotron mt-3">
         <h2><b>Rating: </b>{{ rev.rating }}<rating style="float: right; color: #75808a; font-size: 40px;" [(ngModel)]="rev.rating" [max]="max" [readonly]="true"></rating></h2>
         <br><b>Comment: </b>{{ rev.text }}
       </div>
