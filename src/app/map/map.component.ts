@@ -17,8 +17,11 @@ import { analyzeAndValidateNgModules } from '@angular/compiler';
 export class MapComponent implements AfterViewInit, OnInit {
 
   //star rating
+  surveySubmitted = false;
   max = 5;
-  rate = 2;
+  rate = 0;
+  comment: any;
+  avgRating = 0;
   isReadonly = false;
   
   lat: number;
@@ -39,9 +42,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   inputAddr: any;
   geoApiFile: any;
   locationData: any;
-  state: any;
-  county: any;
-  city: any;
+
 
   weatherApiKey: any = "2883471b37ffc685d279ad06d302d7f5";
   weatherApiFile: any;
@@ -207,20 +208,6 @@ export class MapComponent implements AfterViewInit, OnInit {
     );
   }
 
-  // method call to submit a test review to backend for the city of Broken Arrow
-  sendTestReview() {
-    let c = "Broken Arrow";
-    let s = "OK";
-    let rating = 5;
-    let text = "Great place to live";
-
-    this.appService.submitReview(c, s, rating, text).subscribe(
-      (data:any) => {
-        console.log(data.success)
-      }
-    )
-  }
-
   // send an array of three addresses for the backend to process
   // need to configure backend to process either single or multiple inputs (shouldn't be too hard)
   // adds lat/long to an array as follows: [lat1, long1, lat2, long2, ..., lat{n}, long{n}]
@@ -259,6 +246,19 @@ export class MapComponent implements AfterViewInit, OnInit {
    zillowRoute(index: number){
     window.location.href = 'https://www.zillow.com/homes/' + this.locations[index].city + ',' + this.locations[index].state + '_rb/'
     //console.log(this.locations[index].city + ',' + this.locations[index].state)
+  }
+
+  submitReview(city: any, state: any)
+  {
+    if(this.rate != 0 && city && state)
+    {
+      this.surveySubmitted = true;
+      this.appService.submitReview(city, state, this.rate, this.comment).subscribe(
+        (data:any) => {
+          console.log(data.success)
+        }
+      );
+    }
   }
 
   parsePathData(path: any) {
@@ -345,6 +345,13 @@ export class MapComponent implements AfterViewInit, OnInit {
               console.log(data.prices);
             }
           )
+
+          this.appService.getAvgRating(this.cityNameArray[i], this.stateNameArray[i]).subscribe(
+            (data: any) => {
+              console.log(data);
+              this.avgRating = Math.ceil(data * 100) / 100;
+            },
+          );
 
           // for each location, collect all reviews from the backend that pertain to it
           this.appService.getReview(this.cityNameArray[i], this.stateNameArray[i]).subscribe(

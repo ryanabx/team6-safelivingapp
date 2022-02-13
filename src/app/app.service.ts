@@ -69,4 +69,8 @@ export class AppService {
   getReview(city: any, state: any) {
     return this.http.get(this.serverURL + "reviews/api/getReview/" + city + "/" + state + "/ ")
   }
+
+  getAvgRating(city: any, state: any) {
+    return this.http.get(this.serverURL + "reviews/api/getAvgRating/" + city + "/" + state + "/ ")
+  }
 }

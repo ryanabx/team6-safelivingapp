@@ -40,7 +40,16 @@ def getReview(request, city, state):
         response.append(something)
     return JsonResponse(response, safe=False)
 
+# retrieve the average rating of the [city, state]
+def getAvgRating(request, city, state):
 
-
+    relevant = Review.objects.filter(city=city, state=state)
+    total = 0
+    count = 0
+    for r in serializers.serialize('python', relevant):
+        something = r['fields']
+        total += something.get('rating')
+        count += 1
+    return JsonResponse(total / count, safe=False)
     
 
