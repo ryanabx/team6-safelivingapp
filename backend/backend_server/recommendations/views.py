@@ -53,6 +53,7 @@ def recommend(initialAddress, radiusValue, populationPreference="any"):
             #"recommendation" : ( "" + recommendedCity["city"] + ", " + recommendedCity["state"] )
             "city" : recommendedCity["city"],
             "state" : recommendedCity["state"],
+            "population" : recommendedCity["population"],
             "Safe Living Score" : maxScore
         }
     
@@ -139,15 +140,17 @@ def getRadius(radiusValue):
 # GIVEN --> LONG/LAT TUPLE, MIN/MAX POPULATION TUPLE, RADIUS
 # RETURN --> LIST OF CITIES
 
-def getCitiesOfPopulationInRange(coordinates, populationRange, radius):
+def getCitiesOfPopulationInRange(coordinates, populationRange, radius,
+CITY_DICT=json.load( open("./datasets/us_city_info.json") ) ):
     #cityDictionaryAll = csv.DictReader( open("us_cities.csv") )
-    cityDictionaryAll = csv.DictReader( open("./recommendations/us_cities.csv") )
+    #cityDictionaryAll = csv.DictReader( open("./recommendations/us_cities.csv") )
     iLong = coordinates[1]
     iLat = coordinates[0]
 
     cityDictionaryFinal = []
 
-    for city in cityDictionaryAll:
+    #for city in cityDictionaryAll:
+    for city in CITY_DICT:
         longDif = abs( float(city["lng"]) - iLong )
         latDif = abs( float(city["lat"]) - iLat )
 
