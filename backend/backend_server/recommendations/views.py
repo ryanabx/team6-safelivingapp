@@ -43,7 +43,9 @@ def recommend(initialAddress, radiusValue, populationPreference="any"):
     if(recommendedCity == None):
 
         context = {
-            "city" : "No City Found"
+            "city" : "No City Found",
+            "error_code": 1,
+            "error_message": "No recommended city found"
     }
     else:
 
@@ -51,7 +53,9 @@ def recommend(initialAddress, radiusValue, populationPreference="any"):
             #"recommendation" : ( "" + recommendedCity["city"] + ", " + recommendedCity["state"] )
             "city" : recommendedCity["city"],
             "state" : recommendedCity["state"],
-            "crimeScore" : maxCrimeScore
+            "crimeScore" : maxCrimeScore,
+            "error_code": 0,
+            "error_message": ""
         }
     
     return context
@@ -173,7 +177,7 @@ def getCrimeScore(city, state):
     #url = ("http://192.168.137.1:8000/safelivingscore/api/", city, "/", state, "/")
     #crimeScore = json.loads( requests.get(url) )
 
-    if(crimeScore == "There was a problem getting a score. No cities in range."):
+    if crimeScore["error_code"] > 0:
         return -1
 
     return float(crimeScore)
