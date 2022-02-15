@@ -9,6 +9,8 @@ import json
 import requests
 #csv.DictReader(file)
 
+#TEST WITH: http://localhost:8000/recommendations/api/tulsa/4000/large
+
 
 
 # PROTOTYPE REQUIREMENTS:
@@ -28,7 +30,7 @@ def recommend(initialAddress, radiusValue, populationPreference="any"):
 
     cities = getCitiesOfPopulationInRange(startingCoordinates, populationScale, radius)
 
-    maxCrimeScore = -1
+    maxScore = -1
     recommendedCity = None
 
     for city in cities: # Basic min/max calculation, but works (for now)
@@ -36,8 +38,8 @@ def recommend(initialAddress, radiusValue, populationPreference="any"):
         curScore = getCrimeScore(city["city"], city["state_id"])
         print("curScore = ", curScore)
         
-        if curScore >= maxCrimeScore:
-            maxCrimeScore = curScore 
+        if curScore >= maxScore:
+            maxScore = curScore 
             recommendedCity = city
     
     if(recommendedCity == None):
@@ -53,9 +55,9 @@ def recommend(initialAddress, radiusValue, populationPreference="any"):
             #"recommendation" : ( "" + recommendedCity["city"] + ", " + recommendedCity["state"] )
             "city" : recommendedCity["city"],
             "state" : recommendedCity["state"],
-            "crimeScore" : maxCrimeScore,
             "error_code": 0,
-            "error_message": ""
+            "error_message": "",
+            "Safe Living Score" : maxScore
         }
     
     return context

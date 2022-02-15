@@ -26,6 +26,7 @@ urlpatterns = [
     path('transportation/', include('transportation_score.urls')),
     path('costofliving/', include('cost_of_living.urls')),
     path('boundaries/', include('boundaries.urls')),
+    path('reviews/', include('reviews.urls')),
     path('api-token-auth/', obtain_jwt_token),
     path('api-token-refresh/', refresh_jwt_token),
     path('user/', include('user.urls')),

@@ -22,7 +22,7 @@
         <div class="collapse navbar-collapse">
             <ul class=" nav navbar-nav ml-auto">
               
-                <div *ngIf="this._userService.username == null, else elseBlock">
+                <div *ngIf="this._userService.username === null, else elseBlock">
                   <li routerLinkActive="active">
                     <a routerLink="/login" style="color:#00009D; font-family: Georgia, serif;">Login</a>
                   </li>

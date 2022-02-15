@@ -9,7 +9,7 @@ import { UserService } from '../user.service';
   templateUrl: './user-bookmarks.component.html',
   styleUrls: ['./user-bookmarks.component.css']
 })
-export class UserBookmarksComponent implements OnInit {
+export class UserBookmarksComponent {
 
   inputAddr: any;
   apiFile: any;
@@ -41,7 +41,7 @@ export class UserBookmarksComponent implements OnInit {
     private _userService: UserService) {
     // this._userService.username; <-- current logged-in user; null if none
     //this.bookmarks = this.appService.getBookmarks(this._userService.username);
-    this.appService.getBookmarks(_userService.username).subscribe(
+    this.appService.getBookmarks(this._userService.username).subscribe(
       (data:any) => {
         this.bookmarks = data;
         // console.log(data);
@@ -79,6 +79,4 @@ export class UserBookmarksComponent implements OnInit {
       () => console.log('done loading coords : ' + this.addrInputService.getAddr() + " : " + this.geoApiFile)
     );
   }
-
-  ngOnInit(): void {}
 }

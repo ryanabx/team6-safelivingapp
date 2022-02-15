@@ -5,11 +5,8 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './property-browser.component.html',
   styleUrls: ['./property-browser.component.css']
 })
-export class PropertyBrowserComponent implements OnInit {
+export class PropertyBrowserComponent {
 
   constructor() { }
-
-  ngOnInit(): void {
-  }
 
 }

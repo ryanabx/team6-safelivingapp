@@ -8,7 +8,7 @@ import { analyzeAndValidateNgModules } from '@angular/compiler';
   templateUrl: './crimeapi.component.html',
   styleUrls: ['./crimeapi.component.css']
 })
-export class CrimeapiComponent implements OnInit {
+export class CrimeapiComponent {
 
   url = 'http://localhost:8000/crimedata/api/FL0500500/2019/2020/';
   items: any = [];
@@ -180,11 +180,6 @@ export class CrimeapiComponent implements OnInit {
       }*/
     });
    }
-
-
-  ngOnInit(): void {
-
-  }
 
 }
 function zillowRoute() {

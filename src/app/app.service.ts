@@ -61,4 +61,16 @@ export class AppService {
   delBookmark(user: any, address: any) {
     return this.http.get(this.serverURL + "user/api/del_bookmark/" + user + "/" + address + "/");
   }
+
+  submitReview(city: any, state: any, rating: any, text: any) {
+    return this.http.get(this.serverURL + "reviews/api/submitReview/" + city + "/" + state + "/ " + rating + "/" + text + "/ ")
+  }
+
+  getReview(city: any, state: any) {
+    return this.http.get(this.serverURL + "reviews/api/getReview/" + city + "/" + state + "/ ")
+  }
+
+  getAvgRating(city: any, state: any) {
+    return this.http.get(this.serverURL + "reviews/api/getAvgRating/" + city + "/" + state + "/ ")
+  }
 }

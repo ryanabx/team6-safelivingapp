@@ -6,6 +6,7 @@ import { AppService } from '../app.service';
 import { MapsAPILoader } from '@agm/core';
 import { HttpClient } from '@angular/common/http';
 import { UserService } from '../user.service';
+import { analyzeAndValidateNgModules } from '@angular/compiler';
 //import { stringify } from 'querystring';
 
 @Component({
@@ -14,6 +15,15 @@ import { UserService } from '../user.service';
   styleUrls: ['./map.component.css']
 })
 export class MapComponent implements AfterViewInit, OnInit {
+
+  //star rating
+  surveySubmitted = false;
+  max = 5;
+  rate = 0;
+  comment: any;
+  avgRating = 0;
+  isReadonly = false;
+  
   lat: number;
   long: number;
   latLongArray: any = [];
@@ -32,9 +42,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   inputAddr: any;
   geoApiFile: any;
   locationData: any;
-  state: any;
-  county: any;
-  city: any;
+
 
   weatherApiKey: any = "2883471b37ffc685d279ad06d302d7f5";
   weatherApiFile: any;
@@ -240,6 +248,19 @@ export class MapComponent implements AfterViewInit, OnInit {
     //console.log(this.locations[index].city + ',' + this.locations[index].state)
   }
 
+  submitReview(city: any, state: any)
+  {
+    if(this.rate != 0 && city && state)
+    {
+      this.surveySubmitted = true;
+      this.appService.submitReview(city, state, this.rate, this.comment).subscribe(
+        (data:any) => {
+          console.log(data.success)
+        }
+      );
+    }
+  }
+
   parsePathData(path: any) {
 
     let parsedData : any = [];
@@ -280,7 +301,7 @@ export class MapComponent implements AfterViewInit, OnInit {
 
 
 
-      /* deprecated / depreciated
+      /* deprecated
       console.log(this.lat + " : " + this.long)
       if(this.lat != 0 && this.long != 0){
         this.appService.getSafeLivingScoreAPI(this.long, this.lat, 2.0).subscribe(
@@ -304,13 +325,12 @@ export class MapComponent implements AfterViewInit, OnInit {
         }
       }
 
-      // set the respective city and state name to each location in locations array
+      // set the respective variables to each location in locations array
       if (this.cityNameArray != null || this.stateNameArray != null) {
         for (let i = 0; i < this.locations.length; i++) {
           this.locations[i].setCity(this.cityNameArray[i]);
           this.locations[i].setState(this.stateNameArray[i]);
 
-          console.log("got here")
           this.appService.getBoundaries(this.cityNameArray[i], this.stateNameArray[i]).subscribe(
             (data: any) => {
               this.locations[i].setPath(this.parsePathData(data));
@@ -325,6 +345,25 @@ export class MapComponent implements AfterViewInit, OnInit {
               console.log(data.prices);
             }
           )
+
+          this.appService.getAvgRating(this.cityNameArray[i], this.stateNameArray[i]).subscribe(
+            (data: any) => {
+              console.log(data);
+              this.avgRating = Math.ceil(data * 100) / 100;
+            },
+          );
+
+          // for each location, collect all reviews from the backend that pertain to it
+          this.appService.getReview(this.cityNameArray[i], this.stateNameArray[i]).subscribe(
+            (data: any) => {
+              console.log("got here")
+
+              // save them into its location object
+              this.locations[i].setReviews(data);
+              console.log("Review(s) Returned: " + data);
+            }
+          )
+
         }
       }
       console.log("Locations initially created: " + this.locations)
@@ -368,6 +407,7 @@ export class Location {
     apartmentHigh: '',
     gas: ''
   };
+  public reviews: any;
   public labelOptions: any = {
     color: 'white',
     fontFamily: '',
@@ -401,6 +441,12 @@ export class Location {
 
   setPath(path: any){
     this.testPaths = path;
+  }
+
+  // called to save the returned array of json objects containing the reviews
+  // reminder, the format of a returned review is {"city": city, "state": state, "rating": rating, "text": text/comments}
+  setReviews(reviews: any) { 
+    this.reviews = reviews;
   }
 
   setCostOfLiving(col: any) {

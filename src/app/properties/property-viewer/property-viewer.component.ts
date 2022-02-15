@@ -5,11 +5,8 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './property-viewer.component.html',
   styleUrls: ['./property-viewer.component.css']
 })
-export class PropertyViewerComponent implements OnInit {
+export class PropertyViewerComponent {
 
   constructor() { }
-
-  ngOnInit(): void {
-  }
 
 }
