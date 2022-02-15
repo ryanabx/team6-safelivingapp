@@ -247,7 +247,7 @@ CRIME_DATA = json.load(open('./datasets/crime_data_sorted.json')),
 CITY_ORI = json.load(open('./datasets/city_ori.json'))
 ):
     #print(f'Get safe living score for {city}, {state}')
-    score = get_crime_score(city, state, POPULATION_DATA, CRIME_DATA, AGENCIES, CITY_ORI)
+    score = get_crime_score(city, state, POPULATION_DATA, CRIME_DATA, CITY_ORI)
     if "error_code" in score and score["error_code"] != 0:
         score["safe-living-score"] = -1
     else:
