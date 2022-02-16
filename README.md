@@ -30,8 +30,8 @@ To build the software, run `ng serve`. Add `--open` at the end to open in the de
 7. Make sure to read tutorials for how to do things in Django!
 
 ## Migrate Database (Django Backend)
-1. Run "python manage.py makemigrations"
-2. Run "python manage.py migrate"
+1. Run `python manage.py makemigrations`
+2. Run `python manage.py migrate`
 
 ## Build/Test Software (Django Backend)
 1. Make sure you are in the virtual environment. You will see a (venv) in your shell if you are in the virtual environment.
