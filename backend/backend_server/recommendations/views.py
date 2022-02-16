@@ -9,6 +9,8 @@ import json
 import requests
 #csv.DictReader(file)
 
+#TEST WITH: http://localhost:8000/recommendations/api/tulsa/4000/large
+
 
 
 # PROTOTYPE REQUIREMENTS:
@@ -28,7 +30,7 @@ def recommend(initialAddress, radiusValue, populationPreference="any"):
 
     cities = getCitiesOfPopulationInRange(startingCoordinates, populationScale, radius)
 
-    maxCrimeScore = -1
+    maxScore = -1
     recommendedCity = None
 
     for city in cities: # Basic min/max calculation, but works (for now)
@@ -36,14 +38,16 @@ def recommend(initialAddress, radiusValue, populationPreference="any"):
         curScore = getCrimeScore(city["city"], city["state_id"])
         print("curScore = ", curScore)
         
-        if curScore >= maxCrimeScore:
-            maxCrimeScore = curScore 
+        if curScore >= maxScore:
+            maxScore = curScore 
             recommendedCity = city
     
     if(recommendedCity == None):
 
         context = {
-            "city" : "No City Found"
+            "city" : "No City Found",
+            "error_code": 1,
+            "error_message": "No recommended city found"
     }
     else:
 
@@ -51,7 +55,9 @@ def recommend(initialAddress, radiusValue, populationPreference="any"):
             #"recommendation" : ( "" + recommendedCity["city"] + ", " + recommendedCity["state"] )
             "city" : recommendedCity["city"],
             "state" : recommendedCity["state"],
-            "crimeScore" : maxCrimeScore
+            "error_code": 0,
+            "error_message": "",
+            "Safe Living Score" : maxScore
         }
     
     return context
@@ -166,14 +172,16 @@ def getCitiesOfPopulationInRange(coordinates, populationRange, radius):
 
 def getCrimeScore(city, state):
 
-    crimeScore = safe_living_score.views.get_score_dict(city, state)["safe-living-score"] 
+    score_dict = safe_living_score.views.get_score_dict(city, state)
+
+    crimeScore = score_dict["safe-living-score"] 
 
 
     #url = ("https://localhost:8000/safelivingscore/api/", city, "/", state, "/")192.168.2.68
     #url = ("http://192.168.137.1:8000/safelivingscore/api/", city, "/", state, "/")
     #crimeScore = json.loads( requests.get(url) )
 
-    if(crimeScore == "There was a problem getting a score. No cities in range."):
+    if score_dict["error_code"] > 0:
         return -1
 
     return float(crimeScore)

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AddrInputService } from '../addr-input.service';
 import { AppService } from '../app.service';
@@ -8,7 +9,7 @@ import { AppService } from '../app.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit { 
   inputAddr: any;
   apiFile: any;
   locationData: any;
