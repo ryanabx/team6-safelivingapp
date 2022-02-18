@@ -169,7 +169,12 @@ CITY_DICT=json.load( open("./datasets/us_city_info.json") ) ):
 # GIVEN --> CITY NAME AND STATE NAME
 # RETURN --> CALUCLATED CRIME SCORE
 
-def getCrimeScore(city, state):
+def getCrimeScore(city, state,
+    ORI_DICT = json.load( open("./datasets/city_ori.json") ) ):
+
+    if state in ORI_DICT and city in ORI_DICT[state]:
+        if( ORI_DICT[state][city] == [] ):
+            return -1
 
     crimeScore = safe_living_score.views.get_score_dict(city, state)["safe-living-score"] 
 
@@ -178,8 +183,8 @@ def getCrimeScore(city, state):
     #url = ("http://192.168.137.1:8000/safelivingscore/api/", city, "/", state, "/")
     #crimeScore = json.loads( requests.get(url) )
 
-    if(crimeScore == "There was a problem getting a score. No cities in range."):
-        return -1
+    #if(crimeScore == "There was a problem getting a score. No cities in range."):
+    #       return -1
 
     return float(crimeScore)
 
