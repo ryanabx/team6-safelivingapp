@@ -182,14 +182,9 @@ def make_search_suggestions():
     except FileNotFoundError:
         print("Could not find the population dataset")
         POPULATION_DATA = {}
-    i = 1
     for state in POPULATION_DATA:
         for city in POPULATION_DATA[state]:
-            SEARCH_SUGGESTIONS.append({
-                "id": i,
-                "name": f'{city}, {state}'
-            })
-            i += 1
+            SEARCH_SUGGESTIONS.append(f'{city}, {state}')
     
     with open('./backend/backend_server/datasets/search_suggestions.json', "w") as outfile:
         json.dump(SEARCH_SUGGESTIONS, outfile)
