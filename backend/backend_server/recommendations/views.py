@@ -18,17 +18,17 @@ import requests
 # GIVEN --> CITY, STATE, RADIUS, POPULATION SCALE
 # RETURN --> CITY WITH HIGHEST SAFETY SCORE
 
-def recommendCity(request, initialAddress, radiusValue, populationPreference="any"):
-    return JsonResponse( recommend(initialAddress, radiusValue, populationPreference) )
+def recommendCity(request, initialAddress, radiusValue, minPopulation=-1, maxPopulation=float("inf")):
+    return JsonResponse( recommend(initialAddress, radiusValue, ( float(minPopulation), float(maxPopulation) ) ) )
 
 
-def recommend(initialAddress, radiusValue, populationPreference="any"):
+def recommend(initialAddress, radiusValue, populationPreference=( -1, float("inf") )):
 
     startingCoordinates = getCoordinates(initialAddress)
-    populationScale = getPopulationScale(populationPreference)
+    #populationScale = getPopulationScale(populationPreference)
     radius = getRadius(radiusValue)
 
-    cities = getCitiesOfPopulationInRange(startingCoordinates, populationScale, radius)
+    cities = getCitiesOfPopulationInRange(startingCoordinates, populationPreference, radius)
 
     maxScore = -1
     recommendedCity = None
@@ -96,26 +96,28 @@ def getCoordinates(address):
 # UTLIZES NCES CLASSIFICATIONS
 # FORMAT: (>= Lower Bound, < Upper Bound)
 
-def getPopulationScale(populationDescriptor):
-    
-    match populationDescriptor:
-        
-        case "town":
-            return( (0, 50_000) )
-        
-        case "small":
-            return( (50_000, 100_000) )
-        
-        case "medium":
-            return( (100_000, 250_000) )
-        
-        case "large":
-            return( (250_000, float("inf")) )
-        
-        case "any":
-            return( (0, float("inf")) )
+#DEPRECIATED
 
-    return (-1, -1)
+#def getPopulationScale(populationDescriptor):
+    
+#    match populationDescriptor:
+        
+#        case "town":
+#            return( (0, 50_000) )
+        
+ #       case "small":
+  #          return( (50_000, 100_000) )
+        
+   #     case "medium":
+    #        return( (100_000, 250_000) )
+        
+     #   case "large":
+      #      return( (250_000, float("inf")) )
+        
+       # case "any":
+        #    return( (0, float("inf")) )
+
+    # return (-1, -1)
 
 def populationInRange(population, range):
     if( int(population) >= range[0] and int(population) < range[1] ):
