@@ -450,10 +450,48 @@ export class Location {
   }
 
   setCostOfLiving(col: any) {
-    console.log(col[40].average_price)
-    this.costOfLiving.salary = parseFloat(col[40].average_price).toFixed(2).toString();
-    this.costOfLiving.apartmentLow = parseFloat(col[22].average_price).toFixed(2).toString();
-    this.costOfLiving.apartmentHigh = parseFloat(col[23].average_price).toFixed(2).toString();
-    this.costOfLiving.gas = parseFloat(col[14].average_price).toFixed(2).toString();
+
+    let i = 0;
+    while (i < col.length) {
+      console.log("this is the " + i + "th time in the loop")
+
+      // check if it's for monthly salary
+      if (col[i].item_name === "Average Monthly Net Salary (After Tax), Salaries And Financing") {
+        this.costOfLiving.salary = parseFloat(col[i].average_price).toFixed(2).toString();
+      }
+
+      // check if it's for apartment rent (low)
+      else if (col[i].item_name ===  "Apartment (1 bedroom) Outside of Centre, Rent Per Month") {
+        this.costOfLiving.apartmentLow = parseFloat(col[i].average_price).toFixed(2).toString();
+      }
+
+      // check if it's for apartment rent (high)
+      else if (col[i].item_name ===  "Apartment (3 bedrooms) in City Centre, Rent Per Month") {
+        this.costOfLiving.apartmentHigh = parseFloat(col[i].average_price).toFixed(2).toString();
+      }
+
+      // check if it's for gasoline prices
+      else if (col[i].item_name === "Gasoline (1 liter), Transportation") {
+        // need to multiply by 3.78541 to convert Liters (not 'litres'), to gallons of gas.
+        // console.log(col[i].item_name)
+        // console.log(col[i].average_price)
+        this.costOfLiving.gas = (parseFloat(col[i].average_price) * 3.78541).toFixed(2).toString();
+      }
+
+      i++;
+    }
+
+    if (this.costOfLiving.salary === '') {
+      this.costOfLiving.salary = "No Data"
+    }
+    if (this.costOfLiving.apartmentLow === '') {
+      this.costOfLiving.apartmentLow = "No Data"
+    }
+    if (this.costOfLiving.apartmentHigh === '') {
+      this.costOfLiving.apartmentHigh = "No Data"
+    }
+    if (this.costOfLiving.gas === '') {
+      this.costOfLiving.gas = "No Data"
+    }
   }
 }

@@ -14,6 +14,9 @@ def getCostOfLiving(request, city, state):
     #state = 'Example
     print(city, state)
     url = f'https://www.numbeo.com/api/city_prices?api_key={key}&query={city},%20{state}'
+    print("--------------------------")
+    print(url)
+    print("--------------------------")
 
     r = requests.get(url)
     stuff = r.json()
