@@ -7,6 +7,7 @@ from django.http import JsonResponse
 import csv
 import json
 import requests
+import math
 #csv.DictReader(file)
 
 #TEST WITH: http://localhost:8000/recommendations/api/tulsa/4000/large
@@ -86,10 +87,7 @@ def getCoordinates(address):
     print(latitude, " ", longitude)
 
     return( (float(latitude), float(longitude)) )
-
-    
-
-    return -1
+    #return -1
 
 
 # Get min and max of population given descriptor
@@ -157,16 +155,40 @@ CITY_DICT=json.load( open("./datasets/us_city_info.json") ) ):
 
     #for city in cityDictionaryAll:
     for city in CITY_DICT:
-        longDif = abs( float(city["lng"]) - iLong )
-        latDif = abs( float(city["lat"]) - iLat )
+        distance = getLongLatDistance( iLong, iLat, float(city["lng"]), float(city["lat"]) )
+        #longDif = abs( float(city["lng"]) - iLong )
+        #latDif = abs( float(city["lat"]) - iLat )
 
-        if(longDif <= radius and latDif <= radius):
-            distance = sqrt( longDif**2 + latDif**2 )
+        #if(longDif <= radius and latDif <= radius):
+        if(distance <= radius):
+            #distance = sqrt( longDif**2 + latDif**2 )
             
-            if( distance <= radius and populationInRange(city["population"], populationRange) ):
+            #if( distance <= radius and populationInRange(city["population"], populationRange) ):
+            if(populationInRange(city["population"], populationRange)):
                 cityDictionaryFinal.append(city)
 
     return cityDictionaryFinal
+
+
+
+def getLongLatDistance(iLong, iLat, curLong, curLat):
+    
+    longDifference = abs(iLong - curLong)
+    latDifference = abs(iLat - curLat)
+    
+    EARTH_RADIUS = 6371 # Radius in kilometers
+
+    radLongDifference = (longDifference * math.pi) / 180
+    radLatDifference = (latDifference * math.pi) / 180
+    iRadLat = (iLat * math.pi) / 180
+    curRadLat = (curLat * math.pi) / 180
+
+    aFormula = ( math.sin(radLatDifference/2) ** 2 ) + ( math.cos(iRadLat) * math.cos(curRadLat) ) + ( math.sin(radLongDifference/2) ** 2 )
+    #bFormula = 2 * math.atan2( math.sqrt(aFormula), math.sqrt(1-aFormula) )
+    bFormula = 2 * math.asin( math.sqrt(aFormula) )
+    finalDistance = EARTH_RADIUS * bFormula
+
+    return finalDistance
 
 
 
