@@ -33,6 +33,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   radius: number;
 
   bookmarked: boolean = false;
+  emptySearch: boolean = false;
   
   crimeScore: any;
   crimeScoreArray: any = [];
@@ -92,16 +93,7 @@ export class MapComponent implements AfterViewInit, OnInit {
     //private mapsAPILoader: MapsAPILoader;
     
 
-    // poverty and income api
-    this.http.get("http://api.census.gov/data/timeseries/poverty/saipe?get=NAME,SAEMHI_PT,SAEPOVALL_PT,SAEPOVRTALL_PT&GEOID=40143&YEAR=2019").toPromise().then(data =>{
-      console.log("Heres the data");
-      console.log(data);
-      this.censusEconDataFile = data
-      this.censusEconData = this.censusEconDataFile[1]
-      this.censusMedIncome = this.censusEconData[1]
-      this.censusPovCount = this.censusEconData[2]
-      this.censusPovRate = this.censusEconData[3]
-    });
+  
   }
 
   amIBookmarked(bookmarks: any): boolean {
@@ -141,15 +133,41 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.appService.callGeoApi(value).subscribe(
       (data: any) => {
         this.geoApiFile = data;
-        this.locationData = this.geoApiFile.results[0].locations[0];
+        this.locationData = this.geoApiFile.results[0].locations;
+
+        // iterate through returned location array
+        for (let i = 0; i < this.locationData.length; i++) {
+
+          // if location is not in US, remove
+          if (this.locationData[i].adminArea1 != "US") {
+            this.locationData.splice(i, 1);
+          }
+        }
+        console.log("Here's the Locations:")
+        //console.log(this.locationData);
+        console.log(this.geoApiFile);
+
+        console.log("Here's the Locations after removing non-us places:")
+        //console.log(this.locationData);
         console.log(this.locationData);
-        this.latLongArray = [this.locationData.latLng.lat, this.locationData.latLng.lng]
-        this.cityNameArray = [this.locationData.adminArea5];
-        this.stateNameArray = [this.locationData.adminArea3]
-        this.router.navigate(['map'], {queryParams: {latLng : JSON.stringify(this.latLongArray), 
-        city : JSON.stringify(this.cityNameArray), 
-        state : JSON.stringify(this.stateNameArray), 
-        addr : this.inputAddr}}).then(() => {this.crimeScore = "Loading... Please wait!";});
+
+        // check if there is anything left in array, if so, initiate search 
+        if (this.locationData.length > 0) {
+          console.log("There's a valid, US, address here")
+          this.latLongArray = [this.locationData[0].latLng.lat, this.locationData[0].latLng.lng]
+          this.cityNameArray = [this.locationData[0].adminArea5];
+          this.stateNameArray = [this.locationData[0].adminArea3]
+
+          this.router.navigate(['map'], {queryParams: {latLng : JSON.stringify(this.latLongArray), 
+          city : JSON.stringify(this.cityNameArray), 
+          state : JSON.stringify(this.stateNameArray), 
+          addr : this.inputAddr}}).then(() => {this.crimeScore = "Loading... Please wait!";});
+        }
+        // else, flag to prompt user
+        else {
+          console.log("There's nothin' here boss")
+          this.router.navigate(['map'], {queryParams: {emptySearch : true}})
+        }
       },
       (err: any) => console.error(err),
       () => console.log('done loading coords : ' + this.addrInputService.getAddr() + " : " + this.geoApiFile)
@@ -174,17 +192,44 @@ export class MapComponent implements AfterViewInit, OnInit {
         this.geoApiFile = data;
         this.locationData = this.geoApiFile.results
         console.log(this.locationData)
-        for (let i = 0; i < this.locationData.length; i++) {
-          this.latLongArray.push(this.locationData[i].locations[0].latLng.lat)
-          this.latLongArray.push(this.locationData[i].locations[0].latLng.lng)
-          this.cityNameArray.push(this.locationData[i].locations[0].adminArea5)
-          this.stateNameArray.push(this.locationData[i].locations[0].adminArea3)
-        }
 
-        this.router.navigate(['map'], {queryParams: {latLng : JSON.stringify(this.latLongArray), 
+        // iterate through returned location array
+        for (let i = 0; i < this.locationData.length; i++) {
+
+          // if location is not in US, remove
+          if (this.locationData[i].adminArea1 != "US") {
+            this.locationData.splice(i, 1);
+          }
+        }
+        console.log("Here's the Locations:")
+        //console.log(this.locationData);
+        console.log(this.geoApiFile);
+
+        console.log("Here's the Locations after removing non-us places:")
+        //console.log(this.locationData);
+        console.log(this.locationData);
+
+        // check if there is anything left in array, if so, initiate search 
+        if (this.locationData.length > 0) {
+          console.log("There's a valid, US, address here")
+          for (let i = 0; i < this.locationData.length; i++) {
+            this.latLongArray.push(this.locationData[i].locations[0].latLng.lat)
+            this.latLongArray.push(this.locationData[i].locations[0].latLng.lng)
+            this.cityNameArray.push(this.locationData[i].locations[0].adminArea5)
+            this.stateNameArray.push(this.locationData[i].locations[0].adminArea3)
+          }
+
+          this.router.navigate(['map'], {queryParams: {latLng : JSON.stringify(this.latLongArray), 
           city : JSON.stringify(this.cityNameArray), 
           state : JSON.stringify(this.stateNameArray), 
-          addr : this.inputAddr}}).then(() => {this.crimeScore = "Loading... Please wait!";});      },
+          addr : this.inputAddr}}).then(() => {this.crimeScore = "Loading... Please wait!";});
+        }
+        // else, flag to prompt user
+        else {
+          console.log("There's nothin' here boss")
+          this.router.navigate(['map'], {queryParams: {emptySearch : true}})
+        } 
+      },
       (err: any) => console.error(err),
       () => console.log()
     );
@@ -226,6 +271,7 @@ export class MapComponent implements AfterViewInit, OnInit {
       (data: any) => {
         this.geoApiFile = data;
         this.locationData = this.geoApiFile.results
+        console.log("Here's the location data:")
         console.log(this.locationData)
         for (let i = 0; i < this.locationData.length; i++) {
           this.latLongArray.push(this.locationData[i].locations[0].latLng.lat)
@@ -292,6 +338,7 @@ export class MapComponent implements AfterViewInit, OnInit {
       //this.long = params['long'] ? (parseFloat(params['long']) ? parseFloat(params['long']) : 0) : 0;
       
       this.inputAddr = params['addr']
+      this.emptySearch = params['emptySearch']
       
       this.latLongArray = JSON.parse(params['latLng']); // accept the lat/long array for multiple locations
       console.log(this.latLongArray)

@@ -19,6 +19,14 @@
         </form>
       </div>
 
+      <div *ngIf="this.emptySearch == true">
+        <form class="form-inline justify-content-center mb-5">
+          <h1>
+            Please enter a city, state within the US
+          </h1>
+        </form>
+      </div>
+
       <div class="information container-fluid align-content-center fixed-bottom">
         <hr>
           <!-- Example row of columns -->
