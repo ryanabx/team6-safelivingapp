@@ -1,16 +1,19 @@
 <body>
+  <!-- Create Search Bar -->
 <div class="search-container">
     <input type="text" placeholder="Search [City, State]" name="'search'" id = "userInput" #userInput> <!-- id = "userInput" -->
     <button class="btn btn-primary fa fa-search" (click)="sendInput(userInput.value)" type="button">Find</button> <!-- onclick = 'sendInput()' -->
     <button *ngIf="inputAddr !== null" class="btn btn-primary fa fa-search" (click)="addToInput(userInput.value)" type="button">Add to Search</button>
 </div>
 
+<!-- Search Bar Text -->
 <div *ngIf="this.emptySearch == true">
   <p>
     Please enter a valid US [city, state]
   </p>
 </div>
 
+<!-- Bookmark For Logged In User -->
 <div *ngIf="this._userService.username !== null">
   <ng-template [ngIf]="!this.bookmarked">
     <div>
@@ -33,6 +36,7 @@
   <button class="btn btn-primary" (click)="reveal()">Show Me in Console</button>
 </div>-->
 
+<!-- Create Map -->
 <div class = left>
 <agm-map style="width: 500px; height: 500px" [latitude] = "39.8283" [longitude] = "-98.5795" [zoom] = "3">
     <agm-marker *ngFor="let location of locations; let i=index" [latitude]="location.lat" [longitude]="location.long"
@@ -59,6 +63,7 @@
 </div>
 
 <div>
+<!-- Create City Info Box -->
 <div class = "right">
   <div *ngFor="let location of locations; let i=index" >
     <div *ngIf="inputAddr !== null" class = "center-text jumbotron">
@@ -88,14 +93,16 @@
         <li>Average Apartment Rent Per Month Range: <b>${{location.costOfLiving.apartmentLow}} - ${{location.costOfLiving.apartmentHigh}}</b></li>
         <li>Gasoline Per Gallon: <b>${{location.costOfLiving.gas}}</b></li>
       </ul>
+      <!-- Zillow Link for Houses -->
       <div *ngIf="inputAddr !== null">
         <br><button class="btn btn-primary" (click)="zillowRoute(i)">Find Houses In {{location.city}}</button>
         <!--<a *ngFor="let link of zillowLinks; let i = index" href = {{link}}>[See houses in {{cityNameArray[i]}}]</a>-->
         <p style = "font-size: small">*Will take you off site to Zillow.com*</p>
       </div>
       
+      <!-- Check Survey Completion Status -->
       <div *ngIf="surveySubmitted === false; else submitted">
-        <!-- star rating -->
+        <!-- Star Rating -->
         <div class="col-md-4 mt-4">
           <h2>Rate This City</h2>
           <rating  style="color: #0275d8;font-size: 40px;" [(ngModel)]="rate" [max]="max" [readonly]="isReadonly">

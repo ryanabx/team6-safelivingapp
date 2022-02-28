@@ -7,21 +7,24 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 
+ <!-- Create the Navbar-->
 <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #ffb202;">
     <div class="container-fluid">
         <div class="navbar-header">
             <img  class="images" src="SL_Logo_NoBkg.png" width="100" height="75"/>
         </div>
         
+        <!-- Left Side Tabs-->
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
                 <li routerLinkActive="active"><a routerLink="/home" style="color:#00009D; font-family: Georgia, serif">Home</a></li>
                 <li routerLinkActive="active"><a routerLink="/map" style="color:#00009D; font-family: Georgia, serif;">Explore</a></li>
             </ul>
         </div>
+        <!-- Right Side Tabs-->
         <div class="collapse navbar-collapse">
             <ul class=" nav navbar-nav ml-auto">
-              
+                <!-- Navbar Tabs (not logged in)-->
                 <div *ngIf="this._userService.username === null, else elseBlock">
                   <li routerLinkActive="active">
                     <a routerLink="/login" style="color:#00009D; font-family: Georgia, serif;">Login</a>
@@ -33,6 +36,7 @@
                     <a routerLink="/contact" style="color:#00009D; font-family: Georgia, serif;">Contact Us</a>
                   </li>
                 </div>
+                <!-- Navbar Tabs (logged in)-->
                 <ng-template #elseBlock>
                   <li routerLinkActive="active">
                     <a routerLink="/bookmarks" style="color:#00009D; font-family: Georgia, serif;">Bookmarks</a>
