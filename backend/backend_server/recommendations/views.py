@@ -8,6 +8,7 @@ import csv
 import json
 import requests
 import math
+import geopy.distance
 #csv.DictReader(file)
 
 #TEST WITH: http://localhost:8000/recommendations/api/tulsa/4000/large
@@ -136,7 +137,7 @@ def populationInRange(population, range):
 # RETURN --> MAPQUEST RADIUS SCALE
 
 def getRadius(radiusValue):
-    return int(radiusValue) / 1000
+    return int(radiusValue) #/ 1000
 
 
 # TODO: Should get cities within the radius that fits the population criteria
@@ -155,15 +156,10 @@ CITY_DICT=json.load( open("./datasets/us_city_info.json") ) ):
 
     #for city in cityDictionaryAll:
     for city in CITY_DICT:
-        distance = getLongLatDistance( iLong, iLat, float(city["lng"]), float(city["lat"]) )
-        #longDif = abs( float(city["lng"]) - iLong )
-        #latDif = abs( float(city["lat"]) - iLat )
+        
+        distance = geopy.distance.great_circle( (iLat, iLong), ( float(city["lat"]), float(city["lng"]) ) ).km
 
-        #if(longDif <= radius and latDif <= radius):
         if(distance <= radius):
-            #distance = sqrt( longDif**2 + latDif**2 )
-            
-            #if( distance <= radius and populationInRange(city["population"], populationRange) ):
             if(populationInRange(city["population"], populationRange)):
                 cityDictionaryFinal.append(city)
 
@@ -171,24 +167,24 @@ CITY_DICT=json.load( open("./datasets/us_city_info.json") ) ):
 
 
 
-def getLongLatDistance(iLong, iLat, curLong, curLat):
+# def getLongLatDistance(iLong, iLat, curLong, curLat):
     
-    longDifference = abs(iLong - curLong)
-    latDifference = abs(iLat - curLat)
+#     longDifference = abs(iLong - curLong)
+#     latDifference = abs(iLat - curLat)
     
-    EARTH_RADIUS = 6371 # Radius in kilometers
+#     EARTH_RADIUS = 6371 # Radius in kilometers
 
-    radLongDifference = (longDifference * math.pi) / 180
-    radLatDifference = (latDifference * math.pi) / 180
-    iRadLat = (iLat * math.pi) / 180
-    curRadLat = (curLat * math.pi) / 180
+#     radLongDifference = (longDifference * math.pi) / 180
+#     radLatDifference = (latDifference * math.pi) / 180
+#     iRadLat = (iLat * math.pi) / 180
+#     curRadLat = (curLat * math.pi) / 180
 
-    aFormula = ( math.sin(radLatDifference/2) ** 2 ) + ( math.cos(iRadLat) * math.cos(curRadLat) ) + ( math.sin(radLongDifference/2) ** 2 )
-    #bFormula = 2 * math.atan2( math.sqrt(aFormula), math.sqrt(1-aFormula) )
-    bFormula = 2 * math.asin( math.sqrt(aFormula) )
-    finalDistance = EARTH_RADIUS * bFormula
+#     aFormula = ( math.sin(radLatDifference/2) ** 2 ) + ( math.cos(iRadLat) * math.cos(curRadLat) ) + ( math.sin(radLongDifference/2) ** 2 )
+#     #bFormula = 2 * math.atan2( math.sqrt(aFormula), math.sqrt(1-aFormula) )
+#     bFormula = 2 * math.asin( math.sqrt(aFormula) )
+#     finalDistance = EARTH_RADIUS * bFormula
 
-    return finalDistance
+#     return finalDistance
 
 
 
