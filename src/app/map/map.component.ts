@@ -141,6 +141,7 @@ export class MapComponent implements AfterViewInit, OnInit {
           // if location is not in US, remove
           if (this.locationData[i].adminArea1 != "US") {
             this.locationData.splice(i, 1);
+            i--;
           }
         }
         console.log("Here's the Locations:")
@@ -175,7 +176,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   addToInput(value: string) {
-
+    console.log("called")
     if (value == '') {
       return
     }
@@ -186,21 +187,26 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.locations = [];
     this.cityNameArray = [];
     this.stateNameArray = []
+    console.log("inputaddr: " + this.inputAddr)
 
     this.appService.callGeoApi(this.inputAddr).subscribe(
       (data: any) => {
         this.geoApiFile = data;
+        console.log(this.geoApiFile)
         this.locationData = this.geoApiFile.results
-        console.log(this.locationData)
-
+        console.log("before doing anything" + this.locationData)
+        /*
         // iterate through returned location array
         for (let i = 0; i < this.locationData.length; i++) {
 
           // if location is not in US, remove
           if (this.locationData[i].adminArea1 != "US") {
-            this.locationData.splice(i, 1);
+            let removed = this.locationData.splice(i, 1);
+            console.log("Current Location: " + this.locationData[i])
+            console.log("removed:" + removed)
+            i--;
           }
-        }
+        }*/
         console.log("Here's the Locations:")
         //console.log(this.locationData);
         console.log(this.geoApiFile);
@@ -227,7 +233,7 @@ export class MapComponent implements AfterViewInit, OnInit {
         // else, flag to prompt user
         else {
           console.log("There's nothin' here boss")
-          this.router.navigate(['map'], {queryParams: {emptySearch : true}})
+          /*this.router.navigate(['map'], {queryParams: {emptySearch : true}})*/
         } 
       },
       (err: any) => console.error(err),

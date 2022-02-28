@@ -44,13 +44,19 @@ export class HomeComponent implements OnInit {
       (data: any) => {
         this.geoApiFile = data;
         this.locationData = this.geoApiFile.results[0].locations;
+        console.log("original length: " + this.locationData.length)
+        console.log(this.locationData)
 
         // iterate through returned location array
         for (let i = 0; i < this.locationData.length; i++) {
 
+          console.log(this.locationData[i].adminArea1)
           // if location is not in US, remove
           if (this.locationData[i].adminArea1 != "US") {
+            console.log("eliminated" + i)
             this.locationData.splice(i, 1);
+            i--;
+            console.log(this.locationData.length)
           }
         }
         console.log("Here's the Locations:")

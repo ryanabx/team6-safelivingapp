@@ -57,6 +57,8 @@ def geocoding(inputAddr):
     #print (url)
     r = requests.get(url)
 
+    print(r.json())
+
     return r.json()
 
     #stuff = r.json()
