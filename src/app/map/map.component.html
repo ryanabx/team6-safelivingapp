@@ -4,6 +4,13 @@
     <button class="btn btn-primary fa fa-search" (click)="sendInput(userInput.value)" type="button">Find</button> <!-- onclick = 'sendInput()' -->
     <button *ngIf="inputAddr !== null" class="btn btn-primary fa fa-search" (click)="addToInput(userInput.value)" type="button">Add to Search</button>
 </div>
+
+<div *ngIf="this.emptySearch == true">
+  <p>
+    Please enter a valid US [city, state]
+  </p>
+</div>
+
 <div *ngIf="this._userService.username !== null">
   <ng-template [ngIf]="!this.bookmarked">
     <div>

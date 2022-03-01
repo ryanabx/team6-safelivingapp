@@ -23,6 +23,7 @@ import { CreateComponent } from './create/create.component';
 import { LoginComponent } from './login/login.component';
 import { RatingModule } from 'ngx-bootstrap/rating';
 import { FooterComponent } from './footer/footer.component';
+import { ErrorHandlerComponent } from './error-handler/error-handler.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { FooterComponent } from './footer/footer.component';
     UserBookmarksComponent,
     CreateComponent,
     LoginComponent,
-    FooterComponent
+    FooterComponent,
+    ErrorHandlerComponent
   ],
   imports: [
     BrowserModule,
