@@ -1,4 +1,5 @@
 #from asyncio.windows_events import NULL
+from math import exp, log
 from typing import OrderedDict
 from django.shortcuts import render
 import requests
@@ -6,6 +7,7 @@ from django.http import JsonResponse
 import json
 #import requests_cache
 #requests_cache.install_cache(expire_after=-1) #NOTE Currently cache does not expire. 
+from reviews.views import getReviewList
 
 from safe_living_score.ori_utils import FBI_wrapper
 
@@ -244,7 +246,7 @@ CITY_ORI = json.load(open('./datasets/city_ori.json'))
 def get_safe_living_score(city, state,
 POPULATION_DATA = json.load(open('./datasets/population_data_fixed.json')),
 CRIME_DATA = json.load(open('./datasets/crime_data_sorted.json')),
-CITY_ORI = json.load(open('./datasets/city_ori.json'))
+CITY_ORI = json.load(open('./datasets/city_ori.json')), include_reviews = True
 ):
     #print(f'Get safe living score for {city}, {state}')
     score = get_crime_score(city, state, POPULATION_DATA, CRIME_DATA, CITY_ORI)
@@ -254,6 +256,17 @@ CITY_ORI = json.load(open('./datasets/city_ori.json'))
         score["error_code"] = 0
         score["error_message"] = ""
         score["safe-living-score"] = 100 - score["all"]
+    if include_reviews and score["safe-living-score"] != -1:
+        reviews = getReviewList(city, state)
+        if reviews:
+            ALPHA = 0.2 # Reviews make up a maximum of 20% of a score
+            BETA = log(0.5) / 5 # 50% closer to maximum every 5 reviews
+            count = len(reviews)
+            avg = sum([r.get("rating") for r in reviews]) / count
+            base_score = 100 - score["all"]
+            review_score = 25 * (avg - 1)
+            review_weight = -ALPHA * (exp(BETA * count) - 1)
+            score["safe-living-score"] = review_weight * review_score + (1-review_weight) * base_score
     return score
 
 # Gets the number of crimes for a certain ORI

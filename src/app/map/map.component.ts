@@ -7,7 +7,7 @@ import { MapsAPILoader } from '@agm/core';
 import { HttpClient } from '@angular/common/http';
 import { UserService } from '../user.service';
 import { analyzeAndValidateNgModules } from '@angular/compiler';
-//import { stringify } from 'querystring';
+// import { stringify } from 'querystring';
 
 @Component({
   selector: 'app-map',
@@ -16,7 +16,7 @@ import { analyzeAndValidateNgModules } from '@angular/compiler';
 })
 export class MapComponent implements AfterViewInit, OnInit {
 
-  //star rating
+  // star rating
   surveySubmitted = false;
   max = 5;
   rate = 0;
@@ -58,13 +58,13 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   testPaths: any = [
     
-    {lat: 30, lng: 30},
-    {lat: 60, lng: 30},
-    {lat: 60, lng: 60}
+    { lat: 30, lng: 30 },
+    { lat: 60, lng: 30 },
+    { lat: 60, lng: 60 }
 
   ];
 
-  //testGeoJson: any;
+  // testGeoJson: any;
 
   labelOptions: any = {
     color: 'white',
@@ -82,18 +82,27 @@ export class MapComponent implements AfterViewInit, OnInit {
     private http: HttpClient,
     public _userService: UserService) {
       this.router.routeReuseStrategy.shouldReuseRoute = () => false;
-    // Dietler Commons: 36.1522971, -95.9481072
-    this.lat = 0;
-    this.long = 0;
-    this.radius = 5000
+      // Dietler Commons: 36.1522971, -95.9481072
+      this.lat = 0;
+      this.long = 0;
+      this.radius = 5000
 
-    this.crimeScore = "Loading... Please wait!";
-    
+      this.crimeScore = "Loading... Please wait!";
+      
 
-    //private mapsAPILoader: MapsAPILoader;
-    
+      // private mapsAPILoader: MapsAPILoader;
+      
 
-  
+      // poverty and income api
+      // this.http.get("http://api.census.gov/data/timeseries/poverty/saipe?get=NAME,SAEMHI_PT,SAEPOVALL_PT,SAEPOVRTALL_PT&GEOID=40143&YEAR=2019").toPromise().then(data => {
+      //   console.log("Heres the data");
+      //   console.log(data);
+      //   this.censusEconDataFile = data
+      //   this.censusEconData = this.censusEconDataFile[1]
+      //   this.censusMedIncome = this.censusEconData[1]
+      //   this.censusPovCount = this.censusEconData[2]
+      //   this.censusPovRate = this.censusEconData[3]
+      // });
   }
 
   amIBookmarked(bookmarks: any): boolean {
@@ -129,7 +138,7 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.inputAddr = value;
     this.zillowLinks.push('https://www.zillow.com/homes/' + value + '_rb/');
     console.log(this.inputAddr);
-    //this.addrInputService.setAddr(this.inputAddr);
+    // this.addrInputService.setAddr(this.inputAddr);
     this.appService.callGeoApi(value).subscribe(
       (data: any) => {
         this.geoApiFile = data;
@@ -170,7 +179,7 @@ export class MapComponent implements AfterViewInit, OnInit {
           this.router.navigate(['map'], {queryParams: {emptySearch : true}})
         }
       },
-      (err: any) => console.error(err),
+      // (err: any) => console.error(err),
       () => console.log('done loading coords : ' + this.addrInputService.getAddr() + " : " + this.geoApiFile)
     );
   }
@@ -240,8 +249,8 @@ export class MapComponent implements AfterViewInit, OnInit {
       () => console.log()
     );
 
-    //TEMP CODE
-    //this.boundariesToPath("owasso", "oklahoma");
+    // TEMP CODE
+    // this.boundariesToPath("owasso", "oklahoma");
 
 
   }
@@ -290,18 +299,17 @@ export class MapComponent implements AfterViewInit, OnInit {
           city : JSON.stringify(this.cityNameArray), 
           state : JSON.stringify(this.stateNameArray), 
           addr : this.inputAddr}}).then(() => {this.crimeScore = "Loading... Please wait!";});      },
-      (err: any) => console.error(err),
+      // (err: any) => console.error(err),
       () => console.log()
     );
   }
                                                                                                                            
-   zillowRoute(index: number){
+   zillowRoute(index: number) {
     window.location.href = 'https://www.zillow.com/homes/' + this.locations[index].city + ',' + this.locations[index].state + '_rb/'
-    //console.log(this.locations[index].city + ',' + this.locations[index].state)
+    // console.log(this.locations[index].city + ',' + this.locations[index].state)
   }
 
-  submitReview(city: any, state: any)
-  {
+  submitReview(city: any, state: any) {
     if(this.rate != 0 && city && state)
     {
       this.surveySubmitted = true;
@@ -340,8 +348,8 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.route.queryParams
     .subscribe(params => {
       // deprecated / depreciated
-      //this.lat = params['lat'] ? (parseFloat(params['lat']) ? parseFloat(params['lat']) : 0) : 0;
-      //this.long = params['long'] ? (parseFloat(params['long']) ? parseFloat(params['long']) : 0) : 0;
+      // this.lat = params['lat'] ? (parseFloat(params['lat']) ? parseFloat(params['lat']) : 0) : 0;
+      // this.long = params['long'] ? (parseFloat(params['long']) ? parseFloat(params['long']) : 0) : 0;
       
       this.inputAddr = params['addr']
       this.emptySearch = params['emptySearch']
@@ -387,7 +395,7 @@ export class MapComponent implements AfterViewInit, OnInit {
           this.appService.getBoundaries(this.cityNameArray[i], this.stateNameArray[i]).subscribe(
             (data: any) => {
               this.locations[i].setPath(this.parsePathData(data));
-              //this.testGeoJson = data;
+              // this.testGeoJson = data;
               console.log(data);
             }
           )
@@ -503,48 +511,10 @@ export class Location {
   }
 
   setCostOfLiving(col: any) {
-
-    let i = 0;
-    while (i < col.length) {
-      console.log("this is the " + i + "th time in the loop")
-
-      // check if it's for monthly salary
-      if (col[i].item_name === "Average Monthly Net Salary (After Tax), Salaries And Financing") {
-        this.costOfLiving.salary = parseFloat(col[i].average_price).toFixed(2).toString();
-      }
-
-      // check if it's for apartment rent (low)
-      else if (col[i].item_name ===  "Apartment (1 bedroom) Outside of Centre, Rent Per Month") {
-        this.costOfLiving.apartmentLow = parseFloat(col[i].average_price).toFixed(2).toString();
-      }
-
-      // check if it's for apartment rent (high)
-      else if (col[i].item_name ===  "Apartment (3 bedrooms) in City Centre, Rent Per Month") {
-        this.costOfLiving.apartmentHigh = parseFloat(col[i].average_price).toFixed(2).toString();
-      }
-
-      // check if it's for gasoline prices
-      else if (col[i].item_name === "Gasoline (1 liter), Transportation") {
-        // need to multiply by 3.78541 to convert Liters (not 'litres'), to gallons of gas.
-        // console.log(col[i].item_name)
-        // console.log(col[i].average_price)
-        this.costOfLiving.gas = (parseFloat(col[i].average_price) * 3.78541).toFixed(2).toString();
-      }
-
-      i++;
-    }
-
-    if (this.costOfLiving.salary === '') {
-      this.costOfLiving.salary = "No Data"
-    }
-    if (this.costOfLiving.apartmentLow === '') {
-      this.costOfLiving.apartmentLow = "No Data"
-    }
-    if (this.costOfLiving.apartmentHigh === '') {
-      this.costOfLiving.apartmentHigh = "No Data"
-    }
-    if (this.costOfLiving.gas === '') {
-      this.costOfLiving.gas = "No Data"
-    }
+    console.log(col[40].average_price)
+    this.costOfLiving.salary = parseFloat(col[40].average_price).toFixed(2).toString();
+    this.costOfLiving.apartmentLow = parseFloat(col[22].average_price).toFixed(2).toString();
+    this.costOfLiving.apartmentHigh = parseFloat(col[23].average_price).toFixed(2).toString();
+    this.costOfLiving.gas = parseFloat(col[14].average_price).toFixed(2).toString();
   }
 }
