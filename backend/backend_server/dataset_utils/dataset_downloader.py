@@ -174,9 +174,27 @@ def fix_population_dataset(request = ""):
     print("Successfully compiled population dataset!")
     return JsonResponse({"complete": True})
 
-def  main():
+def make_search_suggestions():
+    SEARCH_SUGGESTIONS = []
+
+    try:
+        POPULATION_DATA = json.load(open("./backend/backend_server/datasets/population_data_fixed.json"))
+    except FileNotFoundError:
+        print("Could not find the population dataset")
+        POPULATION_DATA = {}
+    for state in POPULATION_DATA:
+        for city in POPULATION_DATA[state]:
+            SEARCH_SUGGESTIONS.append(f'{city}, {state}')
+    
+    with open('./backend/backend_server/datasets/search_suggestions.json', "w") as outfile:
+        json.dump(SEARCH_SUGGESTIONS, outfile)
+    
+    print("DONE!")
+
+
+def main():
     print(os.getcwd())
-    make_city_state_to_ori_dataset()
+    make_search_suggestions()
 
 if __name__ == "__main__":
     main()
