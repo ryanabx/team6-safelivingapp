@@ -2,8 +2,14 @@
 from math import exp, log
 from typing import OrderedDict
 from django.shortcuts import render
+import requests
 from django.http import JsonResponse
 import json
+#import requests_cache
+#requests_cache.install_cache(expire_after=-1) #NOTE Currently cache does not expire. 
+from reviews.views import getReviewList
+
+from safe_living_score.ori_utils import FBI_wrapper
 
 GEOCODING_KEY = 'c7qYTGBjRaRkGF7ucqOvpNy6L1Q857oD'
 NATIONAL_POPULATION = 329484123
