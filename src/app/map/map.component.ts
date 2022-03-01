@@ -33,6 +33,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   radius: number;
 
   bookmarked: boolean = false;
+  emptySearch: boolean = false;
   
   crimeScore: any;
   crimeScoreArray: any = [];
@@ -92,16 +93,7 @@ export class MapComponent implements AfterViewInit, OnInit {
     //private mapsAPILoader: MapsAPILoader;
     
 
-    // poverty and income api
-    this.http.get("http://api.census.gov/data/timeseries/poverty/saipe?get=NAME,SAEMHI_PT,SAEPOVALL_PT,SAEPOVRTALL_PT&GEOID=40143&YEAR=2019").toPromise().then(data =>{
-      console.log("Heres the data");
-      console.log(data);
-      this.censusEconDataFile = data
-      this.censusEconData = this.censusEconDataFile[1]
-      this.censusMedIncome = this.censusEconData[1]
-      this.censusPovCount = this.censusEconData[2]
-      this.censusPovRate = this.censusEconData[3]
-    });
+  
   }
 
   amIBookmarked(bookmarks: any): boolean {
@@ -141,15 +133,42 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.appService.callGeoApi(value).subscribe(
       (data: any) => {
         this.geoApiFile = data;
-        this.locationData = this.geoApiFile.results[0].locations[0];
+        this.locationData = this.geoApiFile.results[0].locations;
+
+        // iterate through returned location array
+        for (let i = 0; i < this.locationData.length; i++) {
+
+          // if location is not in US, remove
+          if (this.locationData[i].adminArea1 != "US") {
+            this.locationData.splice(i, 1);
+            i--;
+          }
+        }
+        console.log("Here's the Locations:")
+        //console.log(this.locationData);
+        console.log(this.geoApiFile);
+
+        console.log("Here's the Locations after removing non-us places:")
+        //console.log(this.locationData);
         console.log(this.locationData);
-        this.latLongArray = [this.locationData.latLng.lat, this.locationData.latLng.lng]
-        this.cityNameArray = [this.locationData.adminArea5];
-        this.stateNameArray = [this.locationData.adminArea3]
-        this.router.navigate(['map'], {queryParams: {latLng : JSON.stringify(this.latLongArray), 
-        city : JSON.stringify(this.cityNameArray), 
-        state : JSON.stringify(this.stateNameArray), 
-        addr : this.inputAddr}}).then(() => {this.crimeScore = "Loading... Please wait!";});
+
+        // check if there is anything left in array, if so, initiate search 
+        if (this.locationData.length > 0) {
+          console.log("There's a valid, US, address here")
+          this.latLongArray = [this.locationData[0].latLng.lat, this.locationData[0].latLng.lng]
+          this.cityNameArray = [this.locationData[0].adminArea5];
+          this.stateNameArray = [this.locationData[0].adminArea3]
+
+          this.router.navigate(['map'], {queryParams: {latLng : JSON.stringify(this.latLongArray), 
+          city : JSON.stringify(this.cityNameArray), 
+          state : JSON.stringify(this.stateNameArray), 
+          addr : this.inputAddr}}).then(() => {this.crimeScore = "Loading... Please wait!";});
+        }
+        // else, flag to prompt user
+        else {
+          console.log("There's nothin' here boss")
+          this.router.navigate(['map'], {queryParams: {emptySearch : true}})
+        }
       },
       (err: any) => console.error(err),
       () => console.log('done loading coords : ' + this.addrInputService.getAddr() + " : " + this.geoApiFile)
@@ -157,7 +176,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   addToInput(value: string) {
-
+    console.log("called")
     if (value == '') {
       return
     }
@@ -168,23 +187,55 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.locations = [];
     this.cityNameArray = [];
     this.stateNameArray = []
+    console.log("inputaddr: " + this.inputAddr)
 
     this.appService.callGeoApi(this.inputAddr).subscribe(
       (data: any) => {
         this.geoApiFile = data;
+        console.log(this.geoApiFile)
         this.locationData = this.geoApiFile.results
-        console.log(this.locationData)
+        console.log("before doing anything" + this.locationData)
+        /*
+        // iterate through returned location array
         for (let i = 0; i < this.locationData.length; i++) {
-          this.latLongArray.push(this.locationData[i].locations[0].latLng.lat)
-          this.latLongArray.push(this.locationData[i].locations[0].latLng.lng)
-          this.cityNameArray.push(this.locationData[i].locations[0].adminArea5)
-          this.stateNameArray.push(this.locationData[i].locations[0].adminArea3)
-        }
 
-        this.router.navigate(['map'], {queryParams: {latLng : JSON.stringify(this.latLongArray), 
+          // if location is not in US, remove
+          if (this.locationData[i].adminArea1 != "US") {
+            let removed = this.locationData.splice(i, 1);
+            console.log("Current Location: " + this.locationData[i])
+            console.log("removed:" + removed)
+            i--;
+          }
+        }*/
+        console.log("Here's the Locations:")
+        //console.log(this.locationData);
+        console.log(this.geoApiFile);
+
+        console.log("Here's the Locations after removing non-us places:")
+        //console.log(this.locationData);
+        console.log(this.locationData);
+
+        // check if there is anything left in array, if so, initiate search 
+        if (this.locationData.length > 0) {
+          console.log("There's a valid, US, address here")
+          for (let i = 0; i < this.locationData.length; i++) {
+            this.latLongArray.push(this.locationData[i].locations[0].latLng.lat)
+            this.latLongArray.push(this.locationData[i].locations[0].latLng.lng)
+            this.cityNameArray.push(this.locationData[i].locations[0].adminArea5)
+            this.stateNameArray.push(this.locationData[i].locations[0].adminArea3)
+          }
+
+          this.router.navigate(['map'], {queryParams: {latLng : JSON.stringify(this.latLongArray), 
           city : JSON.stringify(this.cityNameArray), 
           state : JSON.stringify(this.stateNameArray), 
-          addr : this.inputAddr}}).then(() => {this.crimeScore = "Loading... Please wait!";});      },
+          addr : this.inputAddr}}).then(() => {this.crimeScore = "Loading... Please wait!";});
+        }
+        // else, flag to prompt user
+        else {
+          console.log("There's nothin' here boss")
+          /*this.router.navigate(['map'], {queryParams: {emptySearch : true}})*/
+        } 
+      },
       (err: any) => console.error(err),
       () => console.log()
     );
@@ -226,6 +277,7 @@ export class MapComponent implements AfterViewInit, OnInit {
       (data: any) => {
         this.geoApiFile = data;
         this.locationData = this.geoApiFile.results
+        console.log("Here's the location data:")
         console.log(this.locationData)
         for (let i = 0; i < this.locationData.length; i++) {
           this.latLongArray.push(this.locationData[i].locations[0].latLng.lat)
@@ -292,6 +344,7 @@ export class MapComponent implements AfterViewInit, OnInit {
       //this.long = params['long'] ? (parseFloat(params['long']) ? parseFloat(params['long']) : 0) : 0;
       
       this.inputAddr = params['addr']
+      this.emptySearch = params['emptySearch']
       
       this.latLongArray = JSON.parse(params['latLng']); // accept the lat/long array for multiple locations
       console.log(this.latLongArray)
@@ -450,10 +503,48 @@ export class Location {
   }
 
   setCostOfLiving(col: any) {
-    console.log(col[40].average_price)
-    this.costOfLiving.salary = parseFloat(col[40].average_price).toFixed(2).toString();
-    this.costOfLiving.apartmentLow = parseFloat(col[22].average_price).toFixed(2).toString();
-    this.costOfLiving.apartmentHigh = parseFloat(col[23].average_price).toFixed(2).toString();
-    this.costOfLiving.gas = parseFloat(col[14].average_price).toFixed(2).toString();
+
+    let i = 0;
+    while (i < col.length) {
+      console.log("this is the " + i + "th time in the loop")
+
+      // check if it's for monthly salary
+      if (col[i].item_name === "Average Monthly Net Salary (After Tax), Salaries And Financing") {
+        this.costOfLiving.salary = parseFloat(col[i].average_price).toFixed(2).toString();
+      }
+
+      // check if it's for apartment rent (low)
+      else if (col[i].item_name ===  "Apartment (1 bedroom) Outside of Centre, Rent Per Month") {
+        this.costOfLiving.apartmentLow = parseFloat(col[i].average_price).toFixed(2).toString();
+      }
+
+      // check if it's for apartment rent (high)
+      else if (col[i].item_name ===  "Apartment (3 bedrooms) in City Centre, Rent Per Month") {
+        this.costOfLiving.apartmentHigh = parseFloat(col[i].average_price).toFixed(2).toString();
+      }
+
+      // check if it's for gasoline prices
+      else if (col[i].item_name === "Gasoline (1 liter), Transportation") {
+        // need to multiply by 3.78541 to convert Liters (not 'litres'), to gallons of gas.
+        // console.log(col[i].item_name)
+        // console.log(col[i].average_price)
+        this.costOfLiving.gas = (parseFloat(col[i].average_price) * 3.78541).toFixed(2).toString();
+      }
+
+      i++;
+    }
+
+    if (this.costOfLiving.salary === '') {
+      this.costOfLiving.salary = "No Data"
+    }
+    if (this.costOfLiving.apartmentLow === '') {
+      this.costOfLiving.apartmentLow = "No Data"
+    }
+    if (this.costOfLiving.apartmentHigh === '') {
+      this.costOfLiving.apartmentHigh = "No Data"
+    }
+    if (this.costOfLiving.gas === '') {
+      this.costOfLiving.gas = "No Data"
+    }
   }
 }

@@ -53,6 +53,10 @@ def getAvgRating(request, city, state):
         something = r['fields']
         total += something.get('rating')
         count += 1
+    
+    if count == 0:
+        return JsonResponse(0, safe=False)
+    
     return JsonResponse(total / count, safe=False)
     
 
