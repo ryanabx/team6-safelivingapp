@@ -5,20 +5,26 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Global Error Handler -->
+    <script src="global-error.js"></script>
   </head>
 
     <title>Self Living - Home</title>
+    <!-- Create Main Section -->
       <div class="jumbotron position-absolute h-80 w-100">
         
         <h1 class="display-4 mb-5"><strong>Safe Living</strong></h1>
         <p class="lead mb-5">A service that helps you find the best and safest place to live.</p>
       
+        <!-- Create Search Bar -->
         <form class="form-inline justify-content-center mb-5">
           <input class="form-control mr-sm-2" type="search" placeholder="Search [City, State]" aria-label="Search" id = "userInput" #userInput>
           <button class="btn btn-primary fa fa-search" (click)="sendInput(userInput.value)" type="button" style="color:white;">Find</button>
         </form>
       </div>
 
+      <!-- Search Bar text-->
       <div *ngIf="this.emptySearch == true">
         <form class="form-inline justify-content-center mb-5">
           <h1>
@@ -27,9 +33,9 @@
         </form>
       </div>
 
+      <!-- Info/Desc Columns -->
       <div class="information container-fluid align-content-center fixed-bottom">
         <hr>
-          <!-- Example row of columns -->
           <div class="row">
             <div class="col-md-4 mt-4">
               <h2>Search Locations</h2>
