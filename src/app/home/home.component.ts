@@ -1,6 +1,7 @@
 import { Component, OnInit} from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { empty } from 'rxjs';
 import { AddrInputService } from '../addr-input.service';
 import { AppService } from '../app.service';
 
@@ -21,6 +22,8 @@ export class HomeComponent implements OnInit {
   crimeScore: string | undefined;
   stateNameArray: any = [];
 
+  emptySearch: boolean = false;
+
   constructor(private route: ActivatedRoute,
   private appService: AppService,
   private addrInputService: AddrInputService, 
@@ -40,15 +43,48 @@ export class HomeComponent implements OnInit {
     this.appService.callGeoApi(value).subscribe(
       (data: any) => {
         this.geoApiFile = data;
-        this.locationData = this.geoApiFile.results[0].locations[0];
+        this.locationData = this.geoApiFile.results[0].locations;
+        console.log("original length: " + this.locationData.length)
+        console.log(this.locationData)
+
+        // iterate through returned location array
+        for (let i = 0; i < this.locationData.length; i++) {
+
+          console.log(this.locationData[i].adminArea1)
+          // if location is not in US, remove
+          if (this.locationData[i].adminArea1 != "US") {
+            console.log("eliminated" + i)
+            this.locationData.splice(i, 1);
+            i--;
+            console.log(this.locationData.length)
+          }
+        }
+        console.log("Here's the Locations:")
+        //console.log(this.locationData);
+        console.log(this.geoApiFile);
+
+        console.log("Here's the Locations after removing non-us places:")
+        //console.log(this.locationData);
         console.log(this.locationData);
-        this.latLongArray = [this.locationData.latLng.lat, this.locationData.latLng.lng]
-        this.cityNameArray = [this.locationData.adminArea5];
-        this.stateNameArray = [this.locationData.adminArea3]
-        this.router.navigate(['map'], {queryParams: {latLng : JSON.stringify(this.latLongArray), 
-        city : JSON.stringify(this.cityNameArray), 
-        state : JSON.stringify(this.stateNameArray), 
-        addr : this.inputAddr}}).then(() => {this.crimeScore = "Loading... Please wait!";});
+
+        // check if there is anything left in array, if so, initiate search 
+        if (this.locationData.length > 0) {
+          console.log("There's a valid, US, address here")
+          this.latLongArray = [this.locationData[0].latLng.lat, this.locationData[0].latLng.lng]
+          this.cityNameArray = [this.locationData[0].adminArea5];
+          this.stateNameArray = [this.locationData[0].adminArea3]
+
+          this.router.navigate(['map'], {queryParams: {latLng : JSON.stringify(this.latLongArray), 
+          city : JSON.stringify(this.cityNameArray), 
+          state : JSON.stringify(this.stateNameArray), 
+          addr : this.inputAddr}}).then(() => {this.crimeScore = "Loading... Please wait!";});
+        }
+        // else, flag to prompt user
+        else {
+          console.log("There's nothin' here boss")
+          this.router.navigate(['home'], {queryParams: {emptySearch : true}})
+        }
+       
       },
       (err: any) => console.error(err),
       () => console.log('done loading coords : ' + this.addrInputService.getAddr() + " : " + this.geoApiFile)
@@ -56,6 +92,10 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.route.queryParams
+    .subscribe(params => {
+      this.emptySearch = params['emptySearch']
+    })
     console.log(this.inputAddr)
   }
 

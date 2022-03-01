@@ -27,7 +27,10 @@ def submitReview(request, city, state, rating, text):
 
 # retrieve all reviews from db that corresponds to the [city, state]
 def getReview(request, city, state):
+    response = getReviewList(city, state)
+    return JsonResponse(response, safe=False)
 
+def getReviewList(city, state):
     # debug statement for retrieving review
     print("Retrieving Reviews for: " + city + ", " + state)
 
@@ -38,7 +41,7 @@ def getReview(request, city, state):
         something = r['fields']
         print (something)
         response.append(something)
-    return JsonResponse(response, safe=False)
+    return response
 
 # retrieve the average rating of the [city, state]
 def getAvgRating(request, city, state):
@@ -50,6 +53,10 @@ def getAvgRating(request, city, state):
         something = r['fields']
         total += something.get('rating')
         count += 1
+    
+    if count == 0:
+        return JsonResponse(0, safe=False)
+    
     return JsonResponse(total / count, safe=False)
     
 
