@@ -72,3 +72,4 @@ population=None, crimescore=None, propertycrimescore=None, violentcrimescore=Non
 		city.violentcrimescore = violentcrimescore
 	city.save()
 	return True
+	
