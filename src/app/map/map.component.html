@@ -91,10 +91,10 @@
       <h2 style="text-align:center">
         <br>Cost of Living Information:
       </h2>
-      <ul style="text-align:left">
-        <li>Average Monthly Net Salary (After Tax): <b>${{location.costOfLiving.salary}}</b></li>
-        <li>Average Apartment Rent Per Month Range: <b>${{location.costOfLiving.apartmentLow}} - ${{location.costOfLiving.apartmentHigh}}</b></li>
-        <li>Gasoline Per Gallon: <b>${{location.costOfLiving.gas}}</b></li>
+      <ul style="text-align:center">
+        <br>Average Monthly Net Salary (After Tax): <b>${{location.costOfLiving.salary}}</b>
+        <br>Average Apartment Rent Per Month Range: <b>${{location.costOfLiving.apartmentLow}} - ${{location.costOfLiving.apartmentHigh}}</b>
+        <br>Gasoline Per Gallon: <b>${{location.costOfLiving.gas}}</b>
       </ul>
       <!-- Zillow Link for Houses -->
       <div *ngIf="inputAddr !== null">
@@ -106,7 +106,7 @@
       <!-- Check Survey Completion Status -->
       <div *ngIf="surveySubmitted === false; else submitted">
         <!-- Star Rating -->
-        <div class="col-md-4 mt-4">
+        <div class="col-md-0 mt-0">
           <h2>Rate This City</h2>
           <rating  style="color: #0275d8;font-size: 40px;" [(ngModel)]="rate" [max]="max" [readonly]="isReadonly">
           </rating>
@@ -121,7 +121,7 @@
 
 
         <!-- Comment Section -->
-        <div class="row justify-content-left mt-3">
+        <div class="row justify-content-center mt-0">
           <label class="text-center">Comment:</label>
         </div>
         <div class="row justify-content-center mt-1" style="margin-right: 35%; margin-left: 35%;">

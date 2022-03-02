@@ -7,6 +7,8 @@ from django.http import JsonResponse
 import csv
 import json
 import requests
+import math
+import geopy.distance
 #csv.DictReader(file)
 
 #TEST WITH: http://localhost:8000/recommendations/api/tulsa/4000/large
@@ -18,17 +20,17 @@ import requests
 # GIVEN --> CITY, STATE, RADIUS, POPULATION SCALE
 # RETURN --> CITY WITH HIGHEST SAFETY SCORE
 
-def recommendCity(request, initialAddress, radiusValue, populationPreference="any"):
-    return JsonResponse( recommend(initialAddress, radiusValue, populationPreference) )
+def recommendCity(request, initialAddress, radiusValue, minPopulation=-1, maxPopulation=float("inf")):
+    return JsonResponse( recommend(initialAddress, radiusValue, ( float(minPopulation), float(maxPopulation) ) ) )
 
 
-def recommend(initialAddress, radiusValue, populationPreference="any"):
+def recommend(initialAddress, radiusValue, populationPreference=( -1, float("inf") )):
 
     startingCoordinates = getCoordinates(initialAddress)
-    populationScale = getPopulationScale(populationPreference)
+    #populationScale = getPopulationScale(populationPreference)
     radius = getRadius(radiusValue)
 
-    cities = getCitiesOfPopulationInRange(startingCoordinates, populationScale, radius)
+    cities = getCitiesOfPopulationInRange(startingCoordinates, populationPreference, radius)
 
     maxScore = -1
     recommendedCity = None
@@ -55,6 +57,7 @@ def recommend(initialAddress, radiusValue, populationPreference="any"):
             #"recommendation" : ( "" + recommendedCity["city"] + ", " + recommendedCity["state"] )
             "city" : recommendedCity["city"],
             "state" : recommendedCity["state"],
+            "population" : recommendedCity["population"],
             "error_code": 0,
             "error_message": "",
             "Safe Living Score" : maxScore
@@ -85,10 +88,7 @@ def getCoordinates(address):
     print(latitude, " ", longitude)
 
     return( (float(latitude), float(longitude)) )
-
-    
-
-    return -1
+    #return -1
 
 
 # Get min and max of population given descriptor
@@ -99,26 +99,28 @@ def getCoordinates(address):
 # UTLIZES NCES CLASSIFICATIONS
 # FORMAT: (>= Lower Bound, < Upper Bound)
 
-def getPopulationScale(populationDescriptor):
-    
-    match populationDescriptor:
-        
-        case "town":
-            return( (0, 50_000) )
-        
-        case "small":
-            return( (50_000, 100_000) )
-        
-        case "medium":
-            return( (100_000, 250_000) )
-        
-        case "large":
-            return( (250_000, float("inf")) )
-        
-        case "any":
-            return( (0, float("inf")) )
+#DEPRECIATED
 
-    return (-1, -1)
+#def getPopulationScale(populationDescriptor):
+    
+#    match populationDescriptor:
+        
+#        case "town":
+#            return( (0, 50_000) )
+        
+ #       case "small":
+  #          return( (50_000, 100_000) )
+        
+   #     case "medium":
+    #        return( (100_000, 250_000) )
+        
+     #   case "large":
+      #      return( (250_000, float("inf")) )
+        
+       # case "any":
+        #    return( (0, float("inf")) )
+
+    # return (-1, -1)
 
 def populationInRange(population, range):
     if( int(population) >= range[0] and int(population) < range[1] ):
@@ -135,7 +137,7 @@ def populationInRange(population, range):
 # RETURN --> MAPQUEST RADIUS SCALE
 
 def getRadius(radiusValue):
-    return int(radiusValue) / 1000
+    return int(radiusValue) #/ 1000
 
 
 # TODO: Should get cities within the radius that fits the population criteria
@@ -143,25 +145,46 @@ def getRadius(radiusValue):
 # GIVEN --> LONG/LAT TUPLE, MIN/MAX POPULATION TUPLE, RADIUS
 # RETURN --> LIST OF CITIES
 
-def getCitiesOfPopulationInRange(coordinates, populationRange, radius):
+def getCitiesOfPopulationInRange(coordinates, populationRange, radius,
+CITY_DICT=json.load( open("./datasets/us_city_info.json") ) ):
     #cityDictionaryAll = csv.DictReader( open("us_cities.csv") )
-    cityDictionaryAll = csv.DictReader( open("./recommendations/us_cities.csv") )
+    #cityDictionaryAll = csv.DictReader( open("./recommendations/us_cities.csv") )
     iLong = coordinates[1]
     iLat = coordinates[0]
 
     cityDictionaryFinal = []
 
-    for city in cityDictionaryAll:
-        longDif = abs( float(city["lng"]) - iLong )
-        latDif = abs( float(city["lat"]) - iLat )
+    #for city in cityDictionaryAll:
+    for city in CITY_DICT:
+        
+        distance = geopy.distance.great_circle( (iLat, iLong), ( float(city["lat"]), float(city["lng"]) ) ).km
 
-        if(longDif <= radius and latDif <= radius):
-            distance = sqrt( longDif**2 + latDif**2 )
-            
-            if( distance <= radius and populationInRange(city["population"], populationRange) ):
+        if(distance <= radius):
+            if(populationInRange(city["population"], populationRange)):
                 cityDictionaryFinal.append(city)
 
     return cityDictionaryFinal
+
+
+
+# def getLongLatDistance(iLong, iLat, curLong, curLat):
+    
+#     longDifference = abs(iLong - curLong)
+#     latDifference = abs(iLat - curLat)
+    
+#     EARTH_RADIUS = 6371 # Radius in kilometers
+
+#     radLongDifference = (longDifference * math.pi) / 180
+#     radLatDifference = (latDifference * math.pi) / 180
+#     iRadLat = (iLat * math.pi) / 180
+#     curRadLat = (curLat * math.pi) / 180
+
+#     aFormula = ( math.sin(radLatDifference/2) ** 2 ) + ( math.cos(iRadLat) * math.cos(curRadLat) ) + ( math.sin(radLongDifference/2) ** 2 )
+#     #bFormula = 2 * math.atan2( math.sqrt(aFormula), math.sqrt(1-aFormula) )
+#     bFormula = 2 * math.asin( math.sqrt(aFormula) )
+#     finalDistance = EARTH_RADIUS * bFormula
+
+#     return finalDistance
 
 
 
@@ -170,7 +193,12 @@ def getCitiesOfPopulationInRange(coordinates, populationRange, radius):
 # GIVEN --> CITY NAME AND STATE NAME
 # RETURN --> CALUCLATED CRIME SCORE
 
-def getCrimeScore(city, state):
+def getCrimeScore(city, state,
+    ORI_DICT = json.load( open("./datasets/city_ori.json") ) ):
+
+    if state in ORI_DICT and city in ORI_DICT[state]:
+        if( ORI_DICT[state][city] == [] ):
+            return -1
 
     score_dict = safe_living_score.views.get_score_dict(city, state)
 
