@@ -15,8 +15,8 @@
       background-repeat: no-repeat;
       background-size: cover;
       text-align: center;
-      text-shadow: black 0 0 15px;
-      font-family: Georgia, serif;
+      text-shadow: black 0 0 8px;
+      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
       font-weight: bold;
       margin: 0;
       position: absolute;
@@ -27,32 +27,20 @@
       font-weight: bold;
       color: white;
       font-size: 64px;
-      font-family: Georgia, serif;
-      text-shadow: black 0 0 15px;
+      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+      text-shadow: black 0 0 8px;
     }
 
     .lead {
       font-weight:  bold;
       color: white;
       font-size: 32px;
-      font-family: Georgia, serif;
-      text-shadow: black 0 0 1px;
+      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+      text-shadow: black 0 0 8px;
     }
 
-    .btn {
-      background: rgb(2,2,68);
-      background: -moz-linear-gradient(90deg, rgba(2,2,68,1) 0%, rgba(0,0,157,1) 50%, rgba(2,2,68,1) 100%);
-      background: -webkit-linear-gradient(90deg, rgba(2,2,68,1) 0%, rgba(0,0,157,1) 50%, rgba(2,2,68,1) 100%);
-      background: linear-gradient(90deg, rgba(2,2,68,1) 0%, rgba(0,0,157,1) 50%, rgba(2,2,68,1) 100%);
-      filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#020244",endColorstr="#020244",GradientType=1);
-      text-align: center;
-      text-shadow: black 0 0 15px;
-      font-family: Georgia, serif;
-      font-weight: bold;
-      color: white;
-      position: relative;
-      border:  0;
-      background-size: cover;
+    .frm{
+      
     }
 
     .hr {

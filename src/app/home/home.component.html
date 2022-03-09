@@ -9,19 +9,23 @@
     <!-- JavaScript Error Handler -->
     <script src="global-error.js"></script>
   </head>
-
-    <title>Self Living - Home</title>
+    <title>Safe Living - Home</title>
     <!-- Create Main Section -->
       <div class="jumbotron position-absolute h-80 w-100">
         
         <h1 class="display-4 mb-5"><strong>Safe Living</strong></h1>
-        <p class="lead mb-5">A service that helps you find the best and safest place to live.</p>
+        <p class="lead mb-5">A service that helps you discover and compare safe cities.</p>
       
         <!-- Create Search Bar -->
-        <form class="form-inline justify-content-center mb-5">
-          <input class="form-control mr-sm-2" type="search" placeholder="Search [City, State]" aria-label="Search" id = "userInput" #userInput>
-          <button class="btn btn-primary fa fa-search" (click)="sendInput(userInput.value)" type="button" style="color:white;">Find</button>
-        </form>
+        <div class="input-group">
+          <div class="form-inline justify-content-center mb-5 frm">
+            <input type="search" id="userInput" #userInput class="form-control" />
+            <label class="form-label" for="userInput">Search</label>
+          </div>
+          <button type="button" class="btn btn-primary" (click)="sendInput(userInput.value)">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
       </div>
 
       <!-- Search Bar text-->
