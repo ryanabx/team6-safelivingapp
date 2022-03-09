@@ -2,37 +2,8 @@
 <script src="global-error.js"></script>
 
 <body>
-  <!-- Create Search Bar -->
-<div class="search-container">
-    <input type="text" placeholder="Search [City, State]" name="'search'" id = "userInput" #userInput> <!-- id = "userInput" -->
-    <button class="btn btn-primary fa fa-search" (click)="sendInput(userInput.value)" type="button">Find</button> <!-- onclick = 'sendInput()' -->
-    <button *ngIf="inputAddr !== null" class="btn btn-primary fa fa-search" (click)="addToInput(userInput.value)" type="button">Add to Search</button>
-</div>
-
-<!-- Search Bar Text -->
-<div *ngIf="this.emptySearch == true">
-  <p>
-    Please enter a valid US [city, state]
-  </p>
-</div>
-
-<!-- Bookmark For Logged In User -->
-<div *ngIf="this._userService.username !== null">
-  <ng-template [ngIf]="!this.bookmarked">
-    <div>
-      <button class="btn btn-success" (click)="addBookmark()">
-        Add Bookmark
-      </button>
-    </div>
-  </ng-template>
-  <ng-template [ngIf]="this.bookmarked">
-    <div>
-      <button class="btn btn-danger" (click)="delBookmark()">
-        Remove Bookmark
-      </button>
-    </div>
-  </ng-template>
-</div>
+  <div class = "body2">
+  
 
 <!--
 <div class="search-container">
@@ -41,7 +12,39 @@
 
 <!-- Create Map -->
 <div class = left>
-<agm-map style="width: 500px; height: 500px" [latitude] = "39.8283" [longitude] = "-98.5795" [zoom] = "3">
+  <!-- Create Search Bar -->
+<div class="search-bar-style search-container d-flex align-self-stretch my-4 justify-content-center">
+  <input type="text" placeholder="Search [City, State]" name="'search'" id = "userInput" #userInput> <!-- id = "userInput" -->
+  <button class="btn btn-primary fa fa-search mx-2" (click)="sendInput(userInput.value)" type="button">Search</button> <!-- onclick = 'sendInput()' -->
+  <button *ngIf="inputAddr !== null" class="btn btn-primary fa fa-search mx-1" (click)="addToInput(userInput.value)" type="button">Add</button>
+</div>
+
+<!-- Search Bar Text -->
+<div *ngIf="this.emptySearch == true">
+<p>
+  Please enter a valid US [city, state]
+</p>
+</div>
+
+<!-- Bookmark For Logged In User -->
+<div *ngIf="this._userService.username !== null">
+<ng-template [ngIf]="!this.bookmarked">
+  <div>
+    <button class="btn btn-success" (click)="addBookmark()">
+      Add Bookmark
+    </button>
+  </div>
+</ng-template>
+<ng-template [ngIf]="this.bookmarked">
+  <div>
+    <button class="btn btn-danger" (click)="delBookmark()">
+      Remove Bookmark
+    </button>
+  </div>
+</ng-template>
+</div>
+
+<agm-map class = "map-style" [latitude] = "39.8283" [longitude] = "-98.5795" [zoom] = "3">
     <agm-marker *ngFor="let location of locations; let i=index" [latitude]="location.lat" [longitude]="location.long"
       [label]="location.labelOptions">
       <agm-info-window>
@@ -183,4 +186,5 @@
 <!-- The following tag displays the data from the crime api on the maps page, but will need an ori routed to the map component as a query parameter -->
 <!-- <app-crimeapi></app-crimeapi> -->
 <!--(circleComplete)="circleAdded($event)" before [drawingmode] -->
+</div>
 </body>

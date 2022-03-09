@@ -1,50 +1,9 @@
-    .information {text-align: center;
-          justify-content: center;
-          margin: auto;
-          padding-top: 3%;
-          padding-left: auto;
-          padding-right: auto;
-          padding-bottom: 3%;
-          height: auto;
-          width: 100%;
-          overflow: hidden;
-    }
-
-    .jumbotron {
-      background-image: url(cityPanorama.png);
-      background-repeat: no-repeat;
-      background-size: cover;
-      text-align: center;
-      text-shadow: black 0 0 8px;
-      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-      font-weight: bold;
-      margin: 0;
-      position: absolute;
-      overflow: hidden;
-    }
-
-    .display-4{
-      font-weight: bold;
-      color: white;
-      font-size: 64px;
-      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-      text-shadow: black 0 0 8px;
-    }
-
-    .lead {
-      font-weight:  bold;
-      color: white;
-      font-size: 32px;
-      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-      text-shadow: black 0 0 8px;
-    }
-
-    .frm{
-      
-    }
-
-    .hr {
-      padding: 0;
-      margin: 0;
-      border: 0;
-    }
+.home-background{
+  background-image: url('../../assets/city-backdrop.jpg');
+  background-size: cover;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  filter: blur(2px);
+  -webkit-filter: blur(2px);
+}

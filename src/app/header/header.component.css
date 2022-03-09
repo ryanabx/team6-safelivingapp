@@ -3,14 +3,12 @@
     font-weight: normal;
     font-size: large;
     padding: 0;
-    margin-bottom: 10px;
     font-family: 'Segoe UI', 'Open Sans', 'Helvetica Neue', sans-serif;
     background-color: #fa8413;
     border-radius: 0px;
 }
 
 .navbar:after{
-    padding-bottom:10px;
     background-color: #ffffff;
     color: white
 }
