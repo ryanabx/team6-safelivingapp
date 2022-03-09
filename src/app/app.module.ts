@@ -18,6 +18,7 @@ import { CreateComponent } from './create/create.component';
 import { LoginComponent } from './login/login.component';
 import { RatingModule } from 'ngx-bootstrap/rating';
 import { FooterComponent } from './footer/footer.component';
+import { Home2Component } from './home2/home2.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { FooterComponent } from './footer/footer.component';
     UserBookmarksComponent,
     CreateComponent,
     LoginComponent,
-    FooterComponent
+    FooterComponent,
+    Home2Component
   ],
   imports: [
     BrowserModule,
