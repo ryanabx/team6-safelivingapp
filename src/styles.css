@@ -3,7 +3,7 @@ body {
     margin: 0 !important;
     border: 0 px !important;
     padding: 0 !important;
-    font-family:'Courier New', Courier, monospace;
+    font-family:'Segoe UI', 'Open Sans', 'Helvetica Neue', sans-serif;
     background-image: url('./assets/safelivingbackground.png');
     background-size: 1024px 1024px;
     

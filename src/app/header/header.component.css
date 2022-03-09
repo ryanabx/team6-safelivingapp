@@ -1,10 +1,10 @@
 .navbar {
     src: url(SL_Logo_NoBkg.png);
-    font-weight: bold;
+    font-weight: normal;
     font-size: large;
     padding: 0;
     margin-bottom: 10px;
-    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-family: 'Segoe UI', 'Open Sans', 'Helvetica Neue', sans-serif;
     background-color: #fa8413;
     border-radius: 0px;
 }
