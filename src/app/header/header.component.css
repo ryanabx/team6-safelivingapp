@@ -1,7 +1,31 @@
-.navbar{
+.navbar {
     src: url(SL_Logo_NoBkg.png);
     font-weight: bold;
     font-size: large;
     padding: 0;
-    margin: 0;
+    margin-bottom: 10px;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    background-color: #fa8413;
+    border-radius: 0px;
 }
+
+.navbar:after{
+    padding-bottom:10px;
+    background-color: #ffffff;
+    color: white
+}
+
+.navbar-button{
+    color:#000000
+}
+
+.navbar-button:hover{
+    background-color:#ad5c10;
+    color: #ffffff;
+}
+
+.navbar-button:focus{
+    background-color:#fa8413;
+    color: #000000;
+}
+
