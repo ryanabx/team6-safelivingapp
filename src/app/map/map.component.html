@@ -13,10 +13,12 @@
 <!-- Create Map -->
 <div class = left>
   <!-- Create Search Bar -->
-<div class="search-bar-style search-container d-flex align-self-stretch my-4 justify-content-center">
-  <input type="text" placeholder="Search [City, State]" name="'search'" id = "userInput" #userInput> <!-- id = "userInput" -->
-  <button class="btn btn-primary fa fa-search mx-2" (click)="sendInput(userInput.value)" type="button">Search</button> <!-- onclick = 'sendInput()' -->
+<div class="input-group my-4">
+  <input type="text" class="form-control rounded" placeholder="Enter a City, State here!" aria-label="Search" aria-describedby="search-addon" name = "'search'" id = "userInput" #userInput/>
+  <button type="button" class="btn btn-primary fa fa-search" (click)="sendInput(userInput.value)">Search</button>
+  <ng-template [ngIf]="this.locations.length !== 0">
   <button *ngIf="inputAddr !== null" class="btn btn-primary fa fa-search mx-1" (click)="addToInput(userInput.value)" type="button">Add</button>
+  </ng-template>
 </div>
 
 <!-- Search Bar Text -->
@@ -69,6 +71,21 @@
 </div>
 
 <div>
+
+<div class = "right search-info">
+  <div *ngIf="this.locations.length === 0" class = "center-text search-info d-flex flex-column justify-content-center">
+    <h2>
+      <b>Please search for a city using the search bar to the left!</b>
+    </h2>
+    <p>
+      Format your searches using the city name and state abbreviation!
+    </p>
+    <p>
+      For example, <b>Chicago, IL</b>
+    </p>
+  </div>
+</div>
+
 <!-- Create City Info Box -->
 <div class = "right">
   <div *ngFor="let location of locations; let i=index" >
