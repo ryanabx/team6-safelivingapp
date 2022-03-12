@@ -74,7 +74,7 @@ export class AppService {
     return this.http.get(this.serverURL + "reviews/api/getAvgRating/" + city + "/" + state + "/ ")
   }
 
-  getSearchSuggestions() {
-    return this.http.get(this.serverURL + "datasets/api/get/searchsuggestions")
+  getSearchSuggestions(currentInput: any) {
+    return this.http.get(this.serverURL + "datasets/api/get/searchsuggestions/" + currentInput + "/")
   }
 }

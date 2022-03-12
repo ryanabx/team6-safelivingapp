@@ -3,8 +3,19 @@
 
 <body>
   <!-- Create Search Bar -->
+  
 <div class="search-container">
-    <input type="text" placeholder="Search [City, State]" name="'search'" id = "userInput" #userInput> <!-- id = "userInput" -->
+  <form [formGroup]="formGroup">
+    <mat-form-field>
+      <input formControlName='suggestions' placeholder="Search [City, State]" id="userInput" matInput type="text" [matAutocomplete]="auto" #userInput/>
+      <mat-autocomplete #auto="matAutocomplete">
+        <mat-option *ngFor="let item of searchSuggestions" [value]="item">
+          {{item}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </form>
+    <!--<input type="text" placeholder="Search [City, State]" name="'search'" id = "userInput" #userInput> --><!-- id = "userInput" -->
     <button class="btn btn-primary fa fa-search" (click)="sendInput(userInput.value)" type="button">Find</button> <!-- onclick = 'sendInput()' -->
     <button *ngIf="inputAddr !== null" class="btn btn-primary fa fa-search" (click)="addToInput(userInput.value)" type="button">Add to Search</button>
 </div>

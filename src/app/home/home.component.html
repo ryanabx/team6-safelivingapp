@@ -18,10 +18,18 @@
         <p class="lead mb-5">A service that helps you find the best and safest place to live.</p>
       
         <!-- Create Search Bar -->
-        <form class="form-inline justify-content-center mb-5">
-          <input class="form-control mr-sm-2" type="search" placeholder="Search [City, State]" aria-label="Search" id = "userInput" #userInput>
-          <button class="btn btn-primary fa fa-search" (click)="sendInput(userInput.value)" type="button" style="color:white;">Find</button>
+        <form [formGroup]="formGroup" class="form-inline justify-content-center mb-5">
+          <mat-form-field>
+            <input formControlName='suggestions' placeholder="Search [City, State]" id="userInput" color="" matInput type="text" [matAutocomplete]="auto" #userInput/>
+            <mat-autocomplete #auto="matAutocomplete">
+              <mat-option *ngFor="let item of searchSuggestions" [value]="item">
+                {{item}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
         </form>
+          <!--<input type="text" placeholder="Search [City, State]" name="'search'" id = "userInput" #userInput> --><!-- id = "userInput" -->
+          <button class="btn btn-primary fa fa-search" (click)="sendInput(userInput.value)" type="button">Find</button> <!-- onclick = 'sendInput()' -->
       </div>
 
       <!-- Search Bar text-->
