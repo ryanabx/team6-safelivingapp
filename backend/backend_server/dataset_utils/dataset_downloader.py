@@ -3,16 +3,11 @@ import json
 import os
 
 from django.http import JsonResponse
-#import safe_living_score
-
-# import importlib.util
-# spec = importlib.util.spec_from_file_location("safe_living_app", "C:/Users/Ryan/Documents/GitHub/team6-safelivingapp/backend/backend_server/safe_living_score")
-
-# sls = importlib.util.module_from_spec(spec)
-# spec.loader.exec_module(sls)
 
 CRIME_DATA_EXPLORER_KEY = 'nHym62MTPDELS0XgtAZLLw0fL3jNWoNvsY2kn315'
 GEOCODING_KEY = 'c7qYTGBjRaRkGF7ucqOvpNy6L1Q857oD'
+
+import safe_living_score
 
 # Utility function to download the newest crime data from the FBI Crime Data Explorer
 def download_newest_crime_data(request = ""):

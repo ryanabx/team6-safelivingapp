@@ -1,15 +1,13 @@
 #from asyncio.windows_events import NULL
 from math import exp, log
 from typing import OrderedDict
-from django.shortcuts import render
-import requests
+
 from django.http import JsonResponse
 import json
 #import requests_cache
 #requests_cache.install_cache(expire_after=-1) #NOTE Currently cache does not expire. 
 from reviews.views import getReviewList
 
-from safe_living_score.ori_utils import FBI_wrapper
 
 GEOCODING_KEY = 'c7qYTGBjRaRkGF7ucqOvpNy6L1Q857oD'
 NATIONAL_POPULATION = 329484123
@@ -266,7 +264,7 @@ CITY_ORI = json.load(open('./datasets/city_ori.json')), include_reviews = True
             base_score = 100 - score["all"]
             review_score = 25 * (avg - 1)
             review_weight = -ALPHA * (exp(BETA * count) - 1)
-            score["safe-living-score"] = review_weight * review_score + (1-review_weight) * base_score
+            score["safe-living-score"] = round(review_weight * review_score + (1-review_weight) * base_score)
     return score
 
 # Gets the number of crimes for a certain ORI
