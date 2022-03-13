@@ -19,8 +19,8 @@
       
         <!-- Create Search Bar -->
         <form [formGroup]="formGroup" class="form-inline justify-content-center mb-5">
-          <mat-form-field>
-            <input formControlName='suggestions' placeholder="Search [City, State]" id="userInput" color="" matInput type="text" [matAutocomplete]="auto" #userInput/>
+          <mat-form-field class="search-container">
+            <input formControlName='suggestions' placeholder="Search [City, State]" id="userInput" matInput type="text" [matAutocomplete]="auto" #userInput/>
             <mat-autocomplete #auto="matAutocomplete">
               <mat-option *ngFor="let item of searchSuggestions" [value]="item">
                 {{item}}

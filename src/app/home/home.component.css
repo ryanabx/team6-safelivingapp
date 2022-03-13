@@ -23,6 +23,14 @@
       overflow: hidden;
     }
 
+    .search-container {
+      background:rgb(255, 255, 255);
+      font-size: 12px;
+      border-color: rgba(0,0,157,1);
+      border-style: ridge;
+      box-shadow: black 0 0 15px;
+    }
+
     .display-4{
       font-weight: bold;
       color: white;

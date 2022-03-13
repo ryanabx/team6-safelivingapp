@@ -550,7 +550,7 @@ export class Location {
   setCostOfLiving(col: any) {
     
     let i = 0;
-    while (i < col.length) {
+    while (col != null && i < col.length) {
       console.log("this is the " + i + "th time in the loop")
 
       // check if it's for monthly salary
