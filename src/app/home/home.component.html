@@ -6,17 +6,19 @@
     <!-- JavaScript Error Handler -->
     <script src="global-error.js"></script>
   </head>
-    
-<div class = "container-fluid d-flex justify-content-center body2">
-  <div class = "row">
-    <div class = "col m-5">
-      <p> Column </p>
-    </div>
-    <div class = "col m-5">
-      <p> Column </p>
-    </div>
-    <div class = "col m-5">
-      <p> Column </p>
-    </div>
-  </div>
+
+  
+<div class = "container-fluid d-flex justify-content-center body2 text-center bg-image home-background">
+  <div class = "container-fluid d-flex flex-column justify-content-center body2 text-center">
+    <h1 class = "jumbotron-text"><b> Find safe cities with Safe Living </b></h1>
+    <p class = "jumbotron-text">To start, <i>Make a search!</i></p>
+    <p class = "jumbotron-text">For example, <b>Chicago, IL</b></p>
+    <div class="input-group d-flex my-4 px-5 search-bar-style">
+      <input type="text" class="form-control rounded" placeholder="Enter a City, State here!" aria-label="Search" aria-describedby="search-addon" name = "'search'" id = "userInput" #userInput/>
+      <button type="button" class="btn btn-primary fa fa-search" (click)="sendInput(userInput.value)">Search</button>
+    </div>  
+</div>
+</div>
+<div class = "d-flex flex-column justify-content-center text-center">
+  <h1 class = "m-5">What is Safe Living?</h1>
 </div>

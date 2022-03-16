@@ -1,9 +1,15 @@
+.jumbotron-text{
+  color: #FFFFFF;
+  text-shadow: 2px 2px 2px black, 0px 0px 5px black
+}
+
 .home-background{
-  background-image: url('../../assets/city-backdrop.jpg');
-  background-size: cover;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  filter: blur(2px);
-  -webkit-filter: blur(2px);
+  background-image: url(../../assets/city-backdrop.jpg);
+  height: 50vh;
+  width: 100vw;
+  box-shadow: 0px 2px 10px black;
+}
+
+.search-bar-style{
+  
 }

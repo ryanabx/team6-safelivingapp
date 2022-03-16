@@ -13,7 +13,7 @@
 <!-- Create Map -->
 <div class = left>
   <!-- Create Search Bar -->
-<div class="input-group my-4">
+<div class="input-group d-flex my-4">
   <input type="text" class="form-control rounded" placeholder="Enter a City, State here!" aria-label="Search" aria-describedby="search-addon" name = "'search'" id = "userInput" #userInput/>
   <button type="button" class="btn btn-primary fa fa-search" (click)="sendInput(userInput.value)">Search</button>
   <ng-template [ngIf]="this.locations.length !== 0">
