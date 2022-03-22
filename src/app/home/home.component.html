@@ -1,22 +1,23 @@
-   <head>
-   <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- JavaScript Error Handler -->
-    <script src="global-error.js"></script>
-  </head>
+  <!-- JavaScript Error Handler -->
+  <script src="global-error.js"></script>
+</head>
 
-  
-<div class = "container-fluid d-flex justify-content-center body2 text-center bg-image home-background">
-  <div class = "container-fluid d-flex flex-column justify-content-center body2 text-center">
-    <h1 class = "jumbotron-text"><b> Find safe cities with Safe Living </b></h1>
-    <p class = "jumbotron-text">To start, <i>Make a search!</i></p>
-    <p class = "jumbotron-text">For example, <b>Chicago, IL</b></p>
+
+<div class="container-fluid d-flex justify-content-center body2 text-center bg-image home-background">
+  <div class="container-fluid d-flex flex-column justify-content-center body2 text-center">
+    <h1 class="jumbotron-text"><b> Find safe cities with Safe Living </b></h1>
+    <p class="jumbotron-text">To start, <i>Make a search!</i></p>
+    <p class="jumbotron-text">For example, <b>Chicago, IL</b></p>
 
     <div [formGroup]="formGroup" class="input-group d-flex my-4 px-5 search-bar-style justify-content-center">
       <div class="search-container">
-        <input class="form-control rounded" formControlName='suggestions' placeholder="Enter a City, State here!" id="userInput" matInput type="text" [matAutocomplete]="auto" #userInput/>
+        <input class="form-control rounded" formControlName='suggestions' placeholder="Enter a City, State here!"
+          id="userInput" matInput type="text" [matAutocomplete]="auto" #userInput />
         <mat-autocomplete #auto="matAutocomplete">
           <mat-option *ngFor="let item of searchSuggestions" [value]="item">
             {{item}}
@@ -26,12 +27,15 @@
       <button type="button" class="btn btn-primary fa fa-search" (click)="sendInput(userInput.value)">Search</button>
     </div>
 
+  </div>
 </div>
-</div>
-<div class = "d-flex flex-column justify-content-center text-center">
-  <h1 class = "m-5">What is Safe Living?</h1>
+<div class="d-flex flex-column justify-content-center text-center">
+  <h1 class="m-5">What is Safe Living?</h1>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+  integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+  integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+  integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
