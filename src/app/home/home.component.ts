@@ -24,11 +24,45 @@ export class HomeComponent implements OnInit {
 
   emptySearch: boolean = false;
 
+  searchSuggestions: any;
+  formGroup: FormGroup = this.fb.group({'suggestions' : ['']});
+
   constructor(private route: ActivatedRoute,
   private appService: AppService,
   private addrInputService: AddrInputService, 
-  private router: Router) {}
+  private router: Router,
+  private fb: FormBuilder) {}
 
+      // intialize Angular Material Form to track user input as they type
+  // if they type more than 3 chars, take that input, call the search 
+  // suggestions dataset util, and save the returning array to be loaded
+  // for displaying suggestions in the autocomplete box.
+  initForm() {
+    console.log(this.formGroup)
+    this.formGroup.get('suggestions')?.valueChanges.subscribe(
+      (data) => {
+        console.log(data);
+        if (data.length >= 3) {
+          ///console.log("it's more than 3!")
+          this.getSuggestions(data)
+        }
+      }
+      )
+  }
+
+  // method that takes input string, sends it to search suggestions
+  // dataset util, and returns an array of cities that contain that
+  // string 
+  getSuggestions(currentInput: any) {
+    console.log(currentInput)
+      this.appService.getSearchSuggestions(currentInput).subscribe(
+        (data: any) => {
+          this.searchSuggestions = data.result;
+          console.log(data)
+        }
+      )
+    
+  }
 
 
   sendInput(value: string) {
@@ -93,6 +127,8 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.initForm()
+
     this.route.queryParams
     .subscribe(params => {
       this.emptySearch = params['emptySearch']

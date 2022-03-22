@@ -264,7 +264,7 @@ CITY_ORI = json.load(open('./datasets/city_ori.json')), include_reviews = True
             base_score = 100 - score["all"]
             review_score = 25 * (avg - 1)
             review_weight = -ALPHA * (exp(BETA * count) - 1)
-            score["safe-living-score"] = review_weight * review_score + (1-review_weight) * base_score
+            score["safe-living-score"] = round(review_weight * review_score + (1-review_weight) * base_score)
     return score
 
 # Gets the number of crimes for a certain ORI

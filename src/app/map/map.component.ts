@@ -7,6 +7,7 @@ import { MapsAPILoader } from '@agm/core';
 import { HttpClient } from '@angular/common/http';
 import { UserService } from '../user.service';
 import { analyzeAndValidateNgModules } from '@angular/compiler';
+import { FormBuilder, FormGroup } from '@angular/forms';
 // import { stringify } from 'querystring';
 
 @Component({
@@ -44,6 +45,8 @@ export class MapComponent implements AfterViewInit, OnInit {
   geoApiFile: any;
   locationData: any;
 
+  formGroup: FormGroup = this.fb.group({'suggestions' : ['']});
+  searchSuggestions: any = [];
 
   weatherApiKey: any = "2883471b37ffc685d279ad06d302d7f5";
   weatherApiFile: any;
@@ -80,6 +83,7 @@ export class MapComponent implements AfterViewInit, OnInit {
     private addrInputService: AddrInputService, 
     private router: Router,
     private http: HttpClient,
+    private fb: FormBuilder,
     public _userService: UserService) {
       this.router.routeReuseStrategy.shouldReuseRoute = () => false;
       // Dietler Commons: 36.1522971, -95.9481072
@@ -103,6 +107,37 @@ export class MapComponent implements AfterViewInit, OnInit {
       //   this.censusPovCount = this.censusEconData[2]
       //   this.censusPovRate = this.censusEconData[3]
       // });
+  }
+
+  // intialize Angular Material Form to track user input as they type
+  // if they type more than 3 chars, take that input, call the search 
+  // suggestions dataset util, and save the returning array to be loaded
+  // for displaying suggestions in the autocomplete box.
+  initForm() {
+    console.log(this.formGroup)
+    this.formGroup.get('suggestions')?.valueChanges.subscribe(
+      (data) => {
+        console.log(data);
+        if (data.length >= 3) {
+          ///console.log("it's more than 3!")
+          this.getSuggestions(data)
+        }
+      }
+      )
+  }
+
+  // method that takes input string, sends it to search suggestions
+  // dataset util, and returns an array of cities that contain that
+  // string 
+  getSuggestions(currentInput: any) {
+    console.log(currentInput)
+      this.appService.getSearchSuggestions(currentInput).subscribe(
+        (data: any) => {
+          this.searchSuggestions = data.result;
+          console.log(data)
+        }
+      )
+    
   }
 
   amIBookmarked(bookmarks: any): boolean {
@@ -351,6 +386,8 @@ export class MapComponent implements AfterViewInit, OnInit {
       // this.lat = params['lat'] ? (parseFloat(params['lat']) ? parseFloat(params['lat']) : 0) : 0;
       // this.long = params['long'] ? (parseFloat(params['long']) ? parseFloat(params['long']) : 0) : 0;
       
+      this.initForm();
+
       this.inputAddr = params['addr']
       this.emptySearch = params['emptySearch']
       
@@ -511,10 +548,48 @@ export class Location {
   }
 
   setCostOfLiving(col: any) {
-    console.log(col[40].average_price)
-    this.costOfLiving.salary = parseFloat(col[40].average_price).toFixed(2).toString();
-    this.costOfLiving.apartmentLow = parseFloat(col[22].average_price).toFixed(2).toString();
-    this.costOfLiving.apartmentHigh = parseFloat(col[23].average_price).toFixed(2).toString();
-    this.costOfLiving.gas = parseFloat(col[14].average_price).toFixed(2).toString();
+    
+    let i = 0;
+    while (col != null && i < col.length) {
+      console.log("this is the " + i + "th time in the loop")
+
+      // check if it's for monthly salary
+      if (col[i].item_name === "Average Monthly Net Salary (After Tax), Salaries And Financing") {
+        this.costOfLiving.salary = parseFloat(col[i].average_price).toFixed(2).toString();
+      }
+
+      // check if it's for apartment rent (low)
+      else if (col[i].item_name ===  "Apartment (1 bedroom) Outside of Centre, Rent Per Month") {
+        this.costOfLiving.apartmentLow = parseFloat(col[i].average_price).toFixed(2).toString();
+      }
+
+      // check if it's for apartment rent (high)
+      else if (col[i].item_name ===  "Apartment (3 bedrooms) in City Centre, Rent Per Month") {
+        this.costOfLiving.apartmentHigh = parseFloat(col[i].average_price).toFixed(2).toString();
+      }
+
+      // check if it's for gasoline prices
+      else if (col[i].item_name === "Gasoline (1 liter), Transportation") {
+        // need to multiply by 3.78541 to convert Liters (not 'litres'), to gallons of gas.
+        // console.log(col[i].item_name)
+        // console.log(col[i].average_price)
+        this.costOfLiving.gas = (parseFloat(col[i].average_price) * 3.78541).toFixed(2).toString();
+      }
+
+      i++;
+    }
+
+    if (this.costOfLiving.salary === '') {
+      this.costOfLiving.salary = "No Data"
+    }
+    if (this.costOfLiving.apartmentLow === '') {
+      this.costOfLiving.apartmentLow = "No Data"
+    }
+    if (this.costOfLiving.apartmentHigh === '') {
+      this.costOfLiving.apartmentHigh = "No Data"
+    }
+    if (this.costOfLiving.gas === '') {
+      this.costOfLiving.gas = "No Data"
+    }
   }
 }

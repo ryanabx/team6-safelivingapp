@@ -13,13 +13,20 @@
 <!-- Create Map -->
 <div class = left>
   <!-- Create Search Bar -->
-<div class="input-group d-flex my-4">
-  <input type="text" class="form-control rounded" placeholder="Enter a City, State here!" aria-label="Search" aria-describedby="search-addon" name = "'search'" id = "userInput" #userInput/>
-  <button type="button" class="btn btn-primary fa fa-search" (click)="sendInput(userInput.value)">Search</button>
-  <ng-template [ngIf]="this.locations.length !== 0">
-  <button *ngIf="inputAddr !== null" class="btn btn-primary fa fa-search mx-1" (click)="addToInput(userInput.value)" type="button">Add</button>
-  </ng-template>
-</div>
+  <div [formGroup]="formGroup" class="input-group d-flex my-4">
+    <div class="search-container">
+      <input class="form-control rounded" formControlName='suggestions' placeholder="Enter a City, State here!" id="userInput" matInput type="text" [matAutocomplete]="auto" #userInput/>
+      <mat-autocomplete #auto="matAutocomplete">
+        <mat-option *ngFor="let item of searchSuggestions" [value]="item">
+          {{item}}
+        </mat-option>
+      </mat-autocomplete>
+    </div>
+    <button type="button" class="btn btn-primary fa fa-search" (click)="sendInput(userInput.value)">Search</button>
+    <ng-template [ngIf]="this.locations.length !== 0">
+      <button *ngIf="inputAddr !== null" class="btn btn-primary fa fa-search mx-1" (click)="addToInput(userInput.value)" type="button">Add</button>
+      </ng-template>
+  </div>
 
 <!-- Search Bar Text -->
 <div *ngIf="this.emptySearch == true">
