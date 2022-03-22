@@ -10,18 +10,16 @@ GEOCODING_KEY = 'c7qYTGBjRaRkGF7ucqOvpNy6L1Q857oD'
 import safe_living_score
 
 # Utility function to download the newest crime data from the FBI Crime Data Explorer
-def download_newest_crime_data(request = ""):
-    from_date = 2020
-    to_date = 2020
+def download_newest_crime_data(request = "", from_date = 2000, to_date = 2020, save_filepath="./datasets/crime_data.json", agencies_filepath = "./datasets/agencies.json"):
 
     try:
-        f = open("./datasets/crime_data.json")
+        f = open(save_filepath)
     except FileNotFoundError:
         CRIME_DATA = {}
     else:
         CRIME_DATA = json.load(f)
     
-    f = open("./datasets/agencies.json")
+    f = open(agencies_filepath)
     AGENCY_DATA = json.load(f)
     count = 0
     try:
@@ -35,11 +33,11 @@ def download_newest_crime_data(request = ""):
                     count += 1
                     if count % 10 == 0:
                         print(f"{count} / 11877. {count/11877 * 100:.2f}%")
-        with open("./datasets/crime_data.json", "w") as outfile:
+        with open(save_filepath, "w") as outfile:
             json.dump(CRIME_DATA, outfile)
         print("Successfully downloaded dataset!")
     except KeyboardInterrupt:
-        with open("./datasets/crime_data.json", "w") as outfile:
+        with open(save_filepath, "w") as outfile:
             json.dump(CRIME_DATA, outfile)
         print("Saved what could be saved")
 
@@ -169,6 +167,9 @@ def fix_population_dataset(request = ""):
     print("Successfully compiled population dataset!")
     return JsonResponse({"complete": True})
 
+def download_historical_crime_data():
+    pass
+
 def make_search_suggestions():
     SEARCH_SUGGESTIONS = []
 
@@ -189,7 +190,7 @@ def make_search_suggestions():
 
 def main():
     print(os.getcwd())
-    make_search_suggestions()
+    download_newest_crime_data("", 2000, 2020, "./agencies.json", "./result.json")
 
 if __name__ == "__main__":
     main()
