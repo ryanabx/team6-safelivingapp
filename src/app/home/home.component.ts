@@ -72,6 +72,8 @@ export class HomeComponent implements OnInit {
     }
 
     this.inputAddr = value;
+    this.cityNameArray = [this.inputAddr.split(",")[0]];
+    this.stateNameArray = [this.inputAddr.split(", ")[1]];
     //this.zillowLinks.push('https://www.zillow.com/homes/' + value + '_rb/');
     console.log(this.inputAddr);
     //this.addrInputService.setAddr(this.inputAddr);
@@ -106,8 +108,7 @@ export class HomeComponent implements OnInit {
         if (this.locationData.length > 0) {
           console.log("There's a valid, US, address here")
           this.latLongArray = [this.locationData[0].latLng.lat, this.locationData[0].latLng.lng]
-          this.cityNameArray = [this.locationData[0].adminArea5];
-          this.stateNameArray = [this.locationData[0].adminArea3]
+          
 
           var city_result = JSON.stringify(this.cityNameArray);
 

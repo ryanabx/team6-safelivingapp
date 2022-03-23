@@ -176,6 +176,11 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.inputAddr = value;
     this.zillowLinks.push('https://www.zillow.com/homes/' + value + '_rb/');
     console.log(this.inputAddr);
+
+    this.cityNameArray = [this.inputAddr.split(",")[0]];
+    this.stateNameArray = [this.inputAddr.split(", ")[1]];
+
+    console.log("CITY: [" + this.cityNameArray + "] State: [" + this.stateNameArray + "]");
     // this.addrInputService.setAddr(this.inputAddr);
     this.appService.callGeoApi(value).subscribe(
       (data: any) => {
@@ -203,8 +208,8 @@ export class MapComponent implements AfterViewInit, OnInit {
         if (this.locationData.length > 0) {
           console.log("There's a valid, US, address here")
           this.latLongArray = [this.locationData[0].latLng.lat, this.locationData[0].latLng.lng]
-          this.cityNameArray = [this.locationData[0].adminArea5];
-          this.stateNameArray = [this.locationData[0].adminArea3]
+          // this.cityNameArray = [this.locationData[0].adminArea5];
+          // this.stateNameArray = [this.locationData[0].adminArea3]
 
           var city_result = JSON.stringify(this.cityNameArray);
 
@@ -235,6 +240,7 @@ export class MapComponent implements AfterViewInit, OnInit {
     }
 
     this.inputAddr += "|" + value;
+    var inputAddresses = this.inputAddr.split("|");
     this.zillowLinks.push('https://www.zillow.com/homes/' + value + '_rb/');
     this.latLongArray = [];
     this.locations = [];
@@ -274,8 +280,8 @@ export class MapComponent implements AfterViewInit, OnInit {
           for (let i = 0; i < this.locationData.length; i++) {
             this.latLongArray.push(this.locationData[i].locations[0].latLng.lat)
             this.latLongArray.push(this.locationData[i].locations[0].latLng.lng)
-            this.cityNameArray.push(this.locationData[i].locations[0].adminArea5)
-            this.stateNameArray.push(this.locationData[i].locations[0].adminArea3)
+            this.cityNameArray.push(inputAddresses[i].split(",")[0])
+            this.stateNameArray.push(inputAddresses[i].split(", ")[1])
           }
 
           this.router.navigate(['map'], {queryParams: {latLng : JSON.stringify(this.latLongArray), 
