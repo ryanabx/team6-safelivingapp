@@ -109,10 +109,17 @@ export class HomeComponent implements OnInit {
           this.cityNameArray = [this.locationData[0].adminArea5];
           this.stateNameArray = [this.locationData[0].adminArea3]
 
+          var city_result = JSON.stringify(this.cityNameArray);
+
+          if(city_result === "St Louis"){
+            city_result = "St. Louis";
+          }
+
           this.router.navigate(['map'], {queryParams: {latLng : JSON.stringify(this.latLongArray), 
-          city : JSON.stringify(this.cityNameArray), 
+          city : city_result, 
           state : JSON.stringify(this.stateNameArray), 
           addr : this.inputAddr}}).then(() => {this.crimeScore = "Loading... Please wait!";});
+          
         }
         // else, flag to prompt user
         else {
