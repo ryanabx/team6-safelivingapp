@@ -19,7 +19,7 @@ export class AppService {
   ALSO PAY ATTENTION TO backend/BACKEND_API.md FOR AN EXAMPLE OF DATA RETURNED FOR EACH API!
   */
   callGeoApi(input:any): any {
-    return this.http.get(this.serverURL + 'geocoding/api/' + input + "/"); 
+    return this.http.get(this.serverURL + 'geocoding/api/' + encodeURIComponent(input) + "/"); 
   }
 
   getSafeLivingScoreAPI(city: any, state: any){
@@ -63,7 +63,7 @@ export class AppService {
   }
 
   submitReview(city: any, state: any, rating: any, text: any) {
-    return this.http.get(this.serverURL + "reviews/api/submitReview/" + city + "/" + state + "/ " + rating + "/" + encodeURIComponent(text) as String + "/ ")
+    return this.http.get(this.serverURL + "reviews/api/submitReview/" + city + "/" + state + "/ " + rating + "/" + encodeURIComponent(text) + "/ ")
   }
 
   getReview(city: any, state: any) {
