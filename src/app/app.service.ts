@@ -63,7 +63,7 @@ export class AppService {
   }
 
   submitReview(city: any, state: any, rating: any, text: any) {
-    return this.http.get(this.serverURL + "reviews/api/submitReview/" + city + "/" + state + "/ " + rating + "/" + text + "/ ")
+    return this.http.get(this.serverURL + "reviews/api/submitReview/" + city + "/" + state + "/ " + rating + "/" + encodeURIComponent(text) as String + "/ ")
   }
 
   getReview(city: any, state: any) {
