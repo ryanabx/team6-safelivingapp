@@ -39,6 +39,9 @@ export class MapComponent implements AfterViewInit, OnInit {
   crimeScore: any;
   crimeScoreArray: any = [];
 
+  errorCode: any;
+  errorMessage: any;
+
   zillowLinks: any = [];
 
   inputAddr: any;
@@ -173,6 +176,11 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.inputAddr = value;
     this.zillowLinks.push('https://www.zillow.com/homes/' + value + '_rb/');
     console.log(this.inputAddr);
+
+    this.cityNameArray = [this.inputAddr.split(",")[0]];
+    this.stateNameArray = [this.inputAddr.split(", ")[1]];
+
+    console.log("CITY: [" + this.cityNameArray + "] State: [" + this.stateNameArray + "]");
     // this.addrInputService.setAddr(this.inputAddr);
     this.appService.callGeoApi(value).subscribe(
       (data: any) => {
@@ -200,11 +208,17 @@ export class MapComponent implements AfterViewInit, OnInit {
         if (this.locationData.length > 0) {
           console.log("There's a valid, US, address here")
           this.latLongArray = [this.locationData[0].latLng.lat, this.locationData[0].latLng.lng]
-          this.cityNameArray = [this.locationData[0].adminArea5];
-          this.stateNameArray = [this.locationData[0].adminArea3]
+          // this.cityNameArray = [this.locationData[0].adminArea5];
+          // this.stateNameArray = [this.locationData[0].adminArea3]
+
+          var city_result = JSON.stringify(this.cityNameArray);
+
+          if(city_result === "St Louis"){
+            city_result = "St. Louis";
+          }
 
           this.router.navigate(['map'], {queryParams: {latLng : JSON.stringify(this.latLongArray), 
-          city : JSON.stringify(this.cityNameArray), 
+          city : city_result, 
           state : JSON.stringify(this.stateNameArray), 
           addr : this.inputAddr}}).then(() => {this.crimeScore = "Loading... Please wait!";});
         }
@@ -226,6 +240,7 @@ export class MapComponent implements AfterViewInit, OnInit {
     }
 
     this.inputAddr += "|" + value;
+    var inputAddresses = this.inputAddr.split("|");
     this.zillowLinks.push('https://www.zillow.com/homes/' + value + '_rb/');
     this.latLongArray = [];
     this.locations = [];
@@ -265,8 +280,8 @@ export class MapComponent implements AfterViewInit, OnInit {
           for (let i = 0; i < this.locationData.length; i++) {
             this.latLongArray.push(this.locationData[i].locations[0].latLng.lat)
             this.latLongArray.push(this.locationData[i].locations[0].latLng.lng)
-            this.cityNameArray.push(this.locationData[i].locations[0].adminArea5)
-            this.stateNameArray.push(this.locationData[i].locations[0].adminArea3)
+            this.cityNameArray.push(inputAddresses[i].split(",")[0])
+            this.stateNameArray.push(inputAddresses[i].split(", ")[1])
           }
 
           this.router.navigate(['map'], {queryParams: {latLng : JSON.stringify(this.latLongArray), 
@@ -397,19 +412,11 @@ export class MapComponent implements AfterViewInit, OnInit {
       this.cityNameArray = JSON.parse(params['city'])
       this.stateNameArray = JSON.parse(params['state'])
 
-
-
-      /* deprecated
-      console.log(this.lat + " : " + this.long)
-      if(this.lat != 0 && this.long != 0){
-        this.appService.getSafeLivingScoreAPI(this.long, this.lat, 2.0).subscribe(
-          (data: any)=>{
-            this.crimeScore = data["safe-living-score"];
-            this.crimeScore = parseFloat((Math.round(this.crimeScore * 100) / 100).toFixed(2));
-          }
-        );
-        console.log(this.crimeScore);
-      }*/
+      for (var i = 0; i < this.cityNameArray.length; i++){
+        if (this.cityNameArray[i] === "St Louis"){
+          this.cityNameArray[i] = "St. Louis";
+        }
+      }
 
       // create the location objects for each lat/long pair
       // save their respective lat/long
@@ -474,10 +481,14 @@ export class MapComponent implements AfterViewInit, OnInit {
           this.appService.getSafeLivingScoreAPI(this.locations[i].city, this.locations[i].state).subscribe(
             (data: any)=>{
               this.crimeScore = data["safe-living-score"];
+              this.errorCode = data["error_code"];
+              this.errorMessage = data["error_message"];
               if(!isNaN(parseFloat(this.crimeScore))){
                 this.crimeScore = parseFloat((Math.round(this.crimeScore * 100) / 100).toFixed(2));
               }
               this.locations[i].setCrimeScore(this.crimeScore);
+              this.locations[i].setErrorCode(this.errorCode, this.errorMessage);
+              console.log("Error code: " + this.errorCode + "| Error message: " + this.errorMessage);
               this.crimeScoreArray.push(this.crimeScore);
             }
           );
@@ -499,6 +510,8 @@ export class Location {
   public crimeScore: string = "Loading... Please Wait :)";
   public city: any;
   public state: any;
+  public errorCode: any;
+  public errorMessage: any;
   public costOfLiving: any = {
     salary: '',
     apartmentLow: '',
@@ -522,6 +535,11 @@ export class Location {
   setLatLong(lat: number, long: number) {
     this.lat = lat;
     this.long = long;
+  }
+
+  setErrorCode(errorCode: any, errorMessage: any){
+    this.errorCode = errorCode;
+    this.errorMessage = errorMessage;
   }
 
   setCrimeScore(score: string) {
