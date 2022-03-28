@@ -41,7 +41,8 @@
 
 <!-- Create Map -->
 <div class = left>
-<agm-map style="width: 500px; height: 500px" [latitude] = "39.8283" [longitude] = "-98.5795" [zoom] = "3">
+<!--<agm-map style="width: 500px; height: 500px" [latitude] = "39.8283" [longitude] = "-98.5795" [zoom] = "3">-->
+  <agm-map style="width: 500px; height: 500px" [latitude] = "centerLat" [longitude] = "centerLong" [zoom] = "mapZoom">
     <agm-marker *ngFor="let location of locations; let i=index" [latitude]="location.lat" [longitude]="location.long"
       [label]="location.labelOptions">
       <agm-info-window>

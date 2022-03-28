@@ -20,51 +20,111 @@ import geopy.distance
 # GIVEN --> CITY, STATE, RADIUS, POPULATION SCALE
 # RETURN --> CITY WITH HIGHEST SAFETY SCORE
 
-def recommendCity(request, initialAddress, radiusValue, minPopulation=-1, maxPopulation=float("inf")):
-    return JsonResponse( recommend(initialAddress, radiusValue, ( float(minPopulation), float(maxPopulation) ) ) )
+def recommendCity(request, initialAddress="", stateID="any", radiusValue=-1, minPopulation=-1, maxPopulation=float("inf")):
+    return JsonResponse( recommend(initialAddress, radiusValue, stateID, ( float(minPopulation), float(maxPopulation) ) ) )
 
 
-def recommend(initialAddress, radiusValue, populationPreference=( -1, float("inf") )):
+# def recommend(initialAddress, radiusValue, populationPreference=( -1, float("inf") )):
 
-    startingCoordinates = getCoordinates(initialAddress)
-    #populationScale = getPopulationScale(populationPreference)
-    radius = getRadius(radiusValue)
+#     startingCoordinates = getCoordinates(initialAddress)
+#     #populationScale = getPopulationScale(populationPreference)
+#     radius = getRadius(radiusValue)
 
-    cities = getCitiesOfPopulationInRange(startingCoordinates, populationPreference, radius)
+#     cities = getCitiesOfPopulationInRange(startingCoordinates, populationPreference, radius)
 
-    maxScore = -1
-    recommendedCity = None
+#     maxScore = -1
+#     recommendedCity = None
 
-    for city in cities: # Basic min/max calculation, but works (for now)
-        print(city)
-        curScore = getCrimeScore(city["city"], city["state_id"])
-        print("curScore = ", curScore)
+#     for city in cities: # Basic min/max calculation, but works (for now)
+#         print(city)
+#         curScore = getCrimeScore(city["city"], city["state_id"])
+#         print("curScore = ", curScore)
         
-        if curScore >= maxScore:
-            maxScore = curScore 
-            recommendedCity = city
+#         if curScore >= maxScore:
+#             maxScore = curScore 
+#             recommendedCity = city
     
-    if(recommendedCity == None):
+#     if(recommendedCity == None):
 
-        context = {
-            "city" : "No City Found",
-            "error_code": 1,
-            "error_message": "No recommended city found"
-    }
-    else:
+#         context = {
+#             "city" : "No City Found",
+#             "error_code": 1,
+#             "error_message": "No recommended city found"
+#     }
+#     else:
 
-        context = {
-            #"recommendation" : ( "" + recommendedCity["city"] + ", " + recommendedCity["state"] )
-            "city" : recommendedCity["city"],
-            "state" : recommendedCity["state"],
-            "population" : recommendedCity["population"],
-            "error_code": 0,
-            "error_message": "",
-            "Safe Living Score" : maxScore
+#         context = {
+#             #"recommendation" : ( "" + recommendedCity["city"] + ", " + recommendedCity["state"] )
+#             "city" : recommendedCity["city"],
+#             "state" : recommendedCity["state"],
+#             "population" : recommendedCity["population"],
+#             "error_code": 0,
+#             "error_message": "",
+#             "Safe Living Score" : maxScore
+#         }
+    
+#     return context
+
+
+
+def recommend(initialAddress="", radiusValue=-1, stateID="any", populationPreference=( -1, float("inf") )):
+
+    if(initialAddress != ""):
+        startingCoordinates = getCoordinates(initialAddress)
+        radius = getRadius(radiusValue)
+        cities = getCitiesOfPopulationInRange(startingCoordinates, populationPreference, radius)
+    
+    elif(stateID != "any"):
+        cities = getCitiesOfPopulationInState(stateID, populationPreference)
+
+    if(cities != None):
+        cityScorePairs = []
+
+        for city in cities:
+            print("score = ", getCrimeScore(city["city"], city["state_id"]))
+            cityScore = getCrimeScore(city["city"], city["state_id"])
+            cityScorePairs.append( (city, cityScore) )
+        
+        return {
+            "cityPairs" : sorted(cityScorePairs, key=getKey, reverse=True)[0:10]
         }
-    
-    return context
 
+
+    # maxScore = -1
+    # recommendedCity = None
+
+    # for city in cities: # Basic min/max calculation, but works (for now)
+    #     print(city)
+    #     curScore = getCrimeScore(city["city"], city["state_id"])
+    #     print("curScore = ", curScore)
+        
+    #     if curScore >= maxScore:
+    #         maxScore = curScore 
+    #         recommendedCity = city
+    
+    # if(recommendedCity == None):
+
+    #     context = {
+    #         "city" : "No City Found",
+    #         "error_code": 1,
+    #         "error_message": "No recommended city found"
+    # }
+    # else:
+
+    #     context = {
+    #         #"recommendation" : ( "" + recommendedCity["city"] + ", " + recommendedCity["state"] )
+    #         "city" : recommendedCity["city"],
+    #         "state" : recommendedCity["state"],
+    #         "population" : recommendedCity["population"],
+    #         "error_code": 0,
+    #         "error_message": "",
+    #         "Safe Living Score" : maxScore
+    #     }
+    
+    # return context
+
+def getKey(item):
+    return item[1]
 
 
 
@@ -166,6 +226,26 @@ CITY_DICT=json.load( open("./datasets/us_city_info.json") ) ):
     return cityDictionaryFinal
 
 
+def getCitiesOfPopulationInState(stateID, populationRange,
+CITY_DICT=json.load( open("./datasets/us_city_info.json") ) ):
+    #cityDictionaryAll = csv.DictReader( open("us_cities.csv") )
+    #cityDictionaryAll = csv.DictReader( open("./recommendations/us_cities.csv") )
+
+    cityDictionaryFinal = []
+
+    #for city in cityDictionaryAll:
+    for city in CITY_DICT:
+        
+        #distance = geopy.distance.great_circle( (iLat, iLong), ( float(city["lat"]), float(city["lng"]) ) ).km
+
+        #if(distance <= radius):
+        if(city["state_id"] == stateID):
+            if(populationInRange(city["population"], populationRange)):
+                cityDictionaryFinal.append(city)
+
+    return cityDictionaryFinal
+
+
 
 # def getLongLatDistance(iLong, iLat, curLong, curLat):
     
@@ -209,6 +289,8 @@ def getCrimeScore(city, state,
     #url = ("http://192.168.137.1:8000/safelivingscore/api/", city, "/", state, "/")
     #crimeScore = json.loads( requests.get(url) )
 
+    #print("message: ", score_dict["error_message"])
+    
     if score_dict["error_code"] > 0:
         return -1
 

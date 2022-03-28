@@ -32,6 +32,10 @@ export class MapComponent implements AfterViewInit, OnInit {
   locations: any = [];
   radius: number;
 
+  centerLat: number = 39.8283;
+  centerLong: number = -98.5795;
+  mapZoom: number = 3;
+
   bookmarked: boolean = false;
   emptySearch: boolean = false;
   
@@ -383,6 +387,18 @@ export class MapComponent implements AfterViewInit, OnInit {
           console.log(this.latLongArray[i], this.latLongArray[i+1])
           newLoc.setLatLong(this.latLongArray[i], this.latLongArray[i+1])
           this.locations.push(newLoc)
+
+          // Set map params
+          if(i == 0) {
+            this.centerLat=this.latLongArray[i];
+            this.centerLong=this.latLongArray[i+1];
+            this.mapZoom=10;
+          } else {
+            this.centerLat = 39.8283;
+            this.centerLong = -98.5795;
+            this.mapZoom = 3;
+          }
+
         }
       }
 
