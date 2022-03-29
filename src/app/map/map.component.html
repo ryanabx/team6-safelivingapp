@@ -55,7 +55,7 @@
         </ng-template>
       </div>
 
-      <agm-map class="map-style" [latitude]="39.8283" [longitude]="-98.5795" [zoom]="3">
+      <agm-map class="map-style" [latitude]="centerLat" [longitude]="centerLong" [zoom]="mapZoom">
         <agm-marker *ngFor="let location of locations; let i=index" [latitude]="location.lat"
           [longitude]="location.long" [label]="location.labelOptions">
           <agm-info-window>
@@ -101,7 +101,7 @@
       <div class="right">
         <div *ngFor="let location of locations; let i=index">
           <div *ngIf="inputAddr !== null" class="center-text jumbotron">
-            <h2>
+            <h2 id = "top">
               <b>{{location.city}}, {{location.state}}</b>
             </h2>
             <div *ngIf="location.errorCode === 0">
@@ -125,23 +125,26 @@
                 <br>Cost of Living Information:
               </h2>
               <ul style="text-align:center">
-                <br>Average Monthly Net Salary (After Tax): <b>${{location.costOfLiving.salary}}</b>
+                Average Monthly Net Salary (After Tax): <b>${{location.costOfLiving.salary}}</b>
                 <br>Average Apartment Rent Per Month Range: <b>${{location.costOfLiving.apartmentLow}} -
                   ${{location.costOfLiving.apartmentHigh}}</b>
                 <br>Gasoline Per Gallon: <b>${{location.costOfLiving.gas}}</b>
               </ul>
               <!-- Zillow Link for Houses -->
               <div *ngIf="inputAddr !== null">
-                <br><button class="btn btn-primary" (click)="zillowRoute(i)">Find Houses In {{location.city}}</button>
+                <button class="btn btn-primary" (click)="zillowRoute(i)">Find Houses In {{location.city}}</button>
                 <!--<a *ngFor="let link of zillowLinks; let i = index" href = {{link}}>[See houses in {{cityNameArray[i]}}]</a>-->
                 <p style="font-size: small">*Will take you off site to Zillow.com*</p>
               </div>
-
+              <!-- Button for Recommendation -->
+              <div>
+                <button class="btn btn-primary" onClick="document.getElementById('Recommendations').scrollIntoView();"> View Nearby Cities</button>
+              </div>
               <!-- Check Survey Completion Status -->
               <div *ngIf="surveySubmitted === false; else submitted">
                 <!-- Star Rating -->
                 <div class="col-md-0 mt-0">
-                  <h2>Rate This City</h2>
+                  <br><h2>Rate This City</h2>
                   <rating style="color: #0275d8;font-size: 40px;" [(ngModel)]="rate" [max]="max"
                     [readonly]="isReadonly">
                   </rating>
@@ -172,6 +175,14 @@
               </div>
               <hr>
             </div>
+            <!-- Recommendation Section -->
+              <div id = "Recommendations"> 
+                <h2>Safest Cities Near {{location.city}}</h2>
+                <!-- Need to get recommendations from backend-->
+
+                <!-- Link to go back to top of jumbotron -->
+                <button class="btn btn-link" onClick="document.getElementById('top').scrollIntoView();"> Back to top</button>
+              </div>
             <div *ngIf="location.errorCode !== 0">
               <h2>There was a problem.</h2>
               <p><i>{{location.errorMessage}}</i></p>
