@@ -7,6 +7,7 @@ import { MapsAPILoader } from '@agm/core';
 import { HttpClient } from '@angular/common/http';
 import { UserService } from '../user.service';
 import { analyzeAndValidateNgModules } from '@angular/compiler';
+import { FormBuilder, FormGroup } from '@angular/forms';
 // import { stringify } from 'querystring';
 
 @Component({
@@ -42,12 +43,17 @@ export class MapComponent implements AfterViewInit, OnInit {
   crimeScore: any;
   crimeScoreArray: any = [];
 
+  errorCode: any;
+  errorMessage: any;
+
   zillowLinks: any = [];
 
   inputAddr: any;
   geoApiFile: any;
   locationData: any;
 
+  formGroup: FormGroup = this.fb.group({'suggestions' : ['']});
+  searchSuggestions: any = [];
 
   weatherApiKey: any = "2883471b37ffc685d279ad06d302d7f5";
   weatherApiFile: any;
@@ -84,6 +90,7 @@ export class MapComponent implements AfterViewInit, OnInit {
     private addrInputService: AddrInputService, 
     private router: Router,
     private http: HttpClient,
+    private fb: FormBuilder,
     public _userService: UserService) {
       this.router.routeReuseStrategy.shouldReuseRoute = () => false;
       // Dietler Commons: 36.1522971, -95.9481072
@@ -107,6 +114,37 @@ export class MapComponent implements AfterViewInit, OnInit {
       //   this.censusPovCount = this.censusEconData[2]
       //   this.censusPovRate = this.censusEconData[3]
       // });
+  }
+
+  // intialize Angular Material Form to track user input as they type
+  // if they type more than 3 chars, take that input, call the search 
+  // suggestions dataset util, and save the returning array to be loaded
+  // for displaying suggestions in the autocomplete box.
+  initForm() {
+    console.log(this.formGroup)
+    this.formGroup.get('suggestions')?.valueChanges.subscribe(
+      (data) => {
+        console.log(data);
+        if (data.length >= 3) {
+          ///console.log("it's more than 3!")
+          this.getSuggestions(data)
+        }
+      }
+      )
+  }
+
+  // method that takes input string, sends it to search suggestions
+  // dataset util, and returns an array of cities that contain that
+  // string 
+  getSuggestions(currentInput: any) {
+    console.log(currentInput)
+      this.appService.getSearchSuggestions(currentInput).subscribe(
+        (data: any) => {
+          this.searchSuggestions = data.result;
+          console.log(data)
+        }
+      )
+    
   }
 
   amIBookmarked(bookmarks: any): boolean {
@@ -142,6 +180,11 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.inputAddr = value;
     this.zillowLinks.push('https://www.zillow.com/homes/' + value + '_rb/');
     console.log(this.inputAddr);
+
+    this.cityNameArray = [this.inputAddr.split(",")[0]];
+    this.stateNameArray = [this.inputAddr.split(", ")[1]];
+
+    console.log("CITY: [" + this.cityNameArray + "] State: [" + this.stateNameArray + "]");
     // this.addrInputService.setAddr(this.inputAddr);
     this.appService.callGeoApi(value).subscribe(
       (data: any) => {
@@ -169,11 +212,17 @@ export class MapComponent implements AfterViewInit, OnInit {
         if (this.locationData.length > 0) {
           console.log("There's a valid, US, address here")
           this.latLongArray = [this.locationData[0].latLng.lat, this.locationData[0].latLng.lng]
-          this.cityNameArray = [this.locationData[0].adminArea5];
-          this.stateNameArray = [this.locationData[0].adminArea3]
+          // this.cityNameArray = [this.locationData[0].adminArea5];
+          // this.stateNameArray = [this.locationData[0].adminArea3]
+
+          var city_result = JSON.stringify(this.cityNameArray);
+
+          if(city_result === "St Louis"){
+            city_result = "St. Louis";
+          }
 
           this.router.navigate(['map'], {queryParams: {latLng : JSON.stringify(this.latLongArray), 
-          city : JSON.stringify(this.cityNameArray), 
+          city : city_result, 
           state : JSON.stringify(this.stateNameArray), 
           addr : this.inputAddr}}).then(() => {this.crimeScore = "Loading... Please wait!";});
         }
@@ -195,6 +244,7 @@ export class MapComponent implements AfterViewInit, OnInit {
     }
 
     this.inputAddr += "|" + value;
+    var inputAddresses = this.inputAddr.split("|");
     this.zillowLinks.push('https://www.zillow.com/homes/' + value + '_rb/');
     this.latLongArray = [];
     this.locations = [];
@@ -234,8 +284,8 @@ export class MapComponent implements AfterViewInit, OnInit {
           for (let i = 0; i < this.locationData.length; i++) {
             this.latLongArray.push(this.locationData[i].locations[0].latLng.lat)
             this.latLongArray.push(this.locationData[i].locations[0].latLng.lng)
-            this.cityNameArray.push(this.locationData[i].locations[0].adminArea5)
-            this.stateNameArray.push(this.locationData[i].locations[0].adminArea3)
+            this.cityNameArray.push(inputAddresses[i].split(",")[0])
+            this.stateNameArray.push(inputAddresses[i].split(", ")[1])
           }
 
           this.router.navigate(['map'], {queryParams: {latLng : JSON.stringify(this.latLongArray), 
@@ -355,6 +405,8 @@ export class MapComponent implements AfterViewInit, OnInit {
       // this.lat = params['lat'] ? (parseFloat(params['lat']) ? parseFloat(params['lat']) : 0) : 0;
       // this.long = params['long'] ? (parseFloat(params['long']) ? parseFloat(params['long']) : 0) : 0;
       
+      this.initForm();
+
       this.inputAddr = params['addr']
       this.emptySearch = params['emptySearch']
       
@@ -364,19 +416,11 @@ export class MapComponent implements AfterViewInit, OnInit {
       this.cityNameArray = JSON.parse(params['city'])
       this.stateNameArray = JSON.parse(params['state'])
 
-
-
-      /* deprecated
-      console.log(this.lat + " : " + this.long)
-      if(this.lat != 0 && this.long != 0){
-        this.appService.getSafeLivingScoreAPI(this.long, this.lat, 2.0).subscribe(
-          (data: any)=>{
-            this.crimeScore = data["safe-living-score"];
-            this.crimeScore = parseFloat((Math.round(this.crimeScore * 100) / 100).toFixed(2));
-          }
-        );
-        console.log(this.crimeScore);
-      }*/
+      for (var i = 0; i < this.cityNameArray.length; i++){
+        if (this.cityNameArray[i] === "St Louis"){
+          this.cityNameArray[i] = "St. Louis";
+        }
+      }
 
       // create the location objects for each lat/long pair
       // save their respective lat/long
@@ -453,10 +497,14 @@ export class MapComponent implements AfterViewInit, OnInit {
           this.appService.getSafeLivingScoreAPI(this.locations[i].city, this.locations[i].state).subscribe(
             (data: any)=>{
               this.crimeScore = data["safe-living-score"];
+              this.errorCode = data["error_code"];
+              this.errorMessage = data["error_message"];
               if(!isNaN(parseFloat(this.crimeScore))){
                 this.crimeScore = parseFloat((Math.round(this.crimeScore * 100) / 100).toFixed(2));
               }
               this.locations[i].setCrimeScore(this.crimeScore);
+              this.locations[i].setErrorCode(this.errorCode, this.errorMessage);
+              console.log("Error code: " + this.errorCode + "| Error message: " + this.errorMessage);
               this.crimeScoreArray.push(this.crimeScore);
             }
           );
@@ -478,6 +526,8 @@ export class Location {
   public crimeScore: string = "Loading... Please Wait :)";
   public city: any;
   public state: any;
+  public errorCode: any;
+  public errorMessage: any;
   public costOfLiving: any = {
     salary: '',
     apartmentLow: '',
@@ -501,6 +551,11 @@ export class Location {
   setLatLong(lat: number, long: number) {
     this.lat = lat;
     this.long = long;
+  }
+
+  setErrorCode(errorCode: any, errorMessage: any){
+    this.errorCode = errorCode;
+    this.errorMessage = errorMessage;
   }
 
   setCrimeScore(score: string) {
@@ -527,10 +582,48 @@ export class Location {
   }
 
   setCostOfLiving(col: any) {
-    console.log(col[40].average_price)
-    this.costOfLiving.salary = parseFloat(col[40].average_price).toFixed(2).toString();
-    this.costOfLiving.apartmentLow = parseFloat(col[22].average_price).toFixed(2).toString();
-    this.costOfLiving.apartmentHigh = parseFloat(col[23].average_price).toFixed(2).toString();
-    this.costOfLiving.gas = parseFloat(col[14].average_price).toFixed(2).toString();
+    
+    let i = 0;
+    while (col != null && i < col.length) {
+      console.log("this is the " + i + "th time in the loop")
+
+      // check if it's for monthly salary
+      if (col[i].item_name === "Average Monthly Net Salary (After Tax), Salaries And Financing") {
+        this.costOfLiving.salary = parseFloat(col[i].average_price).toFixed(2).toString();
+      }
+
+      // check if it's for apartment rent (low)
+      else if (col[i].item_name ===  "Apartment (1 bedroom) Outside of Centre, Rent Per Month") {
+        this.costOfLiving.apartmentLow = parseFloat(col[i].average_price).toFixed(2).toString();
+      }
+
+      // check if it's for apartment rent (high)
+      else if (col[i].item_name ===  "Apartment (3 bedrooms) in City Centre, Rent Per Month") {
+        this.costOfLiving.apartmentHigh = parseFloat(col[i].average_price).toFixed(2).toString();
+      }
+
+      // check if it's for gasoline prices
+      else if (col[i].item_name === "Gasoline (1 liter), Transportation") {
+        // need to multiply by 3.78541 to convert Liters (not 'litres'), to gallons of gas.
+        // console.log(col[i].item_name)
+        // console.log(col[i].average_price)
+        this.costOfLiving.gas = (parseFloat(col[i].average_price) * 3.78541).toFixed(2).toString();
+      }
+
+      i++;
+    }
+
+    if (this.costOfLiving.salary === '') {
+      this.costOfLiving.salary = "No Data"
+    }
+    if (this.costOfLiving.apartmentLow === '') {
+      this.costOfLiving.apartmentLow = "No Data"
+    }
+    if (this.costOfLiving.apartmentHigh === '') {
+      this.costOfLiving.apartmentHigh = "No Data"
+    }
+    if (this.costOfLiving.gas === '') {
+      this.costOfLiving.gas = "No Data"
+    }
   }
 }

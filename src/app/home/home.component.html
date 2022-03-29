@@ -1,65 +1,52 @@
-   <head>
-   <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<!--
+Created By:
+Last Edited By:
+Date Created:
+Date Last Edited:
+Description:
+-->
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-    <!-- JavaScript Error Handler -->
-    <script src="global-error.js"></script>
-  </head>
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>Self Living - Home</title>
-    <!-- Create Main Section -->
-      <div class="jumbotron position-absolute h-80 w-100">
-        
-        <h1 class="display-4 mb-5"><strong>Safe Living</strong></h1>
-        <p class="lead mb-5">A service that helps you find the best and safest place to live.</p>
-      
-        <!-- Create Search Bar -->
-        <form class="form-inline justify-content-center mb-5">
-          <input class="form-control mr-sm-2" type="search" placeholder="Search [City, State]" aria-label="Search" id = "userInput" #userInput>
-          <button class="btn btn-primary fa fa-search" (click)="sendInput(userInput.value)" type="button" style="color:white;">Find</button>
-        </form>
+  <!-- JavaScript Error Handler -->
+  <script src="global-error.js"></script>
+</head>
+
+
+<div class="container-fluid d-flex justify-content-center body2 text-center bg-image home-background">
+  <div class="container-fluid d-flex flex-column justify-content-center body2 text-center">
+    <h1 class="jumbotron-text"><b> Find safe cities with Safe Living </b></h1>
+    <p class="jumbotron-text">To start, <i>Make a search!</i></p>
+    <p class="jumbotron-text">For example, <b>Chicago, IL</b></p>
+
+    <div [formGroup]="formGroup" class="input-group d-flex my-4 px-5 search-bar-style justify-content-center">
+      <div class="search-container">
+        <input class="form-control rounded" formControlName='suggestions' placeholder="Enter a City, State here!"
+          id="userInput" matInput type="text" [matAutocomplete]="auto" #userInput />
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option *ngFor="let item of searchSuggestions" [value]="item">
+            {{item}}
+          </mat-option>
+        </mat-autocomplete>
       </div>
+      <button type="button" class="btn btn-primary fa fa-search" (click)="sendInput(userInput.value)">Search</button>
+    </div>
 
-      <!-- Search Bar text-->
-      <div *ngIf="this.emptySearch == true">
-        <form class="form-inline justify-content-center mb-5">
-          <h1>
-            Please enter a city, state within the US
-          </h1>
-        </form>
-      </div>
+  </div>
+</div>
+<div class="d-flex flex-column justify-content-center text-center">
+  <h1 class="m-5">What is Safe Living?</h1>
+  <p style="text-align:center;margin-left: 20%; margin-right: 20%; font-size: 24px;"> Safe Living is an all-in-one tool designed for perspective home buyers to find living spaces meeting all their needs. The Safe Living website incorporates information on crime, cost of living, and nearby amenities to give perspective buyers a good sense of living conditions within a community so they can properly assess their decision to buy or rent within an area.</p>
 
-      <!-- Info/Desc Columns -->
-      <div class="information container-fluid align-content-center fixed-bottom">
-        <hr>
-          <div class="row">
-            <div class="col-md-4 mt-4">
-              <h2>Search Locations</h2>
-              <p>Search for locations anywhere in the United States. Type a state, city, address, or zip code into the search bar to find safe places to live in and around that location </p>
-              <!--<p><a class="btn btn-secondary" href="#" role="button">View details »</a></p>-->
-            </div>
-            <div class="col-md-4 mt-4">
-              <h2>Customize Filters</h2>
-              <p>Our safety specifications are defined by multiple different factors. You have the option to filter results to meet your personal criteria to find the best place that matches your wanted living conditions. </p>
-              <!--<p><a class="btn btn-secondary" href="#" role="button">View details »</a></p>-->
-            </div>
-            <div class="col-md-4 mt-4">
-              <h2>Support</h2>
-              <p>If you have any questions, suggestions, or concerns feel free to reach out to us.</p>
-              <p><a class="btn" (click)="sendToContact()" role="button" style="color:white;">Contact Us »</a></p>
-            </div>            
-          </div>
+</div>
 
-          <hr>
-
-        </div> <!-- /container -->
-
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+  integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+  integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+  integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>

@@ -4,7 +4,25 @@ from django.http import JsonResponse
 import json
 # Create your views here.
 
-def get_search_suggestions(request):
+def get_search_suggestions(request, currentInput):
+
+    #print(currentInput)
+
+    result = json.load(open('./datasets/us_city_info.json'))
+    #print(len(result))
+
+    cities = []
+    newResult = []
+
+    for location in result:
+        #print('checking: ' + location.casefold() + ' against ' + currentInput.casefold())
+        if (currentInput.casefold() in location['city'].casefold()):
+            cities.append(location)
+
+    cities.sort(key=lambda location: location['population'], reverse=True)
+    for city in cities:
+        newResult.append(city['city'] + ', ' + city['state_id'])
+
     return JsonResponse(
-        {"result": json.load(open('./datasets/search_suggestions.json'))}
+        {"result": newResult}
         )

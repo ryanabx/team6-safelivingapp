@@ -2,168 +2,198 @@
 <script src="global-error.js"></script>
 
 <body>
-  <!-- Create Search Bar -->
-<div class="search-container">
-    <input type="text" placeholder="Search [City, State]" name="'search'" id = "userInput" #userInput> <!-- id = "userInput" -->
-    <button class="btn btn-primary fa fa-search" (click)="sendInput(userInput.value)" type="button">Find</button> <!-- onclick = 'sendInput()' -->
-    <button *ngIf="inputAddr !== null" class="btn btn-primary fa fa-search" (click)="addToInput(userInput.value)" type="button">Add to Search</button>
-</div>
+  <div class="body2">
 
-<!-- Search Bar Text -->
-<div *ngIf="this.emptySearch == true">
-  <p>
-    Please enter a valid US [city, state]
-  </p>
-</div>
 
-<!-- Bookmark For Logged In User -->
-<div *ngIf="this._userService.username !== null">
-  <ng-template [ngIf]="!this.bookmarked">
-    <div>
-      <button class="btn btn-success" (click)="addBookmark()">
-        Add Bookmark
-      </button>
-    </div>
-  </ng-template>
-  <ng-template [ngIf]="this.bookmarked">
-    <div>
-      <button class="btn btn-danger" (click)="delBookmark()">
-        Remove Bookmark
-      </button>
-    </div>
-  </ng-template>
-</div>
-
-<!--
+    <!--
 <div class="search-container">
   <button class="btn btn-primary" (click)="reveal()">Show Me in Console</button>
 </div>-->
 
-<!-- Create Map -->
-<div class = left>
-<!--<agm-map style="width: 500px; height: 500px" [latitude] = "39.8283" [longitude] = "-98.5795" [zoom] = "3">-->
-  <agm-map style="width: 500px; height: 500px" [latitude] = "centerLat" [longitude] = "centerLong" [zoom] = "mapZoom">
-    <agm-marker *ngFor="let location of locations; let i=index" [latitude]="location.lat" [longitude]="location.long"
-      [label]="location.labelOptions">
-      <agm-info-window>
-        <pre>
+    <!-- Create Map -->
+    <div class=left>
+      <!-- Create Search Bar -->
+      <div [formGroup]="formGroup" class="input-group d-flex my-4">
+        <div class="search-container">
+          <input class="form-control rounded" formControlName='suggestions' placeholder="Enter a City, State here!"
+            id="userInput" matInput type="text" [matAutocomplete]="auto" #userInput />
+          <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let item of searchSuggestions" [value]="item">
+              {{item}}
+            </mat-option>
+          </mat-autocomplete>
+        </div>
+        <button type="button" class="btn btn-primary fa fa-search" (click)="sendInput(userInput.value)">Search</button>
+        <ng-template [ngIf]="this.locations.length !== 0">
+          <button *ngIf="inputAddr !== null" class="btn btn-primary fa fa-search mx-1"
+            (click)="addToInput(userInput.value)" type="button">Add</button>
+        </ng-template>
+      </div>
+
+      <!-- Search Bar Text -->
+      <div *ngIf="this.emptySearch == true">
+        <p>
+          Please enter a valid US [city, state]
+        </p>
+      </div>
+
+      <!-- Bookmark For Logged In User -->
+      <div *ngIf="this._userService.username !== null">
+        <ng-template [ngIf]="!this.bookmarked">
+          <div>
+            <button class="btn btn-success" (click)="addBookmark()">
+              Add Bookmark
+            </button>
+          </div>
+        </ng-template>
+        <ng-template [ngIf]="this.bookmarked">
+          <div>
+            <button class="btn btn-danger" (click)="delBookmark()">
+              Remove Bookmark
+            </button>
+          </div>
+        </ng-template>
+      </div>
+
+      <agm-map class="map-style" [latitude]="39.8283" [longitude]="-98.5795" [zoom]="3">
+        <agm-marker *ngFor="let location of locations; let i=index" [latitude]="location.lat"
+          [longitude]="location.long" [label]="location.labelOptions">
+          <agm-info-window>
+            <pre>
         {{locations[i].city}}, {{locations[i].state}}
         CrimeScore: {{locations[i].crimeScore}}
       </pre>
-          
-      </agm-info-window>
 
-    </agm-marker>
-    <!--<agm-circle [radius]="radius" [fillColor]="'red'"></agm-circle>-->
+          </agm-info-window>
 
-    <agm-polygon [paths]="location.testPaths" [clickable]="false" [fillOpacity]=0.1 *ngFor="let location of locations; let i=index" ></agm-polygon>
-    <!--<agm-polygon [paths]="locations[0].testPaths" [clickable]="false"></agm-polygon> -->
-    <!-- <agm-polygon [paths]="samplePaths2" [clickable]="false"></agm-polygon> -->
-    <!-- <agm-data-layer [geoJson]="testGeoJson"></agm-data-layer> -->
+        </agm-marker>
+        <!--<agm-circle [radius]="radius" [fillColor]="'red'"></agm-circle>-->
 
-
-</agm-map>
-
-</div>
-
-<div>
-<!-- Create City Info Box -->
-<div class = "right">
-  <div *ngFor="let location of locations; let i=index" >
-    <div *ngIf="inputAddr !== null" class = "center-text jumbotron">
-      <h2>
-        <b>{{location.city}}, {{location.state}}</b>
-      </h2>
-      <h2>
-        <br>The safe living score for this area is: <b [ngClass]="{
-          'green' : location.crimeScore >= 90,
-          'red' : location.crimeScore < 70
-        }">{{location.crimeScore}}</b>
-      </h2>
-      <p style = "font-size: medium"> 
-        What does the safe living score mean?
-        <br>We created the safe living score based off of crime in an area!
-        We factor in the crime per capita of a town compared to the national crime per capita.
-        A higher score is better!
-      </p>
-      <h2 style="text-align:center">
-        Average Rating: <b>{{ avgRating }} / {{ max }}</b>
-      </h2>
-      <h2 style="text-align:center">
-        <br>Cost of Living Information:
-      </h2>
-      <ul style="text-align:center">
-        <br>Average Monthly Net Salary (After Tax): <b>${{location.costOfLiving.salary}}</b>
-        <br>Average Apartment Rent Per Month Range: <b>${{location.costOfLiving.apartmentLow}} - ${{location.costOfLiving.apartmentHigh}}</b>
-        <br>Gasoline Per Gallon: <b>${{location.costOfLiving.gas}}</b>
-      </ul>
-      <!-- Zillow Link for Houses -->
-      <div *ngIf="inputAddr !== null">
-        <br><button class="btn btn-primary" (click)="zillowRoute(i)">Find Houses In {{location.city}}</button>
-        <!--<a *ngFor="let link of zillowLinks; let i = index" href = {{link}}>[See houses in {{cityNameArray[i]}}]</a>-->
-        <p style = "font-size: small">*Will take you off site to Zillow.com*</p>
-      </div>
-      
-      <!-- Check Survey Completion Status -->
-      <div *ngIf="surveySubmitted === false; else submitted">
-        <!-- Star Rating -->
-        <div class="col-md-0 mt-0">
-          <h2>Rate This City</h2>
-          <rating  style="color: #0275d8;font-size: 40px;" [(ngModel)]="rate" [max]="max" [readonly]="isReadonly">
-          </rating>
-
-          <!-- <div class="card">
-            <pre class="card-block card-header" style="margin:15px 0;">
-              Rate: <b>{{rate}}</b>
-            </pre>
-          </div> -->
-
-        </div>
+        <agm-polygon [paths]="location.testPaths" [clickable]="false" [fillOpacity]=0.1
+          *ngFor="let location of locations; let i=index"></agm-polygon>
+        <!--<agm-polygon [paths]="locations[0].testPaths" [clickable]="false"></agm-polygon> -->
+        <!-- <agm-polygon [paths]="samplePaths2" [clickable]="false"></agm-polygon> -->
+        <!-- <agm-data-layer [geoJson]="testGeoJson"></agm-data-layer> -->
 
 
-        <!-- Comment Section -->
-        <div class="row justify-content-center mt-0">
-          <label class="text-center">Comment:</label>
-        </div>
-        <div class="row justify-content-center mt-1" style="margin-right: 35%; margin-left: 35%;">
-        <textarea class="form-check" [(ngModel)]="comment" rows="8" placeholder="Comment here..." style="min-width:100%; font-family:  Georgia, serif; font-weight:  bold; margin-bottom: 2%;"></textarea>
-        </div>
-        <div class="row justify-content-center" style="margin-right: 40%; margin-left: 40%;">
-          <button class="btn mt-3" (click)="submitReview(location.city, location.state)" style="min-width:100%; background-color: #FFD580;">Submit</button>
-        </div>
-      </div>
-      <ng-template #submitted>
-        <h2>Thank you for your feedback.</h2>
-      </ng-template>
+      </agm-map>
 
-      <!--
-      <ul>
-        <li *ngFor="let city of cityNameArray; let i=index">{{city}}: {{crimeScoreArray[i]}}</li>
-      </ul>
-      -->
-    
-     <!--<h1>
-        County-wide Economic Stats
-      </h1>
-      <p>(2019 most recent data)</p>
-      <ul>
-        <li>Median Income: ${{censusMedIncome}}</li>
-        <li>{{censusPovCount}} people in poverty</li>
-        <li>{{censusPovRate}}% poverty rate</li>
-    </ul>-->
     </div>
-    <hr>
-    <div *ngFor="let rev of location.reviews; let i = index">
-      <div *ngIf="rev.text !== 'undefined'" class="jumbotron mt-3">
-        <h2><b>Rating: </b>{{ rev.rating }}<rating style="float: right; color: #75808a; font-size: 40px;" [(ngModel)]="rev.rating" [max]="max" [readonly]="true"></rating></h2>
-        <br><b>Comment: </b>{{ rev.text }}
+
+    <div>
+
+      <div class="right search-info">
+        <div *ngIf="this.locations.length === 0"
+          class="center-text search-info d-flex flex-column justify-content-center">
+          <h2>
+            <b>Please search for a city using the search bar to the left!</b>
+          </h2>
+          <p>
+            Format your searches using the city name and state abbreviation!
+          </p>
+          <p>
+            For example, <b>Chicago, IL</b>
+          </p>
+        </div>
+      </div>
+
+      <!-- Create City Info Box -->
+      <div class="right">
+        <div *ngFor="let location of locations; let i=index">
+          <div *ngIf="inputAddr !== null" class="center-text jumbotron">
+            <h2 id = "top">
+              <b>{{location.city}}, {{location.state}}</b>
+            </h2>
+            <div *ngIf="location.errorCode === 0">
+              <h2>
+
+                <br>The safe living score for this area is: <b [ngClass]="{
+                  'green' : location.crimeScore >= 90,
+                  'red' : location.crimeScore < 70
+                  }">{{location.crimeScore}}</b>
+              </h2>
+              <p style="font-size: medium">
+                What does the safe living score mean?
+                <br>We created the safe living score based off of crime in an area!
+                We factor in the crime per capita of a town compared to the national crime per capita.
+                A higher score is better!
+              </p>
+              <h2 style="text-align:center">
+                Average Rating: <b>{{ avgRating }} / {{ max }}</b>
+              </h2>
+              <h2 style="text-align:center">
+                <br>Cost of Living Information:
+              </h2>
+              <ul style="text-align:center">
+                Average Monthly Net Salary (After Tax): <b>${{location.costOfLiving.salary}}</b>
+                <br>Average Apartment Rent Per Month Range: <b>${{location.costOfLiving.apartmentLow}} -
+                  ${{location.costOfLiving.apartmentHigh}}</b>
+                <br>Gasoline Per Gallon: <b>${{location.costOfLiving.gas}}</b>
+              </ul>
+              <!-- Zillow Link for Houses -->
+              <div *ngIf="inputAddr !== null">
+                <button class="btn btn-primary" (click)="zillowRoute(i)">Find Houses In {{location.city}}</button>
+                <!--<a *ngFor="let link of zillowLinks; let i = index" href = {{link}}>[See houses in {{cityNameArray[i]}}]</a>-->
+                <p style="font-size: small">*Will take you off site to Zillow.com*</p>
+              </div>
+              <!-- Button for Recommendation -->
+              <div>
+                <button class="btn btn-primary" onClick="document.getElementById('Recommendations').scrollIntoView();"> View Nearby Cities</button>
+              </div>
+              <!-- Check Survey Completion Status -->
+              <div *ngIf="surveySubmitted === false; else submitted">
+                <!-- Star Rating -->
+                <div class="col-md-0 mt-0">
+                  <br><h2>Rate This City</h2>
+                  <rating style="color: #0275d8;font-size: 40px;" [(ngModel)]="rate" [max]="max"
+                    [readonly]="isReadonly">
+                  </rating>
+                </div>
+                <!-- Comment Section -->
+                <div class="row justify-content-center mt-0">
+                  <label class="text-center">Comment:</label>
+                </div>
+                <div class="row justify-content-center mt-1" style="margin-right: 35%; margin-left: 35%;">
+                  <textarea class="form-check" [(ngModel)]="comment" rows="8" placeholder="Comment here..."
+                    style="min-width:100%; font-family:  Georgia, serif; font-weight:  bold; margin-bottom: 2%;"></textarea>
+                </div>
+                <div class="row justify-content-center" style="margin-right: 40%; margin-left: 40%;">
+                  <button class="btn mt-3" (click)="submitReview(location.city, location.state)"
+                    style="min-width:100%; background-color: #FFD580;">Submit</button>
+                </div>
+              </div>
+              <ng-template #submitted>
+                <h2>Thank you for your feedback.</h2>
+              </ng-template>
+              <div *ngFor="let rev of location.reviews; let i = index">
+                <div *ngIf="rev.text !== 'undefined'" class="jumbotron mt-3">
+                  <h2><b>Rating: </b>{{ rev.rating }}<rating style="float: right; color: #75808a; font-size: 40px;"
+                      [(ngModel)]="rev.rating" [max]="max" [readonly]="true"></rating>
+                  </h2>
+                  <br><b>Comment: </b>{{ rev.text }}
+                </div>
+              </div>
+              <hr>
+            </div>
+            <!-- Recommendation Section -->
+              <div id = "Recommendations"> 
+                <h2>Safest Cities Near {{location.city}}</h2>
+                <!-- Need to get recommendations from backend-->
+
+                <!-- Link to go back to top of jumbotron -->
+                <button class="btn btn-link" onClick="document.getElementById('top').scrollIntoView();"> Back to top</button>
+              </div>
+            <div *ngIf="location.errorCode !== 0">
+              <h2>There was a problem.</h2>
+              <p><i>{{location.errorMessage}}</i></p>
+              <p>Try refining your search!</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
-</div>
 
-<!--
+    <!--
 <div>
   <h1>
     Yearly Weather Statistics for {{county}} County, {{state}}
@@ -178,10 +208,11 @@
 </div>
 -->
 
-<!--  <agm-drawing-manager #drawing="agmDrawingManager" (circleComplete)="circleAdded($event)" [drawingMode]="'circle'" [circleOptions]="{fillColor:'red', radius: 150}">
+    <!--  <agm-drawing-manager #drawing="agmDrawingManager" (circleComplete)="circleAdded($event)" [drawingMode]="'circle'" [circleOptions]="{fillColor:'red', radius: 150}">
 </agm-drawing-manager> -->
 
-<!-- The following tag displays the data from the crime api on the maps page, but will need an ori routed to the map component as a query parameter -->
-<!-- <app-crimeapi></app-crimeapi> -->
-<!--(circleComplete)="circleAdded($event)" before [drawingmode] -->
+    <!-- The following tag displays the data from the crime api on the maps page, but will need an ori routed to the map component as a query parameter -->
+    <!-- <app-crimeapi></app-crimeapi> -->
+    <!--(circleComplete)="circleAdded($event)" before [drawingmode] -->
+  </div>
 </body>

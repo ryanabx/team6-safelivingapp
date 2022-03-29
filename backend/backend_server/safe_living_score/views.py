@@ -1,15 +1,13 @@
 #from asyncio.windows_events import NULL
 from math import exp, log
 from typing import OrderedDict
-from django.shortcuts import render
-import requests
+
 from django.http import JsonResponse
 import json
 #import requests_cache
 #requests_cache.install_cache(expire_after=-1) #NOTE Currently cache does not expire. 
 from reviews.views import getReviewList
 
-from safe_living_score.ori_utils import FBI_wrapper
 
 GEOCODING_KEY = 'c7qYTGBjRaRkGF7ucqOvpNy6L1Q857oD'
 NATIONAL_POPULATION = 329484123
@@ -189,7 +187,7 @@ CITY_ORI = json.load(open('./datasets/city_ori.json'))
             num_crimes[type] += x
 
     if num_crimes["all"] < 10:
-        return {"all": -1, "violent_crime": -1, "property_crime": -1, "error_code": 1, "error_message": "Less than 10 crimes reported. Data for this city is incomplete."}
+        return {"all": -1, "violent_crime": -1, "property_crime": -1, "error_code": 5, "error_message": "Less than 10 crimes reported. Data for this city is incomplete."}
 
     city_population = 0
 
@@ -202,10 +200,10 @@ CITY_ORI = json.load(open('./datasets/city_ori.json'))
         if city_name in POPULATION_DATA[state]:
             city_population = int(POPULATION_DATA[state][city_name]["Population"])
         else:
-            return {"all": -1, "violent_crime": -1, "property_crime": -1, "error_code": 1, "error_message": "City not found."}
+            return {"all": -1, "violent_crime": -1, "property_crime": -1, "error_code": 6, "error_message": "City not found."}
     
     if city_population == 0:
-        return {"all": -1, "violent_crime": -1, "property_crime": -1, "error_code": 1, "error_message": "City not found."}
+        return {"all": -1, "violent_crime": -1, "property_crime": -1, "error_code": 6, "error_message": "City not found."}
     
     #print("HI")
     national_crimes = {"all": 7765143, "violent_crime": 1313105, "property_crime": 6452038}
@@ -266,7 +264,7 @@ CITY_ORI = json.load(open('./datasets/city_ori.json')), include_reviews = True
             base_score = 100 - score["all"]
             review_score = 25 * (avg - 1)
             review_weight = -ALPHA * (exp(BETA * count) - 1)
-            score["safe-living-score"] = review_weight * review_score + (1-review_weight) * base_score
+            score["safe-living-score"] = round(review_weight * review_score + (1-review_weight) * base_score)
     return score
 
 # Gets the number of crimes for a certain ORI

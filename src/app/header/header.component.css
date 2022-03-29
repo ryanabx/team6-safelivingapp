@@ -1,7 +1,38 @@
-.navbar{
+/*
+Created By:
+Last Edited By:
+Date Created:
+Date Last Edited:
+Description:
+*/
+
+
+.navbar {
     src: url(SL_Logo_NoBkg.png);
-    font-weight: bold;
+    font-weight: normal;
     font-size: large;
     padding: 0;
-    margin: 0;
+    font-family: 'Segoe UI', 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: #fa8413;
+    border-radius: 0px;
 }
+
+.navbar:after{
+    background-color: #ffffff;
+    color: white
+}
+
+.navbar-button{
+    color:#000000
+}
+
+.navbar-button:hover{
+    background-color:#ad5c10;
+    color: #ffffff;
+}
+
+.navbar-button:focus{
+    background-color:#fa8413;
+    color: #000000;
+}
+

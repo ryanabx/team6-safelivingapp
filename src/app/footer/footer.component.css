@@ -1,10 +1,17 @@
-#footer-information {
-    bottom: 0;
-    height: 25%;
-    left: 0;
-    position: relative;
-    font-size: small;
-    padding: 0;
-    margin: 0;
+/*
+Created By:
+Last Edited By:
+Date Created:
+Date Last Edited:
+Description:
+*/
 
+
+.footer-styles{
+    background-color: #fa8413;
+    height:3%;
+    font-family: 'Segoe UI', 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: small;
+    vertical-align: middle;
+    text-align:center
 }

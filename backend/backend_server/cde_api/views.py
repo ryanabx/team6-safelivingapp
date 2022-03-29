@@ -25,8 +25,11 @@ def get_crime_data_old(agency, fromDate, toDate):
     stuff["error_message"] = ""
     return stuff
 
-def api_get_crime_data(request, agency, fromDate = 2020, toDate = 2020):
-    return JsonResponse(get_crime_data(agency, fromDate, toDate))
+def api_get_crime_data(request, agency, fromDate, toDate):
+    return JsonResponse({
+        "crime_data": get_crime_data_old(agency, fromDate, toDate),
+        "agency": agency
+    })
 
 # Retrieves FBI Crime Data Explorer Crime Data, or local dataset if the date range is 2020-2020
 def get_crime_data(agency, fromDate = 2020, toDate = 2020):

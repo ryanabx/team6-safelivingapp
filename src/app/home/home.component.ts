@@ -1,3 +1,12 @@
+/*
+Created By:
+Last Edited By:
+Date Created:
+Date Last Edited:
+Description:
+*/
+
+
 import { Component, OnInit} from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -24,10 +33,45 @@ export class HomeComponent implements OnInit {
 
   emptySearch: boolean = false;
 
+  searchSuggestions: any;
+  formGroup: FormGroup = this.fb.group({'suggestions' : ['']});
+
   constructor(private route: ActivatedRoute,
   private appService: AppService,
   private addrInputService: AddrInputService, 
-  private router: Router) {}
+  private router: Router,
+  private fb: FormBuilder) {}
+
+      // intialize Angular Material Form to track user input as they type
+  // if they type more than 3 chars, take that input, call the search 
+  // suggestions dataset util, and save the returning array to be loaded
+  // for displaying suggestions in the autocomplete box.
+  initForm() {
+    console.log(this.formGroup)
+    this.formGroup.get('suggestions')?.valueChanges.subscribe(
+      (data) => {
+        console.log(data);
+        if (data.length >= 3) {
+          ///console.log("it's more than 3!")
+          this.getSuggestions(data)
+        }
+      }
+      )
+  }
+
+  // method that takes input string, sends it to search suggestions
+  // dataset util, and returns an array of cities that contain that
+  // string 
+  getSuggestions(currentInput: any) {
+    console.log(currentInput)
+      this.appService.getSearchSuggestions(currentInput).subscribe(
+        (data: any) => {
+          this.searchSuggestions = data.result;
+          console.log(data)
+        }
+      )
+    
+  }
 
 
   sendInput(value: string) {
@@ -37,6 +81,8 @@ export class HomeComponent implements OnInit {
     }
 
     this.inputAddr = value;
+    this.cityNameArray = [this.inputAddr.split(",")[0]];
+    this.stateNameArray = [this.inputAddr.split(", ")[1]];
     //this.zillowLinks.push('https://www.zillow.com/homes/' + value + '_rb/');
     console.log(this.inputAddr);
     //this.addrInputService.setAddr(this.inputAddr);
@@ -71,13 +117,19 @@ export class HomeComponent implements OnInit {
         if (this.locationData.length > 0) {
           console.log("There's a valid, US, address here")
           this.latLongArray = [this.locationData[0].latLng.lat, this.locationData[0].latLng.lng]
-          this.cityNameArray = [this.locationData[0].adminArea5];
-          this.stateNameArray = [this.locationData[0].adminArea3]
+          
+
+          var city_result = JSON.stringify(this.cityNameArray);
+
+          if(city_result === "St Louis"){
+            city_result = "St. Louis";
+          }
 
           this.router.navigate(['map'], {queryParams: {latLng : JSON.stringify(this.latLongArray), 
-          city : JSON.stringify(this.cityNameArray), 
+          city : city_result, 
           state : JSON.stringify(this.stateNameArray), 
           addr : this.inputAddr}}).then(() => {this.crimeScore = "Loading... Please wait!";});
+          
         }
         // else, flag to prompt user
         else {
@@ -92,6 +144,8 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.initForm()
+
     this.route.queryParams
     .subscribe(params => {
       this.emptySearch = params['emptySearch']

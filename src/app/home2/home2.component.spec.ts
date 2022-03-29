@@ -1,20 +1,29 @@
+/*
+Created By:
+Last Edited By:
+Date Created:
+Date Last Edited:
+Description:
+*/
+
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CrimeapiComponent } from './crimeapi.component';
+import { Home2Component } from './home2.component';
 
-describe('CrimeapiComponent', () => {
-  let component: CrimeapiComponent;
-  let fixture: ComponentFixture<CrimeapiComponent>;
+describe('Home2Component', () => {
+  let component: Home2Component;
+  let fixture: ComponentFixture<Home2Component>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CrimeapiComponent ]
+      declarations: [ Home2Component ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CrimeapiComponent);
+    fixture = TestBed.createComponent(Home2Component);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
