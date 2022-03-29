@@ -3,6 +3,8 @@ import requests
 from django.http import JsonResponse
 from django.http import response
 
+import urllib.parse
+
 # Create your views here.
 
 def getGeocoding(request, inputAddr):
@@ -12,6 +14,8 @@ def geocoding(inputAddr):
     key2 = 'c7qYTGBjRaRkGF7ucqOvpNy6L1Q857oD'
     key = 'sG51Do5TgLBaELz4ZP8JAI0wWWa0QwsS'
     addrList = []
+
+    inputAddr = urllib.parse.unquote(inputAddr)
 
     #print(type(inputAddr)) # note, inputAddr always comes in as a string :(
     #print(inputAddr)

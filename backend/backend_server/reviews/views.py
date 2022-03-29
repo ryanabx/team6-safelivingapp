@@ -4,11 +4,14 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.core import serializers
 
+import urllib.parse
+
 
 # enter a review into the db of [city, state, rating, and text(comments)]
 def submitReview(request, city, state, rating, text):
 
     rating = int(rating)
+    text = urllib.parse.unquote(text)
 
     # check if each field is the appropriate type before saving to DB
     if (isinstance(city, str) and isinstance(city, str) and isinstance(rating, int) and isinstance(text, str)):
