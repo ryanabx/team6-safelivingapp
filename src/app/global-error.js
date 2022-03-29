@@ -1,3 +1,12 @@
+/*
+Created By:
+Last Edited By:
+Date Created:
+Date Last Edited:
+Description:
+*/
+
+
 window.onerror = function (msg, url, lineNo, columnNo, error) {
     var string = msg.toLowerCase();
     var substring = 'script error';
