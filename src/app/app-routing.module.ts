@@ -16,7 +16,6 @@ import { ContactComponent } from './contact/contact.component';
 import { LoginComponent } from './login/login.component';
 import { UserBookmarksComponent } from "./user-bookmarks/user-bookmarks.component";
 import { CreateComponent } from "./create/create.component";
-import { Home2Component } from "./home2/home2.component";
 
 const routes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -27,7 +26,6 @@ const routes: Routes = [
     { path: 'about', component: AboutComponent },
     { path: 'bookmarks', component: UserBookmarksComponent },
     { path: 'contact', component: ContactComponent },
-    { path: 'home2', component: Home2Component },
 ]
 
 @NgModule({
