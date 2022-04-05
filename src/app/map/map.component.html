@@ -15,7 +15,7 @@
       <!-- Create Search Bar -->
       <div [formGroup]="formGroup" class="input-group d-flex my-4">
         <div class="search-container">
-          <input class="form-control rounded" formControlName='suggestions' placeholder="Enter a City, State here!"
+          <input class="form-control rounded" (keyup.enter)="sendInput(userInput.value)" formControlName='suggestions' placeholder="Enter a City, State here!"
             id="userInput" matInput type="text" [matAutocomplete]="auto" #userInput />
           <mat-autocomplete #auto="matAutocomplete">
             <mat-option *ngFor="let item of searchSuggestions" [value]="item">
@@ -111,6 +111,13 @@
                   'green' : location.crimeScore >= 90,
                   'red' : location.crimeScore < 70
                   }">{{location.crimeScore}}</b>
+              </h2>
+              <h2>
+
+                <br>The projected safe living score for this area is: <b [ngClass]="{
+                  'green' : location.crimeScore >= 90,
+                  'red' : location.crimeScore < 70
+                  }">{{location.projectedScore}}</b>
               </h2>
               <p style="font-size: medium">
                 What does the safe living score mean?
