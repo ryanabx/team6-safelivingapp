@@ -12,3 +12,4 @@ urlpatterns = [
 ]
 
 #http://localhost:8000/recommendations/api/radius/safe-living/tulsa/200
+#http://localhost:8000/recommendations/api/state/violent/OK
