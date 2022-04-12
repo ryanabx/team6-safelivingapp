@@ -31,6 +31,7 @@ export class UserBookmarksComponent {
   crimeScore: string | undefined;
   stateNameArray: any = [];
 
+  crimeScores: any = []
   bookmarks: any = []
   // bookmarks = [
   //   {
@@ -53,8 +54,26 @@ export class UserBookmarksComponent {
     this.appService.getBookmarks(this._userService.username).subscribe(
       (data:any) => {
         this.bookmarks = data;
-        // console.log(data);
-      })
+        console.log(data);
+        for (let i = 0; i < this.bookmarks.length; i++) { //TODO
+          this.bookmarks[i].crimeScore = " "
+          console.log("HERE")
+          if(this.bookmarks[i].address.includes("|")) {
+            continue;
+          }
+          this.appService.getSafeLivingScoreAPI(this.bookmarks[i].address.split(",")[0], this.bookmarks[i].address.split(", ")[1]).subscribe(
+            (data: any)=>{
+              let cs = data["safe-living-score"].toString()
+              console.log(data)
+              console.log(cs)
+              this.bookmarks[i].crimeScore = cs
+              if(!isNaN(parseFloat(cs))){
+                this.bookmarks[i].crimeScore = parseFloat((Math.round(parseFloat(cs) * 100) / 100).toFixed(2)).toString();
+              }
+            }
+          );
+        }
+      });
   }
 
   whatIsBookmark(value: number) {
