@@ -11,9 +11,9 @@
 </div>-->
 
     <!-- Create Map -->
-    <div class=left>
+    <div class="left d-flex flex-column">
       <!-- Create Search Bar -->
-      <div [formGroup]="formGroup" class="input-group d-flex my-4">
+      <div [formGroup]="formGroup" class="d-flex search-bar-style justify-content-center my-4 input-group">
         <div class="search-container">
           <input class="form-control rounded" formControlName='suggestions' placeholder="Enter a City, State here!"
             id="userInput" matInput type="text" [matAutocomplete]="auto" #userInput />

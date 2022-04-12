@@ -13,7 +13,7 @@ Description:
     font-size: large;
     padding: 0;
     font-family: 'Segoe UI', 'Open Sans', 'Helvetica Neue', sans-serif;
-    background-color: #fa8413;
+    background-color: var(--safelivingcolor1);
     border-radius: 0px;
 }
 
@@ -23,16 +23,16 @@ Description:
 }
 
 .navbar-button{
-    color:#000000
+    color: var(--textdefaultcolor)
 }
 
 .navbar-button:hover{
-    background-color:#ad5c10;
-    color: #ffffff;
+    filter:brightness(85%);
+    color: var(--texthovercolor);
 }
 
 .navbar-button:focus{
-    background-color:#fa8413;
-    color: #000000;
+    filter:brightness(85%);
+    color: var(--textdefaultcolor);
 }
 
