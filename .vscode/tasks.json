@@ -4,11 +4,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-<<<<<<< Updated upstream
             "label": "runFrontend", 
-=======
-            "label": "runFrontend",
->>>>>>> Stashed changes
             "type": "shell",
             "command": "ng serve --open",
             "problemMatcher": []
@@ -16,11 +12,7 @@
         {
             "label": "runBackend",
             "type": "shell",
-<<<<<<< Updated upstream
             "command": "cd backend/backend_server; & './venv/Scripts/Activate.ps1'; python -m pip install -r requirements.txt; python manage.py migrate; python manage.py runserver",
-=======
-            "command": "cd backend/; & './venv/Scripts/activate'; cd backend_server; python -m pip install -r backend_server/requirements.txt; python manage.py migrate; python manage.py runserver",
->>>>>>> Stashed changes
             "problemMatcher": []
         },
         {
@@ -29,14 +21,7 @@
                 "runFrontend",
                 "runBackend"
             ],
-<<<<<<< Updated upstream
             "runOptions": {"runOn": "folderOpen"}
-=======
-            "runOptions": {
-                "runOn": "folderOpen"
-            },
-            "problemMatcher": []
->>>>>>> Stashed changes
         }
     ]
 }
