@@ -8,6 +8,13 @@ body {
     
 }
 
+:root{
+    --safelivingcolor1: #fa8413;
+    --textdefaultcolor: #000000;
+    --texthovercolor: #f5f5f5;
+    --safelivingcolor2: #fa8413;
+}
+
 .body2 {
     padding-top: 70px;
 }

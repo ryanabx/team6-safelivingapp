@@ -33,6 +33,10 @@ export class MapComponent implements AfterViewInit, OnInit {
   locations: any = [];
   radius: number;
 
+  centerLat: number = 39.8283;
+  centerLong: number = -98.5795;
+  mapZoom: number = 3;
+
   bookmarked: boolean = false;
   emptySearch: boolean = false;
   
@@ -427,6 +431,18 @@ export class MapComponent implements AfterViewInit, OnInit {
           console.log(this.latLongArray[i], this.latLongArray[i+1])
           newLoc.setLatLong(this.latLongArray[i], this.latLongArray[i+1])
           this.locations.push(newLoc)
+
+          // Set map params
+          if(i == 0) {
+            this.centerLat=this.latLongArray[i];
+            this.centerLong=this.latLongArray[i+1];
+            this.mapZoom=10;
+          } else {
+            this.centerLat = 39.8283;
+            this.centerLong = -98.5795;
+            this.mapZoom = 3;
+          }
+
         }
       }
 
@@ -469,6 +485,18 @@ export class MapComponent implements AfterViewInit, OnInit {
             }
           )
 
+          // placeholder for method call to backend for projected score
+          /*
+          this.appService.getProjectedCrimeScore(this.cityNameArray[i], this.stateNameArray[i]).subscribe(
+            (data: any) => {
+              this.locations[i].setProjectedScore(data);
+            }
+          )
+          
+          
+          
+          */ 
+
         }
       }
       console.log("Locations initially created: " + this.locations)
@@ -508,6 +536,7 @@ export class Location {
   public lat: number = 0;
   public long: number = 0;
   public crimeScore: string = "Loading... Please Wait :)";
+  public projectedScore: string = "∞";
   public city: any;
   public state: any;
   public errorCode: any;
@@ -563,6 +592,10 @@ export class Location {
   // reminder, the format of a returned review is {"city": city, "state": state, "rating": rating, "text": text/comments}
   setReviews(reviews: any) { 
     this.reviews = reviews;
+  }
+
+  setProjectedScore(score: any) {
+    this.projectedScore = score;
   }
 
   setCostOfLiving(col: any) {
