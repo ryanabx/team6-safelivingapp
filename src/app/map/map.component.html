@@ -185,7 +185,34 @@
             <!-- Recommendation Section -->
               <div id = "Recommendations"> 
                 <h2>Safest Cities Near {{location.city}}</h2>
+
                 <!-- Need to get recommendations from backend-->
+                <!--User Chooses Between Radius or State-->
+                <form name="radState" action="N/A" method="N/A">
+                  <h4>Would you like recommendations by Radius or State?</h4>
+                  <input type="radio" name="radState" /> Radius<br />
+                  <input type="radio" name="radState" /> State<br />
+                  </form>
+
+
+                <!--Recommendations based on Safe Livng Score, Violence, or Property Costs-->
+                <form name="radState" action="N/A" method="N/A">
+                  <h4>Which metric is most important to you?</h4>
+                  <input type="radio" name="radState" /> Safe Living Score<br />
+                  <input type="radio" name="radState" /> Violent Crime<br />
+                  <input type="radio" name="radState" /> Property Crime<br />
+                  </form>
+
+
+                <!--User Chooses between small, medium or large city-->
+                <form name="radState" action="N/A" method="N/A">
+                  <h4>Preferred city size?</h4>
+                  <input type="radio" name="radState" /> Small (50k-149k)<br />
+                  <input type="radio" name="radState" /> Medium(150k-499k)<br />
+                  <input type="radio" name="radState" /> Large(500k and Above)<br />
+                  <input type="radio" name="radState" /> No Preference<br />
+                  </form>
+
 
                 <!-- Link to go back to top of jumbotron -->
                 <button class="btn btn-link" onClick="document.getElementById('top').scrollIntoView();"> Back to top</button>
