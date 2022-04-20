@@ -145,7 +145,7 @@
               </div>
               <!-- Button for Recommendation -->
               <div>
-                <button class="btn btn-primary" onClick="document.getElementById('Recommendations').scrollIntoView();"> View Nearby Cities</button>
+                <button class="btn btn-primary" (click)="recommendCity(location.city, location.state)"> View Nearby Cities</button>
               </div>
               <!-- Check Survey Completion Status -->
               <div *ngIf="surveySubmitted === false; else submitted">
@@ -186,6 +186,9 @@
               <div id = "Recommendations"> 
                 <h2>Safest Cities Near {{location.city}}</h2>
                 <!-- Need to get recommendations from backend-->
+                <div *ngFor="let rev of location.recommendations; let i = index">
+                  <b>{{rev}}</b>
+                </div>
 
                 <!-- Link to go back to top of jumbotron -->
                 <button class="btn btn-link" onClick="document.getElementById('top').scrollIntoView();"> Back to top</button>

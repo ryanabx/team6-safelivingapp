@@ -86,4 +86,9 @@ export class AppService {
   getSearchSuggestions(currentInput: any) {
     return this.http.get(this.serverURL + "datasets/api/get/searchsuggestions/" + currentInput + "/")
   }
+
+  //recommendation
+  recommendCity(city: any, state: any) {
+    return this.http.get(this.serverURL + "recommendations/api/radius/safe-living/tulsa/20")
+  }
 }

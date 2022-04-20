@@ -375,6 +375,14 @@ export class MapComponent implements AfterViewInit, OnInit {
     }
   }
 
+  recommendCity(city: any, state: any) {
+      this.appService.recommendCity(city, state).subscribe(
+        (data:any) => {
+          console.log(data.success)
+        }
+      );
+  }
+
   parsePathData(path: any) {
 
     let parsedData : any = [];
@@ -482,6 +490,13 @@ export class MapComponent implements AfterViewInit, OnInit {
               // save them into its location object
               this.locations[i].setReviews(data);
               console.log("Review(s) Returned: " + data);
+            }
+          )
+
+          //recommendation
+          this.appService.recommendCity(this.cityNameArray[i], this.stateNameArray[i]).subscribe(
+            (data: any) => {
+              console.log(data)
             }
           )
 
