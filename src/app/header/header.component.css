@@ -15,7 +15,6 @@ Description:
     font-family: 'Segoe UI', 'Open Sans', 'Helvetica Neue', sans-serif;
     background-color: var(--safelivingcolor1);
     border-radius: 0px;
-    box-shadow: 0 2px 8px rgba(0,0,0,.05);
 }
 
 .navbar:after{
