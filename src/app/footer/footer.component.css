@@ -8,10 +8,11 @@ Description:
 
 
 .footer-styles{
-    background-color: #fa8413;
+    background-color: var(--safelivingcolor1);
     height:3%;
     font-family: 'Segoe UI', 'Open Sans', 'Helvetica Neue', sans-serif;
     font-size: small;
     vertical-align: middle;
-    text-align:center
+    text-align:center;
+    color: var(--textdefaultcolor)
 }

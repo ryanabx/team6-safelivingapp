@@ -18,10 +18,10 @@ import geopy.distance
 # GIVEN --> CITY, STATE, RADIUS, POPULATION SCALE
 # RETURN --> CITY WITH HIGHEST SAFETY SCORE
 
-def recommendCity(request, initialAddress="", stateID="any", radiusValue=-1, minPopulation=-1, maxPopulation=float("inf")):
-    return JsonResponse( recommend(initialAddress, radiusValue, stateID, ( float(minPopulation), float(maxPopulation) ) ) )
+def recommendCity(request, initialAddress="", stateID="any", radiusValue=-1, minPopulation=-1, maxPopulation=float("inf"), scoreCategory="safe-living"):
+    return JsonResponse(  recommend(initialAddress, radiusValue, stateID, ( float(minPopulation), float(maxPopulation) ), scoreCategory)  )
 
-def recommend(initialAddress="", radiusValue=-1, stateID="any", populationPreference=( -1, float("inf") )):
+def recommend(initialAddress="", radiusValue=-1, stateID="any", populationPreference=( -1, float("inf") ), scoreCategory="safe-living"):
 
     if(initialAddress != ""):
         startingCoordinates = getCoordinates(initialAddress)
@@ -35,8 +35,7 @@ def recommend(initialAddress="", radiusValue=-1, stateID="any", populationPrefer
         cityScorePairs = []
 
         for city in cities:
-            print("score = ", getCrimeScore(city["city"], city["state_id"]))
-            cityScore = getCrimeScore(city["city"], city["state_id"])
+            cityScore = getScore(city["city"], city["state_id"], scoreCategory)
             cityScorePairs.append( (city, cityScore) )
         
         return {
@@ -130,16 +129,21 @@ CITY_DICT=json.load( open("./datasets/us_city_info.json") ) ):
 # GIVEN --> CITY NAME AND STATE NAME
 # RETURN --> CALUCLATED CRIME SCORE
 
-def getCrimeScore(city, state,
+def getScore(city, state, scoreCategory,
     ORI_DICT = json.load( open("./datasets/city_ori.json") ) ):
 
     if state in ORI_DICT and city in ORI_DICT[state]:
         if( ORI_DICT[state][city] == [] ):
             return -1
 
-    score_dict = safe_living_score.views.get_score_dict(city, state)
+    score_dict = safe_living_score.views.get_safe_living_score(city, state)
 
-    crimeScore = score_dict["safe-living-score"] 
+    if(scoreCategory == "safe-living"):
+        crimeScore = score_dict["safe-living-score"] 
+    if(scoreCategory == "property"):
+        crimeScore = 100 - score_dict["property_crime"] 
+    if(scoreCategory == "violent"):
+        crimeScore = 100 - score_dict["violent_crime"] 
 
 
     #url = ("https://localhost:8000/safelivingscore/api/", city, "/", state, "/")192.168.2.68

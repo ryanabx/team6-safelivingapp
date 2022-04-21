@@ -6,20 +6,6 @@ Date Last Edited:
 Description:
 */
 
-.jumbotron {
-    background-image: url(tulsa.jpg);
-    background-repeat: no-repeat;
-    text-align: center;
-    text-shadow: black 0px 0px 15px;
-    font-family: Georgia, serif;
-    font-weight: bold;
-    color: white;
-    position: relative;
-    text-align: center;
-    display: block;
-    background-size: cover;
-  }
-
   .vertical-center {
     min-height: 100%; /* Fallback for browsers do NOT support vh unit */
     min-height: 100vh; /* These two lines are counted as one :-)       */
