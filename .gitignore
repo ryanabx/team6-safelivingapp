@@ -44,3 +44,4 @@ Thumbs.db
 .vscode/tasks.json
 .vscode/tasks.json
 .vscode/tasks.json
+backend/backend_server/datasets/crime_data_full.json
