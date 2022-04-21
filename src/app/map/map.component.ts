@@ -496,7 +496,16 @@ export class MapComponent implements AfterViewInit, OnInit {
           //recommendation
           this.appService.recommendCity(this.cityNameArray[i], this.stateNameArray[i]).subscribe(
             (data: any) => {
+
+              console.log("Data Under Here: \n")
               console.log(data)
+
+              console.log("City Name Here:")
+              console.log(data["cityPairs"][0][0]["city"]);
+
+              console.log("Score Name Here:");
+              console.log(data["cityPairs"][0][1]);
+              
             }
           )
 
