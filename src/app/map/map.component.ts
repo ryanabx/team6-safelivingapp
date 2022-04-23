@@ -381,23 +381,24 @@ export class MapComponent implements AfterViewInit, OnInit {
     }
   }
 
-  /*recommendCity(city: any, state: any) {
+  //call in html for recommendation func using filters
+  /*recommendCity(city: any, state: any, rad: any, min: any, max: any, category: any) {
       this.appService.recommendCity(city, state, this.radiusValue, this.minPop, this.maxPop, this.scoreCat).subscribe(
         (data:any) => {
           console.log("Data Under Here: \n")
               console.log(data)
 
-              /*console.log("City Name Here:")
-              console.log(data["cityPairs"][0][0]["city"]);
-
-              console.log("Score Name Here:");
-              console.log(data["cityPairs"][0][1]);
-              var x;
-              var recList = []
-              for(x = 0; x>=9; x++)
-                recList.push(data["cityPairs"][0][x]["city"])
+          var recList:any[][] = new Array()
+              for(let j=0; j<10; j++){
+                recList.push(["a",1])
+              }
+              for(let x=0; x<10; x++)
+                {
+                  recList[x][0] = (data["cityPairs"][x][0]["city"])
+                  recList[x][1] = (data["cityPairs"][x][1])
+                }
               console.log(recList)
-              this.locations.setRecommendations(recList);
+              this.locations.setRecommendations(recList)
         }
       );
   }*/
