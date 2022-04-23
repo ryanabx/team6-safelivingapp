@@ -9,6 +9,17 @@ body {
     
 }
 
+.centered-stuff{
+    justify-self: center;
+    align-self: center;
+    justify-content: center;
+    align-content: center;
+    justify-items: center;
+    align-items: center;
+    flex: 1;
+    display: flex;
+}
+
 :root{
     --safelivingcolor1: #fa8413;
     --textdefaultcolor: #000000;
