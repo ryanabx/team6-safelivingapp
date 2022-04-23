@@ -24,6 +24,12 @@ export class MapComponent implements AfterViewInit, OnInit {
   comment: any;
   avgRating = 0;
   isReadonly = false;
+
+  //recommendation
+  radiusValue = 20; 
+  minPop = -1;
+  maxPop = Infinity;
+  scoreCat = "safe-living";
   
   lat: number;
   long: number;
@@ -375,13 +381,26 @@ export class MapComponent implements AfterViewInit, OnInit {
     }
   }
 
-  recommendCity(city: any, state: any) {
-      this.appService.recommendCity(city, state).subscribe(
+  /*recommendCity(city: any, state: any) {
+      this.appService.recommendCity(city, state, this.radiusValue, this.minPop, this.maxPop, this.scoreCat).subscribe(
         (data:any) => {
-          console.log(data.success)
+          console.log("Data Under Here: \n")
+              console.log(data)
+
+              /*console.log("City Name Here:")
+              console.log(data["cityPairs"][0][0]["city"]);
+
+              console.log("Score Name Here:");
+              console.log(data["cityPairs"][0][1]);
+              var x;
+              var recList = []
+              for(x = 0; x>=9; x++)
+                recList.push(data["cityPairs"][0][x]["city"])
+              console.log(recList)
+              this.locations.setRecommendations(recList);
         }
       );
-  }
+  }*/
 
   parsePathData(path: any) {
 
@@ -494,18 +513,28 @@ export class MapComponent implements AfterViewInit, OnInit {
           )
 
           //recommendation
-          this.appService.recommendCity(this.cityNameArray[i], this.stateNameArray[i]).subscribe(
+          this.appService.recommendCity(this.locations[i].city, this.locations[i].state, this.radiusValue, this.minPop, this.maxPop, this.scoreCat).subscribe(
             (data: any) => {
-
               console.log("Data Under Here: \n")
               console.log(data)
 
-              console.log("City Name Here:")
+              /*console.log("City Name Here:")
               console.log(data["cityPairs"][0][0]["city"]);
 
               console.log("Score Name Here:");
-              console.log(data["cityPairs"][0][1]);
-              
+              console.log(data["cityPairs"][0][1]);*/
+
+              var recList:any[][] = new Array()
+              for(let j=0; j<10; j++){
+                recList.push(["a",1])
+              }
+              for(let x=0; x<10; x++)
+                {
+                  recList[x][0] = (data["cityPairs"][x][0]["city"])
+                  recList[x][1] = (data["cityPairs"][x][1])
+                }
+              console.log(recList)
+              this.locations[i].setRecommendations(recList)
             }
           )
 
@@ -572,6 +601,7 @@ export class Location {
     gas: ''
   };
   public reviews: any;
+  public recommendations: any;
   public labelOptions: any = {
     color: 'white',
     fontFamily: '',
@@ -616,6 +646,10 @@ export class Location {
   // reminder, the format of a returned review is {"city": city, "state": state, "rating": rating, "text": text/comments}
   setReviews(reviews: any) { 
     this.reviews = reviews;
+  }
+
+  setRecommendations(recommendations: any) { 
+    this.recommendations = recommendations;
   }
 
   setProjectedScore(score: any) {

@@ -88,7 +88,7 @@ export class AppService {
   }
 
   //recommendation
-  recommendCity(city: any, state: any) {
-    return this.http.get(this.serverURL + "recommendations/api/radius/safe-living/tulsa/20")
+  recommendCity(city: any, state: any, radiusValue=20, minPopulation=-1, maxPopulation=Infinity, scoreCategory="safe-living") {
+    return this.http.get(this.serverURL + "recommendations/api/radius/"+scoreCategory+"/"+city+"/"+radiusValue)
   }
 }
