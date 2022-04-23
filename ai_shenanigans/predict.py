@@ -15,17 +15,26 @@ def get_network():
     hide1 = Dense(32, activation='relu', kernel_initializer='he_normal')(inputs)
     hide2 = Dense(16, activation='relu', kernel_initializer='he_normal')(hide1)
     hide3 = Dense(8, activation='relu', kernel_initializer='he_normal')(hide2)
-    out = Dense(1, activation='linear', kernel_initializer='he_normal')(hide3)
+    out = Dense(2, activation='linear', kernel_initializer='he_normal')(hide3)
     model = Model(inputs=inputs, outputs=out)
     model.compile(optimizer=Adam(lr=1e-4), loss='mse')
     return model
 
 def main():
     model = get_network()
-    data_dir = 'backend/backend_server.datasets/'
+    data_dir = 'backend/backend_server/datasets/'
     x = np.load(data_dir + 'x.npy')
+    x = x[:, :, [2, 3, 4, 5, 6, 7, 8, 9, 10, 11]]
+    print('x')
+    print(x.shape)
     y = np.load(data_dir + 'y.npy')
+    y = y[:, [0, 1]]
+    print('y')
+    print(y.shape)
     g = np.load(data_dir + 'g.npy')
+    g = g[:, :, [2, 3, 4, 5, 6, 7, 8, 9, 10, 11]]
+    print('g')
+    print(g.shape)
     g_lable = np.load(data_dir + 'g_label.npy')
 
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.25)
