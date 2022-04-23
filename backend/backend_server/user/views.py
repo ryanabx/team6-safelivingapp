@@ -7,8 +7,13 @@ import re
 def newUser(request, username, email, password):
     checked = password_check(password)
     if checked.get("check_result"):
-        user = User.objects.create_user(username, email, password)
-        user.save()
+        try:
+            user = User.objects.create_user(username, email, password)
+            user.save()
+        except Exception as e:
+            print(e)
+            checked['check_result'] = False
+        return JsonResponse(checked, safe = False)
     else:
         return JsonResponse(checked, safe = False)
     # user = User.objects.get(username = username)

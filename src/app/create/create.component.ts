@@ -21,6 +21,13 @@ export class CreateComponent implements OnInit {
 
   constructor(private router: Router, public _userService: UserService) { }
 
+  invalidLogin = false;
+  lowercaseError = false;
+  uppercaseError = false;
+  numberError = false;
+  symbolError = false;
+  lengthError = false;
+
   ngOnInit(): void {
     this.newuser = {
       username: '',
@@ -37,9 +44,24 @@ export class CreateComponent implements OnInit {
     this.newuser.email = email;
     this.newuser.username = username;
     this.newuser.password = password;
-    this._userService.register(this.newuser.email, this.newuser.username, this.newuser.password).subscribe();
-    setTimeout(() => {
-      this.sendToLogin();
-    }, 1500);
+    this._userService.register(this.newuser.email, this.newuser.username, this.newuser.password).subscribe(
+      (data: any) => {
+        this.lengthError = data.length_error;
+        this.symbolError = data.symbol_error;
+        this.lowercaseError = data.lowercase_error;
+        this.uppercaseError = data.uppercase_error;
+        this.invalidLogin = data.check_result;
+        this.numberError = data.number_error;
+        
+        this.invalidLogin = !this.invalidLogin;
+        if (!this.invalidLogin){
+          setTimeout(() => {
+            this.sendToLogin();
+          }, 1500);
+        }
+      }
+    );
+    
+    
   }
 }
