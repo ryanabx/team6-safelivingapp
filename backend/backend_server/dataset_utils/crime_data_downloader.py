@@ -87,15 +87,15 @@ def make_ai_vector(SORTED_CRIME_VECTOR_PATH = "", SAVE_PATH = "", SAVE_PATH_2 = 
             for i in range(0,16):
                 arr1 = []
                 issue = False
-                for year in range(2000 + i, 2007 + i):
+                for year in range(2000 + i, 2006 + i):
                     if f'{year}' not in SORTED_CRIME_VECTOR[ORI]:
                         issue = True
                 if not issue:
-                    for year in range(2000 + i, 2006 + i):
+                    for year in range(2000 + i, 2005 + i):
                         arr1.append(SORTED_CRIME_VECTOR[ORI][f'{year}'])
                     if not issue:
                         x_samples.append(arr1)
-                        y_samples.append(SORTED_CRIME_VECTOR[ORI][f'{2006 + i}'])
+                        y_samples.append(SORTED_CRIME_VECTOR[ORI][f'{2005 + i}'])
 
             
             arr2 = []

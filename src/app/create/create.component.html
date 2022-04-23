@@ -51,6 +51,14 @@ Description:
           <input type="password" id="userPassword" class="form-control" #userPassword/>
           <label class="form-label" for="form2Example2">Password</label>
         </div>
+
+        <div *ngIf = "this.invalidLogin">Account creation failed.</div>
+        <div *ngIf = "this.usernameError">Someone chose the same username as you. Oop</div>
+        <div *ngIf = "this.lengthError">Someone decided the password length had to be a certain amount lmfao.</div>
+        <div *ngIf = "this.symbolError">You have to use symbols. (If confused, use !)</div>
+        <div *ngIf = "this.numberError">You have to use numbers.</div>
+        <div *ngIf = "this.lowercaseError">You have to use lowercase letters.</div>
+        <div *ngIf = "this.uppercaseError">You have to use uppercase letters.</div>
       
         <!-- 2 column grid layout for inline styling -->
         <div class="row mb-4">
