@@ -27,6 +27,7 @@ export class CreateComponent implements OnInit {
   numberError = false;
   symbolError = false;
   lengthError = false;
+  usernameError = false;
 
   ngOnInit(): void {
     this.newuser = {
@@ -52,6 +53,7 @@ export class CreateComponent implements OnInit {
         this.uppercaseError = data.uppercase_error;
         this.invalidLogin = data.check_result;
         this.numberError = data.number_error;
+        this.usernameError = data.username_error;
         
         this.invalidLogin = !this.invalidLogin;
         if (!this.invalidLogin){

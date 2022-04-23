@@ -53,6 +53,7 @@ Description:
         </div>
 
         <div *ngIf = "this.invalidLogin">Account creation failed.</div>
+        <div *ngIf = "this.usernameError">Someone chose the same username as you. Oop</div>
         <div *ngIf = "this.lengthError">Someone decided the password length had to be a certain amount lmfao.</div>
         <div *ngIf = "this.symbolError">You have to use symbols. (If confused, use !)</div>
         <div *ngIf = "this.numberError">You have to use numbers.</div>
