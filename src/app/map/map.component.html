@@ -213,6 +213,9 @@
                   <input type="radio" name="radState" /> No Preference<br />
                   </form>
 
+                <div *ngFor="let rec of location.recommendations; let i = index">
+                  <br><b>City: </b>{{rec[0]}} <b>Score: </b>{{rec[1]}}
+                </div>
 
                 <!-- Link to go back to top of jumbotron -->
                 <button class="btn btn-link" onClick="document.getElementById('top').scrollIntoView();"> Back to top</button>
