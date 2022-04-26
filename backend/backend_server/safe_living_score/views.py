@@ -163,15 +163,165 @@ def get_score_dict(city, state):
 def get_crime_score(city, state,
 POPULATION_DATA = json.load(open('./datasets/population_data_fixed.json')),
 CRIME_DATA = json.load(open('./datasets/crime_data_sorted.json')),
-CITY_ORI = json.load(open('./datasets/city_ori.json'))
+CITY_ORI = json.load(open('./datasets/city_ori.json')),
+PROJECTED_DATA = json.load(open('./datasets/ori_future_preds.json'))
 ):
     crime_numbers = {"all": [], "violent_crime": [], "property_crime": []}
+    projected_crime_numbers = {"all": [], "violent_crime": [], "property_crime": []}
 
     if state in CITY_ORI:
         if city in CITY_ORI[state]:
             if CITY_ORI[state][city]:
                 for agency in CITY_ORI[state][city]:
                     crime_count = get_crime_count(agency, state, CRIME_DATA)
+                    projected_crime_count = get_projected_crime_count(agency, PROJECTED_DATA)
+                    for crime_type in CRIME_TYPES:
+                        crime_numbers[crime_type].append(int(crime_count[crime_type]))
+                        projected_crime_numbers[crime_type].append(int(projected_crime_count[crime_type]))
+            else:
+                return {"all": -1, "violent_crime": -1, "property_crime": -1, "projected_all": -1, "projected_violent_crime": -1, "projected_property_crime": -1, "error_code": 3, "error_message": "No Agencies found for specified city."}
+        else:
+            return {"all": -1, "violent_crime": -1, "property_crime": -1, "projected_all": -1, "projected_violent_crime": -1, "projected_property_crime": -1, "error_code": 1, "error_message": "City not found."}
+    else:
+        return {"all": -1, "violent_crime": -1, "property_crime": -1, "projected_all": -1, "projected_violent_crime": -1, "projected_property_crime": -1, "error_code": 4, "error_message": "State not found."}
+
+    num_crimes = {"all": 0, "violent_crime": 0, "property_crime": 0}
+    num_projected_crimes = {"all": 0, "violent_crime": 0, "property_crime": 0}
+    for type in CRIME_TYPES:
+        for x in crime_numbers[type]:
+            num_crimes[type] += x
+        for y in projected_crime_numbers[type]:
+            num_projected_crimes[type] += y
+
+    if num_crimes["all"] < 10:
+        return {"all": -1, "violent_crime": -1, "property_crime": -1, "projected_all": -1, "projected_violent_crime": -1, "projected_property_crime": -1, "error_code": 5, "error_message": "Less than 10 crimes reported. Data for this city is incomplete."}
+
+    city_population = 0
+
+    if city in POPULATION_DATA[state]:
+        city_population = int(POPULATION_DATA[state][city]["Population"])
+    else:
+        city_name = city
+        for suffix in [" city", " City", " village", " Village"]:
+            if suffix in city_name: city_name = city_name[0:city_name.find(suffix)]
+        if city_name in POPULATION_DATA[state]:
+            city_population = int(POPULATION_DATA[state][city_name]["Population"])
+        else:
+            return {"all": -1, "violent_crime": -1, "property_crime": -1, "projected_all": -1, "projected_violent_crime": -1, "projected_property_crime": -1, "error_code": 6, "error_message": "City not found."}
+    
+    if city_population == 0:
+        return {"all": -1, "violent_crime": -1, "property_crime": -1, "projected_all": -1, "projected_violent_crime": -1, "projected_property_crime": -1, "error_code": 6, "error_message": "City not found."}
+    
+    #print("HI")
+    national_crimes = {"all": 7765143, "violent_crime": 1313105, "property_crime": 6452038}
+
+    #print(f'(Number of crimes: {num_crimes["all"]} / City Pop: {city_population}) / (National crimes: {national_crimes["all"]} / National Pop: {NATIONAL_POPULATION})')
+    score = {"all": 0, "violent_crime": 0, "property_crime": 0}
+    for crime_type in CRIME_TYPES:
+        score[crime_type] = (num_crimes[crime_type] / city_population) / (national_crimes[crime_type] / NATIONAL_POPULATION)
+        score[f'projected_{crime_type}'] = (num_projected_crimes[crime_type] / city_population) / (national_crimes[crime_type] / NATIONAL_POPULATION)
+    
+
+    vcrime1 = 0.025
+    vcrime2 = 8.36
+    pcrime1 = 0.18
+    pcrime2 = 4.54
+
+    acrime1 = (vcrime1 + pcrime1) / 2
+    acrime2 = (vcrime2 + pcrime2) / 2
+
+    #Test normalization
+    score["violent_crime"] = (score["violent_crime"] - vcrime1) / (vcrime2 - vcrime1) * 100
+    score["property_crime"] = (score["property_crime"] - pcrime1) / (pcrime2 - pcrime1) * 100
+    score["all"] = (score["violent_crime"] + score["property_crime"]) / 2
+
+    score["violent_crime"] = round(score["violent_crime"])
+    score["property_crime"]= round(score["property_crime"])
+    score["all"] = round(score["all"])
+
+    # Projected Crimes Normalization
+    score["projected_violent_crime"] = (score["projected_violent_crime"] - vcrime1) / (vcrime2 - vcrime1) * 100
+    score["projected_property_crime"] = (score["projected_property_crime"] - pcrime1) / (pcrime2 - pcrime1) * 100
+    score["projected_all"] = (score["projected_violent_crime"] + score["projected_property_crime"]) / 2
+
+    score["projected_violent_crime"] = round(score["projected_violent_crime"])
+    score["projected_property_crime"]= round(score["projected_property_crime"])
+    score["projected_all"] = round(score["projected_all"])
+
+
+    for crime_type in CRIME_TYPES:
+        if score[crime_type] < 0 or score[crime_type] > 100:
+            return {"all": -1, "violent_crime": -1, "property_crime": -1, "projected_all": -1, "projected_violent_crime": -1, "projected_property_crime": -1, "error_code": 2, "error_message": "Score is out of normal range."}
+
+    score["error_code"] = 0
+    score["error_message"] = ""
+
+    return score
+
+# Gets the safe living score for a given city and state.
+def get_safe_living_score(city, state,
+POPULATION_DATA = json.load(open('./datasets/population_data_fixed.json')),
+CRIME_DATA = json.load(open('./datasets/crime_data_sorted.json')),
+CITY_ORI = json.load(open('./datasets/city_ori.json')), include_reviews = True,
+PROJECTED_DATA = json.load(open('./datasets/ori_future_preds.json'))
+):
+    #print(f'Get safe living score for {city}, {state}')
+    score = get_crime_score(city, state, POPULATION_DATA, CRIME_DATA, CITY_ORI, PROJECTED_DATA)
+    if "error_code" in score and score["error_code"] != 0:
+        score["safe-living-score"] = -1
+        score["projected_score"] = -1
+    else:
+        score["error_code"] = 0
+        score["error_message"] = ""
+        score["safe-living-score"] = 100 - score["all"]
+        score["projected_score"] = 100 - score["projected_all"]
+    if include_reviews and score["safe-living-score"] != -1:
+        reviews = getReviewList(city, state)
+        if reviews:
+            ALPHA = 0.2 # Reviews make up a maximum of 20% of a score
+            BETA = log(0.5) / 5 # 50% closer to maximum every 5 reviews
+            count = len(reviews)
+            avg = sum([r.get("rating") for r in reviews]) / count
+            base_score = 100 - score["all"]
+            base_projected_score = 100 - score["projected_all"]
+            review_score = 25 * (avg - 1)
+            review_weight = -ALPHA * (exp(BETA * count) - 1)
+            score["safe-living-score"] = round(review_weight * review_score + (1-review_weight) * base_score)
+            score["projected_score"] = round(review_weight * review_score + (1-review_weight) * base_projected_score)
+    return score
+
+# Gets the number of crimes for a certain ORI
+def get_crime_count(ORI, state_abbr, CRIME_DATA = json.load(open('./datasets/crime_data_sorted.json'))):
+    crime_list = {}
+    for city_data in CRIME_DATA[state_abbr][ORI]["results"]:
+        crime_list[city_data["offense"]] = city_data["actual"]
+    num_crimes = {"all": 0, "violent_crime": 0, "property_crime": 0}
+    for crime_type in CRIME_TYPES:
+        for city_data in relevant_crimes[crime_type]:
+            if(city_data in crime_list):
+                num_crimes[crime_type] += int(crime_list[city_data])
+
+    return num_crimes
+
+# Gets the projected number of crimes for a certain ORI
+def get_projected_crime_count(ORI, PROJECTED_DATA = json.load(open('./datasets/ori_future_preds.json'))):
+    return {
+        "all": PROJECTED_DATA[ORI][0] + PROJECTED_DATA[ORI][1],
+        "violent_crime": PROJECTED_DATA[ORI][0],
+        "property_crime": PROJECTED_DATA[ORI][1]
+        }
+
+def get_projected_score(city, state,
+CRIME_DATA = json.load(open('./datasets/ori_future_preds.json')),
+POPULATION_DATA = json.load(open('./datasets/population_data_fixed.json')),
+CITY_ORI = json.load(open('./datasets/city_ori.json')), include_reviews = True):
+    crime_numbers = {"all": [], "violent_crime": [], "property_crime": []}
+
+    if state in CITY_ORI:
+        if city in CITY_ORI[state]:
+            if CITY_ORI[state][city]:
+                for agency in CITY_ORI[state][city]:
+                    crime_count = get_projected_crime_count(agency, CRIME_DATA)
                     for crime_type in CRIME_TYPES:
                         crime_numbers[crime_type].append(int(crime_count[crime_type]))
             else:
@@ -238,16 +388,6 @@ CITY_ORI = json.load(open('./datasets/city_ori.json'))
     score["error_code"] = 0
     score["error_message"] = ""
 
-    return score
-
-# Gets the safe living score for a given city and state.
-def get_safe_living_score(city, state,
-POPULATION_DATA = json.load(open('./datasets/population_data_fixed.json')),
-CRIME_DATA = json.load(open('./datasets/crime_data_sorted.json')),
-CITY_ORI = json.load(open('./datasets/city_ori.json')), include_reviews = True
-):
-    #print(f'Get safe living score for {city}, {state}')
-    score = get_crime_score(city, state, POPULATION_DATA, CRIME_DATA, CITY_ORI)
     if "error_code" in score and score["error_code"] != 0:
         score["safe-living-score"] = -1
     else:
@@ -266,16 +406,3 @@ CITY_ORI = json.load(open('./datasets/city_ori.json')), include_reviews = True
             review_weight = -ALPHA * (exp(BETA * count) - 1)
             score["safe-living-score"] = round(review_weight * review_score + (1-review_weight) * base_score)
     return score
-
-# Gets the number of crimes for a certain ORI
-def get_crime_count(ORI, state_abbr, CRIME_DATA = json.load(open('./datasets/crime_data_sorted.json'))):
-    crime_list = {}
-    for city_data in CRIME_DATA[state_abbr][ORI]["results"]:
-        crime_list[city_data["offense"]] = city_data["actual"]
-    num_crimes = {"all": 0, "violent_crime": 0, "property_crime": 0}
-    for crime_type in CRIME_TYPES:
-        for city_data in relevant_crimes[crime_type]:
-            if(city_data in crime_list):
-                num_crimes[crime_type] += int(crime_list[city_data])
-
-    return num_crimes
