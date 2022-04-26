@@ -88,12 +88,6 @@ def make_city_state_to_ori_dataset():
 def refresh_crime_scores(request):
     
     try:
-        SCORE_DATA = json.load(open("./datasets/score.json"))
-    except FileNotFoundError:
-        print("Could not find the scores dataset")
-        SCORE_DATA = {}
-    
-    try:
         POPULATION_DATA = json.load(open("./datasets/population_data_fixed.json"))
     except FileNotFoundError:
         print("Could not find the population dataset")
@@ -106,7 +100,7 @@ def refresh_crime_scores(request):
         NAT_CRIME_DATA = {}
     
     try:
-        CRIME_DATA = json.load(open("./datasets/crime_data_sorted.json"))
+        CRIME_DATA = json.load(open("./datasets/ori_future_preds.json"))
     except FileNotFoundError:
         print("Could not find the crime dataset")
         CRIME_DATA = {}
@@ -114,10 +108,12 @@ def refresh_crime_scores(request):
     try:
         AGENCY_DATA = json.load(open("./datasets/agencies.json"))
     except FileNotFoundError:
-        print("Could not find the crime dataset")
+        print("Could not find the agencies dataset")
         AGENCY_DATA = {}
     
     count = 0
+
+    SCORE_DATA = {}
 
     try:
         for state in POPULATION_DATA:
@@ -125,7 +121,7 @@ def refresh_crime_scores(request):
             for town in POPULATION_DATA[state]:
                 if int(POPULATION_DATA[state][town]["Population"]) > 500 and town not in SCORE_DATA:
                     #print(f"Calculating scores for {town}, {state}")
-                    scores = safe_living_score.views.get_safe_living_score(town, state, POPULATION_DATA, CRIME_DATA, AGENCY_DATA)
+                    scores = safe_living_score.views.get_projected_score(town, state, CRIME_DATA, POPULATION_DATA, AGENCY_DATA)
                     SCORE_DATA[town] = {
                         "scores": scores,
                         "town-name": town,
@@ -136,13 +132,15 @@ def refresh_crime_scores(request):
                 if(count % 10 == 0):
                     print(f'{count}')
     except KeyboardInterrupt:
-        with open("./datasets/scores.json", "w") as outfile:
+        with open("./datasets/projected_scores.json", "w") as outfile:
             json.dump(SCORE_DATA, outfile)
         print("Saved what could be saved")
+        return JsonResponse({"done": True})
     
-    with open("./datasets/scores.json", "w") as outfile:
+    with open("./datasets/projected_scores.json", "w") as outfile:
         json.dump(SCORE_DATA, outfile)
     print("Successfully compiled scores dataset")
+    return JsonResponse({"done": True})
 
 def fix_population_dataset(request = ""):
     POPULATION_DATA = json.load(open('./datasets/population_data.json'))
