@@ -1,4 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
+
 body {
     margin: 0 !important;
     border: 0 px !important;
@@ -6,6 +7,17 @@ body {
     background-image: url('./assets/safelivingbackground.png');
     background-size: 1024px 1024px;
     
+}
+
+.centered-stuff{
+    justify-self: center;
+    align-self: center;
+    justify-content: center;
+    align-content: center;
+    justify-items: center;
+    align-items: center;
+    flex: 1;
+    display: flex;
 }
 
 :root{
