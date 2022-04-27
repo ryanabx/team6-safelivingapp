@@ -113,12 +113,17 @@
                   }">{{location.crimeScore}}</b>
               </h2>
               <h2>
-
-                <br>The projected safe living score for this area is: <b [ngClass]="{
-                  'green' : location.crimeScore >= 90,
-                  'red' : location.crimeScore < 70
+                <div *ngIf="location.projectedScore != '-1'">
+                <br>The future projected safe living score for this area is: <b [ngClass]="{
+                  'green' : location.projectedScore >= 90,
+                  'red' : location.projectedScore < 70
                   }">{{location.projectedScore}}</b>
+                  </div>
+                  
               </h2>
+              <div *ngIf="location.projectedScore == '-1'">
+                <br> <p style="font-size: medium"><b>We cannot provide future AI projections for this city.</b> Most likely the reason is because some police agency in the area has incomplete historical data.</p>
+              </div>
               <p style="font-size: medium">
                 What does the safe living score mean?
                 <br>We created the safe living score based off of crime in an area!
