@@ -9,7 +9,7 @@ import json
 from reviews.views import getReviewList
 
 
-GEOCODING_KEY = 'c7qYTGBjRaRkGF7ucqOvpNy6L1Q857oD'
+GEOCODING_KEY = json.load(open('./API_KEYS.json'))["geocoding"]
 NATIONAL_POPULATION = 329484123
 
 CRIME_TYPES = ["all", "violent_crime", "property_crime"]

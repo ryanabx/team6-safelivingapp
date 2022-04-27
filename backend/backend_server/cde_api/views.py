@@ -16,7 +16,7 @@ def get_crime_data_old(agency, fromDate, toDate):
             'message': 'Please provide a valid date range (2000 to 2020)'
         }
         return JsonResponse(return_value)
-    key = 'nHym62MTPDELS0XgtAZLLw0fL3jNWoNvsY2kn315'
+    key = json.load(open('./API_KEYS.json'))["crime_data_explorer"]
     url = f'https://api.usa.gov/crime/fbi/sapi//api/summarized/agencies/{agency}/offenses/{fromDate}/{toDate}?api_key={key}'
     #url = f'https://api.usa.gov/crime/fbi/sapi/api/nibrs/offenses/agencies/{agency}?api_key={key}'
     r = requests.get(url)
