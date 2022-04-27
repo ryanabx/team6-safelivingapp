@@ -184,10 +184,10 @@
             </div>
             <!-- Recommendation Section -->
               <div id = "Recommendations"> 
-                <h2>Safest Cities Near {{location.city}}</h2>
+                <h2><b>Safest Cities Near {{location.city}}</b></h2>
                 <!-- Need to get recommendations from backend-->
                 <div *ngFor="let rec of location.recommendations; let i = index">
-                  <br><b>City: </b>{{rec[0]}} <b>Score: </b>{{rec[1]}}
+                  <h4><br><b>City: </b>{{rec[0]}}, {{location.state}} &emsp; ::&emsp; <b>Score: </b>{{rec[1]}}</h4>
                 </div>
 
                 <!-- Link to go back to top of jumbotron -->
