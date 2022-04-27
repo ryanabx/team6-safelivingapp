@@ -237,7 +237,7 @@ PROJECTED_DATA = json.load(open('./datasets/ori_future_preds.json'))
     p_vcrime1 = 0.035
     p_vcrime2 = 1.53
     p_pcrime1 = 0.127
-    p_pcrime2 = 3.087
+    p_pcrime2 = 4.40 # 3.087
 
     #Test normalization
     score["violent_crime"] = (score["violent_crime"] - vcrime1) / (vcrime2 - vcrime1) * 100
