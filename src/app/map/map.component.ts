@@ -404,7 +404,7 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   // call in html for recommendation func using filters
   recommendCity(location: any, rad: any, min: any, max: any, category: any) {
-      this.appService.recommendCity(location.city, rad, min, max, category).subscribe(
+      this.appService.recommendCity(location.city,location.state, rad, min, max, category).subscribe(
         (data: any) => {
           console.log("Data Under Here: \n");
           console.log(data);
@@ -541,7 +541,7 @@ export class MapComponent implements AfterViewInit, OnInit {
           )
 
           //recommendation
-          this.appService.recommendCity(this.locations[i].city, this.radiusValue, this.minPop, this.maxPop, this.scoreCat).subscribe(
+          this.appService.recommendCity(this.locations[i].city, this.locations[i].state, this.radiusValue, this.minPop, this.maxPop, this.scoreCat).subscribe(
             (data: any) => {
               console.log("Data Under Here: \n")
               console.log(data)
