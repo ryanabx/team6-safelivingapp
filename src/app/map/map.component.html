@@ -108,15 +108,15 @@
               <h2>
 
                 <br>The safe living score for this area is: <b [ngClass]="{
-                  'green' : location.crimeScore >= 90,
-                  'red' : location.crimeScore < 70
+                  'green' : location.crimeScore >= 70,
+                  'red' : location.crimeScore < 30
                   }">{{location.crimeScore}}</b>
               </h2>
               <h2>
                 <div *ngIf="location.projectedScore != '-1'">
                 <br>The future projected safe living score for this area is: <b [ngClass]="{
-                  'green' : location.projectedScore >= 90,
-                  'red' : location.projectedScore < 70
+                  'green' : location.projectedScore >= 70,
+                  'red' : location.projectedScore < 30
                   }">{{location.projectedScore}}</b>
                   </div>
                   
