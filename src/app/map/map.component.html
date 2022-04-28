@@ -11,7 +11,7 @@
 </div>-->
 
     <!-- Create Map -->
-    <div class="left d-flex flex-column">
+    <div class="left d-flex flex-column mt-5">
       <!-- Create Search Bar -->
       <div [formGroup]="formGroup" class="d-flex search-bar-style justify-content-center my-4 input-group">
         <div class="search-container">
@@ -98,7 +98,7 @@
       </div>
 
       <!-- Create City Info Box -->
-      <div class="right">
+      <div class="right" style='margin-top: 4%;'>
         <div *ngFor="let location of locations; let i=index">
           <div *ngIf="inputAddr !== null" class="center-text jumbotron">
             <h2 id = "top">

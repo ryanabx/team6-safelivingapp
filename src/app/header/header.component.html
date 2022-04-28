@@ -35,19 +35,19 @@ Description:
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="nav navbar-nav mb-0 navbar-expand d-xl-flex mr-4 pl-4 pr-1 position-relative gap-5">
                 <li class = "nav-item" routerLinkActive="active">
-                  <a routerLink="/home"  class = "navbar-button btn-outline-light bg-gradient">Home</a>
+                  <a routerLink="/home"  class = "navbar-button btn-outline-light bg-gradient bg-primary">Home</a>
                 </li>
 
                 <li class = "nav-item" routerLinkActive="active">
-                  <a routerLink="/map"  class = "navbar-button btn-outline-light bg-gradient">Explore</a>
+                  <a routerLink="/map"  class = "navbar-button btn-outline-light bg-gradient bg-primary">Explore</a>
                 </li>
 
                 <li routerLinkActive="active">
-                  <a routerLink="/about" class = "navbar-button btn-outline-light bg-gradient">About</a>
+                  <a routerLink="/about" class = "navbar-button btn-outline-light bg-gradient bg-primary">About</a>
                 </li>
                             
                 <li routerLinkActive="active">
-                  <a routerLink="/contact" class = "navbar-button btn-outline-light bg-gradient">Contact Us</a>
+                  <a routerLink="/contact" class = "navbar-button btn-outline-light bg-gradient bg-primary">Contact Us</a>
                 </li>
             </ul>
         </div>
@@ -58,20 +58,20 @@ Description:
                 <!-- Navbar Tabs (not logged in)-->
                 <ng-template [ngIf]="this._userService.username === null">
                   <li>
-                    <button type="button" class = "navbar-button btn-outline-light bg-gradient" data-toggle="popover" title="Popover title" data-content="And here's some amazing content. It's very engaging. Right?">Login</button>
+                    <button type="button" class = "navbar-button btn-outline-light bg-gradient bg-primary" data-toggle="popover" title="Popover title" data-content="And here's some amazing content. It's very engaging. Right?">Login</button>
                   </li>
                   <li routerLinkActive="active">
-                    <a routerLink="/create" class = "navbar-button btn-outline-light bg-gradient">Register</a>
-                  </li>
-                </ng-template>
-                <ng-template [ngIf]="this._userService.username != null">
-                  <li routerLinkActive="active">
-                    <a routerLink="/bookmarks" class = "navbar-button btn-outline-light bg-gradient">Bookmarks</a>
+                    <a routerLink="/create" class = "navbar-button btn-outline-light bg-gradient bg-primary">Register</a>
                   </li>
                 </ng-template>
                 <ng-template [ngIf]="this._userService.username != null">
                   <li routerLinkActive="active">
-                    <a  (click)="logout()" class = "navbar-button btn-outline-light bg-gradient">Sign Out</a>
+                    <a routerLink="/bookmarks" class = "navbar-button btn-outline-light bg-gradient bg-primary">Bookmarks</a>
+                  </li>
+                </ng-template>
+                <ng-template [ngIf]="this._userService.username != null">
+                  <li routerLinkActive="active">
+                    <a  (click)="logout()" class = "navbar-button btn-outline-light bg-gradient bg-primary">Sign Out</a>
                   </li>
                 </ng-template>
 
