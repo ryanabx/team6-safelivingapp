@@ -108,15 +108,15 @@
               <h2>
 
                 <br>The safe living score for this area is: <b [ngClass]="{
-                  'green' : location.crimeScore >= 70,
-                  'red' : location.crimeScore < 30
+                  'green' : location.crimeScore >= 90,
+                  'red' : location.crimeScore < 70
                   }">{{location.crimeScore}}</b>
               </h2>
               <h2>
                 <div *ngIf="location.projectedScore != '-1'">
                 <br>The future projected safe living score for this area is: <b [ngClass]="{
-                  'green' : location.projectedScore >= 70,
-                  'red' : location.projectedScore < 30
+                  'green' : location.projectedScore >= 90,
+                  'red' : location.projectedScore < 70
                   }">{{location.projectedScore}}</b>
                   </div>
                   
@@ -207,21 +207,6 @@
                 </form>
 
                 <!--User Chooses Min City Size-->
-                <form name="radius" action="N/A" method="N/A" [formGroup] = "radForm">
-                  <h4>Preferred Search Radius?</h4>
-                  <input type="radio" id="radOne" value="50" name="radius" formControlName = "radSize">
-                  <label for="radOne">50</label> <br/>
-                  <input type="radio" id="radTwo" value="100" name="radius" formControlName = "radSize">
-                  <label for="radTwo">100</label> <br/>
-                  <input type="radio" id="radThree" value="250" name="radius" formControlName = "radSize">
-                  <label for="radThree">250</label> <br/>
-                  <input type="radio" id="radFour" value="500" name="radius" formControlName = "radSize">
-                  <label for="radFour">500</label> <br/>
-                  <input type="radio" id="radFive" value="10000000000" name="radius" formControlName = "radSize">
-                  <label for="radFive">Any</label> <br/>
-                </form>
-
-                <!--User Chooses Min City Size-->
                 <form name="citySizeMin" action="N/A" method="N/A" [formGroup] = "minSizeForm">
                   <h4>Preferred Minimum City Size?</h4>
                   <input type="radio" id="minOne" value="0" name="citySizeMin" formControlName = "minSize">
@@ -248,7 +233,7 @@
                 </form>
 
                 <div class="row justify-content-center" style="margin-right: 40%; margin-left: 40%;">
-                  <button class="btn mt-4" (click)="recommendCity(location, radForm.value.radSize, minSizeForm.value.minSize, maxSizeForm.value.maxSize, recForm.value.recPriority)"
+                  <button class="btn mt-4" (click)="recommendCity(location, 100, minSizeForm.value.minSize, maxSizeForm.value.maxSize, recForm.value.recPriority)"
                     style="min-width:100%; background-color: #FFD580;">Submit</button>
                 </div>
                   

@@ -26,9 +26,9 @@ export class MapComponent implements AfterViewInit, OnInit {
   isReadonly = false;
 
   // recommendation
-  radiusValue = 100; 
-  minPop = 0;
-  maxPop = 10000000000;
+  radiusValue = 20; 
+  minPop = -1;
+  maxPop = Infinity;
   scoreCat = "safe-living";
   
   lat: number;
@@ -75,7 +75,6 @@ export class MapComponent implements AfterViewInit, OnInit {
   recForm: FormGroup;
   maxSizeForm: FormGroup;
   minSizeForm: FormGroup;
-  radForm: FormGroup;
 
   testPaths: any = [
     
@@ -121,10 +120,6 @@ export class MapComponent implements AfterViewInit, OnInit {
 
       this.minSizeForm = fb.group({
         minSize: ['0', Validators.required]
-      });
-
-      this.radForm = fb.group({
-        radSize: ['100', Validators.required]
       });
       
 
@@ -404,21 +399,21 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   // call in html for recommendation func using filters
   recommendCity(location: any, rad: any, min: any, max: any, category: any) {
-      this.appService.recommendCity(location.city,location.state, rad, min, max, category).subscribe(
+      this.appService.recommendCity(location.city, rad, min, max, category).subscribe(
         (data: any) => {
           console.log("Data Under Here: \n");
           console.log(data);
 
           var recList: any[][] = new Array()
-          for(let j=0; j < data["cityPairs"].length; j++) {
+          for(let j=0; j < 10; j++) {
             recList.push(["a", 1]);
           }
-          for(let x=0; x < data["cityPairs"].length; x++)
+          for(let x=0; x<10; x++)
           {
             recList[x][0] = (data["cityPairs"][x][0]["city"]);
             recList[x][1] = (data["cityPairs"][x][1]);
           }
-          // console.log(recList);
+          console.log(recList);
           location.recommendations = recList;
           // this.locations.setRecommendations(recList)
         }
@@ -541,7 +536,7 @@ export class MapComponent implements AfterViewInit, OnInit {
           )
 
           //recommendation
-          this.appService.recommendCity(this.locations[i].city, this.locations[i].state, this.radiusValue, this.minPop, this.maxPop, this.scoreCat).subscribe(
+          this.appService.recommendCity(this.locations[i].city, this.radiusValue, this.minPop, this.maxPop, this.scoreCat).subscribe(
             (data: any) => {
               console.log("Data Under Here: \n")
               console.log(data)
@@ -553,10 +548,10 @@ export class MapComponent implements AfterViewInit, OnInit {
               console.log(data["cityPairs"][0][1]);*/
 
               var recList:any[][] = new Array()
-              for(let j=0; j < data["cityPairs"].length; j++){
+              for(let j=0; j<10; j++){
                 recList.push(["a",1])
               }
-              for(let x=0; x < data["cityPairs"].length; x++)
+              for(let x=0; x<10; x++)
                 {
                   recList[x][0] = (data["cityPairs"][x][0]["city"])
                   recList[x][1] = (data["cityPairs"][x][1])

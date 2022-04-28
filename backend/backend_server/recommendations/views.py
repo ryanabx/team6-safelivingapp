@@ -18,12 +18,13 @@ import geopy.distance
 # GIVEN --> CITY, STATE, RADIUS, POPULATION SCALE
 # RETURN --> CITY WITH HIGHEST SAFETY SCORE
 
-def recommendCity(request, initialCity="", stateID="any", radiusValue=-1, minPopulation=-1, maxPopulation=float("inf"), scoreCategory="safe-living"):
-    return JsonResponse(recommend(initialCity, radiusValue, stateID, (float(minPopulation), float(maxPopulation)), scoreCategory))
+def recommendCity(request, initialAddress="", stateID="any", radiusValue=-1, minPopulation=-1, maxPopulation=float("inf"), scoreCategory="safe-living"):
+    return JsonResponse(  recommend(initialAddress, radiusValue, stateID, ( float(minPopulation), float(maxPopulation) ), scoreCategory)  )
 
-def recommend(initialCity="", radiusValue=-1, stateID="any", populationPreference=( -1, float("inf") ), scoreCategory="safe-living"):
-    if(initialCity != ""):
-        startingCoordinates = getCoordinates(initialCity, stateID)
+def recommend(initialAddress="", radiusValue=-1, stateID="any", populationPreference=( -1, float("inf") ), scoreCategory="safe-living"):
+
+    if(initialAddress != ""):
+        startingCoordinates = getCoordinates(initialAddress)
         radius = getRadius(radiusValue)
         cities = getCitiesOfPopulationInRange(startingCoordinates, populationPreference, radius)
     
@@ -35,10 +36,11 @@ def recommend(initialCity="", radiusValue=-1, stateID="any", populationPreferenc
 
         for city in cities:
             cityScore = getScore(city["city"], city["state_id"], scoreCategory)
-            if cityScore != -1:
-                cityScorePairs.append((city, cityScore))
-
-    return { "cityPairs" : sorted(cityScorePairs, key=getKey, reverse=True)[0:10] }
+            cityScorePairs.append( (city, cityScore) )
+        
+        return {
+            "cityPairs" : sorted(cityScorePairs, key=getKey, reverse=True)[0:10]
+        }
 
 # Get Key of CityScorePairs
 def getKey(item):
@@ -52,9 +54,7 @@ def getKey(item):
 # GIVEN --> CITY NAME AND STATE NAME
 # RETURN --> LONG/LAT TUPLE
 
-def getCoordinates(city, state):
-    #address = city + ", " + state
-    address = f'{city}, {state}'
+def getCoordinates(address):
     response = geocoding(address)
     data = response["results"][0]["locations"][0]["latLng"]
 
@@ -92,7 +92,7 @@ def getRadius(radiusValue):
 # RETURN --> LIST OF CITIES
 
 def getCitiesOfPopulationInRange(coordinates, populationRange, radius,
-CITY_DICT = json.load( open("./datasets/us_city_info.json") ) ):
+CITY_DICT=json.load( open("./datasets/us_city_info.json") ) ):
     iLong = coordinates[1]
     iLat = coordinates[0]
 
@@ -177,7 +177,7 @@ def getScore(city, state, scoreCategory,
                     
     
     
-    # return -1
+    return -1
 
 
 
