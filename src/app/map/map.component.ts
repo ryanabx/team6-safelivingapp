@@ -382,7 +382,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   //call in html for recommendation func using filters
-  /*recommendCity(city: any, state: any, rad: any, min: any, max: any, category: any) {
+  recommendCity(city: any, state: any, rad: any, min: any, max: any, category: any) {
       this.appService.recommendCity(city, state, this.radiusValue, this.minPop, this.maxPop, this.scoreCat).subscribe(
         (data:any) => {
           console.log("Data Under Here: \n")
@@ -401,7 +401,12 @@ export class MapComponent implements AfterViewInit, OnInit {
               this.locations.setRecommendations(recList)
         }
       );
-  }*/
+  }
+
+
+
+
+
 
   parsePathData(path: any) {
 

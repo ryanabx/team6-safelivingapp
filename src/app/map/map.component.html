@@ -187,35 +187,55 @@
                 <h2>Safest Cities Near {{location.city}}</h2>
 
                 <!-- Need to get recommendations from backend-->
-                <!--User Chooses Between Radius or State-->
-                <form name="radState" action="N/A" method="N/A">
-                  <h4>Would you like recommendations by Radius or State?</h4>
-                  <input type="radio" name="radState" /> Radius<br />
-                  <input type="radio" name="radState" /> State<br />
-                  </form>
-
-
+              
                 <!--Recommendations based on Safe Livng Score, Violence, or Property Costs-->
-                <form name="radState" action="N/A" method="N/A">
+                <form name="priority" action="N/A" method="N/A">
                   <h4>Which metric is most important to you?</h4>
-                  <input type="radio" name="radState" /> Safe Living Score<br />
-                  <input type="radio" name="radState" /> Violent Crime<br />
-                  <input type="radio" name="radState" /> Property Crime<br />
+                  <input type="radio" id="priorityOne" value="safe-living" name="priority" checked>
+                  <label for="priorityOne">Safe Living Score</label> <br/>
+                  <input type="radio" id="priorityTwo" value="violent" name="priority" >
+                  <label for="priorityTwo">Violent Crime</label> <br/>
+                  <input type="radio" id="priorityThree" value="property" name="priority" >
+                  <label for="priorityThree">Property Crime</label> <br/>
                   </form>
 
 
-                <!--User Chooses between small, medium or large city-->
-                <form name="radState" action="N/A" method="N/A">
-                  <h4>Preferred city size?</h4>
-                  <input type="radio" name="radState" /> Small (0-100k)<br />
-                  <input type="radio" name="radState" /> Medium(100k-250k)<br />
-                  <input type="radio" name="radState" /> Large(250k and Above)<br />
-                  <input type="radio" name="radState" /> No Preference<br />
+                <!--User Chooses Min City Size-->
+                <form name="citySizeMin" action="N/A" method="N/A">
+                  <h4>Preferred Minimum City Size?</h4>
+                  <input type="radio" id="minOne" value="0" name="citySizeMin" checked>
+                  <label for="minOne">Any</label> <br/>
+                  <input type="radio" id="minTwo" value="100000" name="citySizeMin" >
+                  <label for="minTwo">100k</label> <br/>
+                  <input type="radio" id="minThree" value="250000" name="citySizeMin" >
+                  <label for="minThree">250k</label> <br/>
+                  <input type="radio" id="minFour" value="500000" name="citySizeMin" >
+                  <label for="minFour">500k</label> <br/>
                   </form>
+
+                  <!--User Chooses Max City Size-->
+                <form name="citySizeMax" action="N/A" method="N/A">
+                  <h4>Preferred Maximum City Size?</h4>
+                  <input type="radio" id="maxOne" value="100000" name="citySizeMax" >
+                  <label for="maxOne">100k</label> <br/>
+                  <input type="radio" id="maxTwo" value="500000" name="citySizeMax" >
+                  <label for="maxTwo">500k</label> <br/>
+                  <input type="radio" id="maxThree" value="1000000" name="citySizeMax" >
+                  <label for="maxThree">1M</label> <br/>
+                  <input type="radio" id="maxFour" value="10000000" name="citySizeMax" checked>
+                  <label for="maxFour">Any</label> <br/>
+                  </form>
+
+                  <div class="row justify-content-center" style="margin-right: 40%; margin-left: 40%;">
+                    <button class="btn mt-4" (click)="recommendCity('Dallas', 'Texas', '100', '100', '100', 'safe-living')"
+                      style="min-width:100%; background-color: #FFD580;">Submit</button>
+                  </div>
+                  
 
                 <div *ngFor="let rec of location.recommendations; let i = index">
                   <br><b>City: </b>{{rec[0]}} <b>Score: </b>{{rec[1]}}
                 </div>
+                
 
                 <!-- Link to go back to top of jumbotron -->
                 <button class="btn btn-link" onClick="document.getElementById('top').scrollIntoView();"> Back to top</button>
