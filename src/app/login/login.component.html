@@ -25,20 +25,20 @@ Description:
 
 
 
-  <div class = "jumbotron vertical-center">
-    <div class = "flex-column col align-items-center centered-stuff" style="margin-top: 5%;">
-      <div><h1 class = "d-flex my-4 bg-white text-border-default text-dark p-3 rounded mb-5">Please enter your login information below:</h1></div>
+  <div class = "body2">
+    <div class = "flex-column col align-items-center centered-stuff">
+      <div><h1 class = "d-flex my-4"> Log into your account! </h1></div>
       <form>
         <!-- Username input -->
     
         <div class="form-outline mb-4">
-          <input type="Username" id="userUsername" class="form-control text-border-default bg-dark text-light" #userUsername/>
+          <input type="Username" id="userUsername" class="form-control" #userUsername/>
           <label class="form-label" for="form2Example1">Username</label>
         </div>
       
         <!-- Password input -->
         <div class="form-outline mb-4">
-          <input type="password" id="userPassword" class="form-control text-border-default bg-dark text-light" #userPassword/>
+          <input type="password" id="userPassword" class="form-control" #userPassword/>
           <label class="form-label" for="form2Example2">Password</label>
         </div>
       
@@ -46,24 +46,24 @@ Description:
         <div class="row mb-4">
           <div class="col d-flex justify-content-center">
             <!-- Checkbox -->
-            <div class="form-check mb-5">
-              <input class="form-check-input bg-dark" type="checkbox" value="" id="form2Example31" checked />
-              <label class="form-check-label" for="form2Example31"> Remember Me </label>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="" id="form2Example31" checked />
+              <label class="form-check-label" for="form2Example31"> Remember me </label>
             </div>
           </div>
       
           <div class="col">
             <!-- Simple link -->
-            <a href="#!" class="text-light mb-3">Forgot password?</a>
+            <a href="#!">Forgot password?</a>
           </div>
         </div>
       
         <!-- Submit button -->
-        <button type="button" (click)="login(userUsername.value, userPassword.value)" class="btn btn-light text-dark btn-block mb-4 text-border-default rounded-pill mb-5">Sign in</button>
+        <button type="button" (click)="login(userUsername.value, userPassword.value)" class="btn btn-primary btn-block mb-4">Sign in</button>
       
         <!-- Register buttons -->
-        <div class="text-center mt-5">
-          <p>Not a member? <a href="/create" class="text-light ml-5 bg-primary text-border-default rounded p-1 pl-0">Register</a></p>
+        <div class="text-center">
+          <p>Not a member? <a href="/create">Register</a></p>
         </div>
       </form>
     </div>

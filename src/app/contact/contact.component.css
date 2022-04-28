@@ -39,7 +39,3 @@ min-width: 100vw;
   position: absolute;
   z-index: -1;   
 }
-
-.text-border-default {
-  border: 3px solid;
-}
