@@ -6,7 +6,7 @@ import re
 # Create your views here.
 def newUser(request, username, email, password):
     checked = password_check(password)
-    checked['username_error'] = True
+    checked['username_error'] = False
     if checked.get("check_result"):
         try:
             user = User.objects.create_user(username, email, password)
@@ -14,7 +14,7 @@ def newUser(request, username, email, password):
         except Exception as e:
             print(e)
             checked['check_result'] = False
-            checked['username_error'] = False
+            checked['username_error'] = True
         return JsonResponse(checked, safe = False)
     else:
         return JsonResponse(checked, safe = False)
