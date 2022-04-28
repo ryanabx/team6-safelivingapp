@@ -1,10 +1,99 @@
 # Utility function to download the newest crime data from the FBI Crime Data Explorer
 import json
+from django.http import JsonResponse
 import requests
 import os
 import numpy
 
+import safe_living_score
+
 CRIME_DATA_EXPLORER_KEY = json.load(open('./API_KEYS.json'))["crime_data_explorer"]
+
+def make_crime_score_dataset(
+    request = "",
+    CITY_LIST = json.load(open("./datasets/search_suggestions.json")),
+    POPULATION_DATA = json.load(open('./datasets/population_data_fixed.json')),
+    CRIME_DATA = json.load(open('./datasets/crime_data_sorted.json')),
+    CITY_ORI = json.load(open('./datasets/city_ori.json')), include_reviews = False,
+    PROJECTED_DATA = json.load(open('./datasets/ori_future_preds.json')),
+    SAVE_PATH = "./datasets/score_error_check.json",
+    SAVE_PATH2 = "./datasets/sorted_violent.json",
+    SAVE_PATH3 = "./datasets/sorted_property.json",
+    SAVE_PATH4 = "./datasets/sorted_all.json",
+    SAVE_PATH5 = "./datasets/sorted_violent_projected.json",
+    SAVE_PATH6 = "./datasets/sorted_property_projected.json",
+    SAVE_PATH7 = "./datasets/sorted_all_projected.json"
+):
+    ALL_SCORES = {}
+    ALL_CRIME = []
+    VIOLENT_CRIME = []
+    PROPERTY_CRIME = []
+    VIOLENT_CRIME_PROJECTED = []
+    PROPERTY_CRIME_PROJECTED = []
+    ALL_CRIME_PROJECTED = []
+    for state in POPULATION_DATA:
+        ALL_SCORES[state] = {}
+        print(state)
+        for city in POPULATION_DATA[state]:
+            result = safe_living_score.views.get_safe_living_score_legacy(
+                city, state,
+                POPULATION_DATA,
+                CRIME_DATA,
+                CITY_ORI,
+                include_reviews,
+                PROJECTED_DATA,
+                False
+            )
+            ALL_SCORES[state][city] = result
+            if result["error_code"] == 0:
+                VIOLENT_CRIME.append((city,state, result["violent_crime"]))
+                PROPERTY_CRIME.append((city,state, result["property_crime"]))
+                ALL_CRIME.append((city, state, result["all"]))
+
+                if result["projected_all"] != -1:
+                    ALL_SCORES[state][city]["projected_violent_crime"] = result["projected_violent_crime"]
+                    ALL_SCORES[state][city]["projected_property_crime"] = result["projected_property_crime"]
+                    ALL_SCORES[state][city]["projected_all"] = result["projected_all"]
+                    VIOLENT_CRIME_PROJECTED.append((city,state, result["projected_violent_crime"]))
+                    PROPERTY_CRIME_PROJECTED.append((city,state, result["projected_property_crime"]))
+                    ALL_CRIME_PROJECTED.append((city, state, result["projected_all"]))
+        
+    
+    VIOLENT_CRIME_SORTED = sorted(VIOLENT_CRIME, key=lambda x: x[2])
+    PROPERTY_CRIME_SORTED = sorted(PROPERTY_CRIME, key=lambda x: x[2])
+    ALL_CRIME_SORTED = sorted(ALL_CRIME, key=lambda x: x[2])
+
+    VIOLENT_CRIME_PROJECTED_SORTED = sorted(VIOLENT_CRIME_PROJECTED, key=lambda x: x[2])
+    PROPERTY_CRIME_PROJECTED_SORTED = sorted(PROPERTY_CRIME_PROJECTED, key=lambda x: x[2])
+    ALL_CRIME_PROJECTED_SORTED = sorted(ALL_CRIME_PROJECTED, key=lambda x: x[2])
+
+    
+    with open(SAVE_PATH, "w") as outfile:
+        json.dump(ALL_SCORES, outfile)
+    
+    with open(SAVE_PATH2, "w") as outfile:
+        json.dump(VIOLENT_CRIME_SORTED, outfile)
+    
+    with open(SAVE_PATH3, "w") as outfile:
+        json.dump(PROPERTY_CRIME_SORTED, outfile)
+    
+    with open(SAVE_PATH4, "w") as outfile:
+        json.dump(ALL_CRIME_SORTED, outfile)
+    
+    with open(SAVE_PATH5, "w") as outfile:
+        json.dump(VIOLENT_CRIME_PROJECTED_SORTED, outfile)
+    
+    with open(SAVE_PATH6, "w") as outfile:
+        json.dump(PROPERTY_CRIME_PROJECTED_SORTED, outfile)
+    
+    with open(SAVE_PATH7, "w") as outfile:
+        json.dump(ALL_CRIME_PROJECTED_SORTED, outfile)
+    
+    print("Done!")
+    return JsonResponse({"finished": True})
+
+    
+
 
 
 def download_newest_crime_data(from_date = 2000, to_date = 2020, save_filepath="./datasets/crime_data.json", agencies_filepath = "./datasets/agencies.json"):
@@ -160,7 +249,8 @@ def main():
     print(f'Working directory: {os.getcwd()}')
     # download_newest_crime_data(2000, 2020, "./datasets/result.json", "./datasets/agencies.json")
     # sort_big_crime_data("./datasets/crime_data_full.json", "./datasets/crime_data_full_sorted.json", "./datasets/crime_vector_sorted.json")
-    make_ai_vector("./datasets/crime_vector_sorted.json", "./datasets/arrays.json", "./datasets/")
+    # make_ai_vector("./datasets/crime_vector_sorted.json", "./datasets/arrays.json", "./datasets/")
+    make_crime_score_dataset()
 
 if __name__ == "__main__":
     main()

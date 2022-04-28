@@ -4,6 +4,9 @@ from django.http import JsonResponse
 import json
 # Create your views here.
 
+def crime_data_wrapper():
+    pass
+
 def get_search_suggestions(request, currentInput):
 
     #print(currentInput)
