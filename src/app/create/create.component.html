@@ -29,26 +29,26 @@ Description:
 
 
 
-  <div class = "body2">
-    <div class = "flex-column col align-items-center centered-stuff">
-      <div><h1 class = "d-flex my-4"> Create your account! </h1></div>
+  <div class = "body2 jumbotron vertical-center" >
+    <div class = "flex-column col align-items-center centered-stuff" style='margin-top: 5%;'>
+      <div><h1 class = "d-flex my-4 bg-light text-dark rounded text-border-default p-3 rounded-pill"> Create your account below: </h1></div>
       <form>
 
         <div class="form-outline mb-4">
-          <input type="Email" id="userEmail" class="form-control" #userEmail/>
+          <input type="Email" id="userEmail" class="form-control text-border-default bg-dark text-light" #userEmail/>
           <label class="form-label" for="form2Example1">Email Address</label>
         </div>
 
         <!-- Username input -->
     
         <div class="form-outline mb-4">
-          <input type="Username" id="userUsername" class="form-control" #userUsername/>
+          <input type="Username" id="userUsername" class="form-control text-border-default bg-dark text-light" #userUsername/>
           <label class="form-label" for="form2Example1">Username</label>
         </div>
       
         <!-- Password input -->
         <div class="form-outline mb-4">
-          <input type="password" id="userPassword" class="form-control" #userPassword/>
+          <input type="password" id="userPassword" class="form-control text-border-default bg-dark text-light" #userPassword/>
           <label class="form-label" for="form2Example2">Password</label>
         </div>
 
@@ -72,11 +72,11 @@ Description:
         </div>
       
         <!-- Submit button -->
-        <button type="button" (click)="register(userEmail.value, userUsername.value, userPassword.value)" class="btn btn-primary btn-block mb-4">Sign up</button>
+        <button type="button" (click)="register(userEmail.value, userUsername.value, userPassword.value)" class="btn btn-light text-dark btn-block mb-4 text-border-default rounded-pill">Sign up</button>
       
         <!-- Register buttons -->
         <div class="text-center">
-          <p>Already a member? You poor thing. <a href="/login">Login</a></p>
+          <p>Already a member? You poor thing. <a href="/login" class="bg-primary rounded p-1 text-border-default text-light">Login</a></p>
         </div>
       </form>
     </div>
