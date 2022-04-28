@@ -8,6 +8,7 @@ Description:
 
 
 .jumbotron {
+  background: url(tulsa.jpg);
   background-repeat: no-repeat;
   text-align: center;
   text-shadow: black 0px 0px 2px;
@@ -30,21 +31,6 @@ Description:
     min-width: 100vw;
     /*min-height: calc(100% - 75px); /*  */
     /*min-height: calc(100vh - 100px); /* */
-  }
-
-  .jumbotron::after {
-    content: "";
-    background: url(tulsa.jpg);
-    opacity: 0.8;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    position: absolute;
-    z-index: -1; 
-    overflow-y: scroll;
-    overflow-x: hide;
-    display: block;  
   }
   
   .text-border-default {

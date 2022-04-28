@@ -6,6 +6,7 @@ Date Last Edited:
 Description:
 */
 .jumbotron {
+  background: url(street.jpg);
   background-repeat: no-repeat;
   text-align: center;
   text-shadow: black 0px 0px 2px;
@@ -18,7 +19,6 @@ Description:
   background-size: cover;
   border: 0;
   overflow-y: scroll;
-  overflow-x: hide;
 }
 
 .vertical-center {
@@ -28,22 +28,6 @@ min-width: 100%;
 min-width: 100vw;
 /* min-height: calc(100% - 75px);  /*  */
 /* min-height: calc(100vh - 100px); /* */
-}
-
-.jumbotron::after {
-  content: "";
-  background: url(street.jpg);
-  opacity: 0.8;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  position: absolute;
-  z-index: -1;
-  background-repeat: no-repeat;
-  background-size: cover;
-  overflow-y: scroll;
-  overflow-x: hide;
 }
 
 .text-border-default {
