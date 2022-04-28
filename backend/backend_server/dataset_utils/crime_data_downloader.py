@@ -3,7 +3,7 @@ import json
 from django.http import JsonResponse
 import requests
 import os
-import numpy
+#import numpy
 
 import safe_living_score
 

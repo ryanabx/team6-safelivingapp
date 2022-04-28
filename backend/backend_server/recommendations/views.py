@@ -18,12 +18,12 @@ import geopy.distance
 # GIVEN --> CITY, STATE, RADIUS, POPULATION SCALE
 # RETURN --> CITY WITH HIGHEST SAFETY SCORE
 
-def recommendCity(request, initialAddress="", stateID="any", radiusValue=-1, minPopulation=-1, maxPopulation=float("inf"), scoreCategory="safe-living"):
-    return JsonResponse(recommend(initialAddress, radiusValue, stateID, (float(minPopulation), float(maxPopulation)), scoreCategory))
+def recommendCity(request, initialCity="", stateID="any", radiusValue=-1, minPopulation=-1, maxPopulation=float("inf"), scoreCategory="safe-living"):
+    return JsonResponse(recommend(initialCity, radiusValue, stateID, (float(minPopulation), float(maxPopulation)), scoreCategory))
 
-def recommend(initialAddress="", radiusValue=-1, stateID="any", populationPreference=( -1, float("inf") ), scoreCategory="safe-living"):
-    if(initialAddress != ""):
-        startingCoordinates = getCoordinates(initialAddress)
+def recommend(initialCity="", radiusValue=-1, stateID="any", populationPreference=( -1, float("inf") ), scoreCategory="safe-living"):
+    if(initialCity != ""):
+        startingCoordinates = getCoordinates(initialCity, stateID)
         radius = getRadius(radiusValue)
         cities = getCitiesOfPopulationInRange(startingCoordinates, populationPreference, radius)
     
@@ -52,7 +52,9 @@ def getKey(item):
 # GIVEN --> CITY NAME AND STATE NAME
 # RETURN --> LONG/LAT TUPLE
 
-def getCoordinates(address):
+def getCoordinates(city, state):
+    #address = city + ", " + state
+    address = f'{city}, {state}'
     response = geocoding(address)
     data = response["results"][0]["locations"][0]["latLng"]
 
