@@ -2,6 +2,7 @@ from django.shortcuts import render
 import requests
 from django.http import JsonResponse
 from django.http import response
+import json
 
 import urllib.parse
 
@@ -11,8 +12,8 @@ def getGeocoding(request, inputAddr):
     return JsonResponse( geocoding(inputAddr) )
 
 def geocoding(inputAddr):
-    key2 = 'c7qYTGBjRaRkGF7ucqOvpNy6L1Q857oD'
-    key = 'sG51Do5TgLBaELz4ZP8JAI0wWWa0QwsS'
+    key2 = json.load(open('./API_KEYS.json'))["geocoding"]
+    key = json.load(open('./API_KEYS.json'))["geocoding2"]
     addrList = []
 
     inputAddr = urllib.parse.unquote(inputAddr)

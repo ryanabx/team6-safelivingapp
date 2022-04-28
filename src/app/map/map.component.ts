@@ -7,7 +7,7 @@ import { MapsAPILoader } from '@agm/core';
 import { HttpClient } from '@angular/common/http';
 import { UserService } from '../user.service';
 import { analyzeAndValidateNgModules } from '@angular/compiler';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 // import { stringify } from 'querystring';
 
 @Component({
@@ -24,6 +24,12 @@ export class MapComponent implements AfterViewInit, OnInit {
   comment: any;
   avgRating = 0;
   isReadonly = false;
+
+  // recommendation
+  radiusValue = 20; 
+  minPop = -1;
+  maxPop = Infinity;
+  scoreCat = "safe-living";
   
   lat: number;
   long: number;
@@ -66,6 +72,10 @@ export class MapComponent implements AfterViewInit, OnInit {
   censusPovRate: any;
   censusPovCount: any;
 
+  recForm: FormGroup;
+  maxSizeForm: FormGroup;
+  minSizeForm: FormGroup;
+
   testPaths: any = [
     
     { lat: 30, lng: 30 },
@@ -99,6 +109,18 @@ export class MapComponent implements AfterViewInit, OnInit {
       this.radius = 5000
 
       this.crimeScore = "Loading... Please wait!";
+
+      this.recForm = fb.group({
+        recPriority: ['safe-living', Validators.required]
+      });
+
+      this.maxSizeForm = fb.group({
+        maxSize: ['10000000000', Validators.required]
+      });
+
+      this.minSizeForm = fb.group({
+        minSize: ['0', Validators.required]
+      });
       
 
       // private mapsAPILoader: MapsAPILoader;
@@ -375,6 +397,34 @@ export class MapComponent implements AfterViewInit, OnInit {
     }
   }
 
+  // call in html for recommendation func using filters
+  recommendCity(location: any, rad: any, min: any, max: any, category: any) {
+      this.appService.recommendCity(location.city, rad, min, max, category).subscribe(
+        (data: any) => {
+          console.log("Data Under Here: \n");
+          console.log(data);
+
+          var recList: any[][] = new Array()
+          for(let j=0; j < 10; j++) {
+            recList.push(["a", 1]);
+          }
+          for(let x=0; x<10; x++)
+          {
+            recList[x][0] = (data["cityPairs"][x][0]["city"]);
+            recList[x][1] = (data["cityPairs"][x][1]);
+          }
+          console.log(recList);
+          location.recommendations = recList;
+          // this.locations.setRecommendations(recList)
+        }
+      );
+  }
+
+
+
+
+
+
   parsePathData(path: any) {
 
     let parsedData : any = [];
@@ -485,6 +535,32 @@ export class MapComponent implements AfterViewInit, OnInit {
             }
           )
 
+          //recommendation
+          this.appService.recommendCity(this.locations[i].city, this.radiusValue, this.minPop, this.maxPop, this.scoreCat).subscribe(
+            (data: any) => {
+              console.log("Data Under Here: \n")
+              console.log(data)
+
+              /*console.log("City Name Here:")
+              console.log(data["cityPairs"][0][0]["city"]);
+
+              console.log("Score Name Here:");
+              console.log(data["cityPairs"][0][1]);*/
+
+              var recList:any[][] = new Array()
+              for(let j=0; j<10; j++){
+                recList.push(["a",1])
+              }
+              for(let x=0; x<10; x++)
+                {
+                  recList[x][0] = (data["cityPairs"][x][0]["city"])
+                  recList[x][1] = (data["cityPairs"][x][1])
+                }
+              console.log(recList)
+              this.locations[i].setRecommendations(recList)
+            }
+          )
+
           // placeholder for method call to backend for projected score
           /*
           this.appService.getProjectedCrimeScore(this.cityNameArray[i], this.stateNameArray[i]).subscribe(
@@ -514,8 +590,13 @@ export class MapComponent implements AfterViewInit, OnInit {
               if(!isNaN(parseFloat(this.crimeScore))){
                 this.crimeScore = parseFloat((Math.round(this.crimeScore * 100) / 100).toFixed(2));
               }
+              if(!isNaN(parseFloat(this.crimeScore))){
+                this.projectedScore = data["projected_score"];
+                console.log("Projected score: " + data["projected_score"])
+              }
               this.locations[i].setCrimeScore(this.crimeScore);
               this.locations[i].setErrorCode(this.errorCode, this.errorMessage);
+              this.locations[i].setProjectedScore(this.projectedScore);
               console.log("Error code: " + this.errorCode + "| Error message: " + this.errorMessage);
               this.crimeScoreArray.push(this.crimeScore);
             }
@@ -529,14 +610,17 @@ export class MapComponent implements AfterViewInit, OnInit {
       
     })
   }
+  public projectedScore: string = "-1";
 }
+
+
 
 export class Location {
 
   public lat: number = 0;
   public long: number = 0;
   public crimeScore: string = "Loading... Please Wait :)";
-  public projectedScore: string = "∞";
+  public projectedScore: string = "-1";
   public city: any;
   public state: any;
   public errorCode: any;
@@ -548,6 +632,7 @@ export class Location {
     gas: ''
   };
   public reviews: any;
+  public recommendations: any;
   public labelOptions: any = {
     color: 'white',
     fontFamily: '',
@@ -592,6 +677,10 @@ export class Location {
   // reminder, the format of a returned review is {"city": city, "state": state, "rating": rating, "text": text/comments}
   setReviews(reviews: any) { 
     this.reviews = reviews;
+  }
+
+  setRecommendations(recommendations: any) { 
+    this.recommendations = recommendations;
   }
 
   setProjectedScore(score: any) {

@@ -180,7 +180,7 @@ class FBI_wrapper:
 	ORI_SCOPE = "agencies"
 
 	def __init__(self):
-		self.api_key = 'nHym62MTPDELS0XgtAZLLw0fL3jNWoNvsY2kn315'
+		self.api_key = json.load(open('./API_KEYS.json'))["crime_data_explorer"]
 		self.rc = RequestCreator(self.api_key)
 	
 	def getAgencies(self):
