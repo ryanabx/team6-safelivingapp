@@ -4,8 +4,8 @@ import os
 
 from django.http import JsonResponse
 
-CRIME_DATA_EXPLORER_KEY = 'nHym62MTPDELS0XgtAZLLw0fL3jNWoNvsY2kn315'
-GEOCODING_KEY = 'c7qYTGBjRaRkGF7ucqOvpNy6L1Q857oD'
+CRIME_DATA_EXPLORER_KEY = json.load(open('./API_KEYS.json'))["crime_data_explorer"]
+GEOCODING_KEY = json.load(open('./API_KEYS.json'))["geocoding"]
 
 import safe_living_score
 

@@ -8,7 +8,7 @@ import json
 
 # Create your views here.
 def getCostOfLiving(request, city, state):
-    key = '6teph9uj3ztaa3'
+    key = json.load(open('./API_KEYS.json'))["numbeo"]
     #url = f'/api/?api_key={key}&query={lon},{lat}&min_contributors=5&max_distance=10000'
     #cityName = 'Example'
     #state = 'Example

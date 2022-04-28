@@ -590,8 +590,13 @@ export class MapComponent implements AfterViewInit, OnInit {
               if(!isNaN(parseFloat(this.crimeScore))){
                 this.crimeScore = parseFloat((Math.round(this.crimeScore * 100) / 100).toFixed(2));
               }
+              if(!isNaN(parseFloat(this.crimeScore))){
+                this.projectedScore = data["projected_score"];
+                console.log("Projected score: " + data["projected_score"])
+              }
               this.locations[i].setCrimeScore(this.crimeScore);
               this.locations[i].setErrorCode(this.errorCode, this.errorMessage);
+              this.locations[i].setProjectedScore(this.projectedScore);
               console.log("Error code: " + this.errorCode + "| Error message: " + this.errorMessage);
               this.crimeScoreArray.push(this.crimeScore);
             }
@@ -605,14 +610,17 @@ export class MapComponent implements AfterViewInit, OnInit {
       
     })
   }
+  public projectedScore: string = "-1";
 }
+
+
 
 export class Location {
 
   public lat: number = 0;
   public long: number = 0;
   public crimeScore: string = "Loading... Please Wait :)";
-  public projectedScore: string = "∞";
+  public projectedScore: string = "-1";
   public city: any;
   public state: any;
   public errorCode: any;
