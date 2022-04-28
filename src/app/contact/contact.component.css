@@ -45,6 +45,7 @@ min-width: 100vw;
   overflow-y: scroll;
   overflow-x: hide;
   background: cover;
+  display: block;
 }
 
 .text-border-default {
