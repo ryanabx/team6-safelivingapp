@@ -5,23 +5,16 @@ Date Created:
 Date Last Edited:
 Description:
 */
-@import url('https://fonts.googleapis.com/css2?family=Alegreya:wght@400&display=swap');
+
 
 .navbar {
     src: url(SL_Logo_NoBkg.png);
-    font-weight: 600;
-    font-size: 1.2vw;
-    background-color: #fa8413;
-    border-bottom-left-radius: 40px;
-    border-bottom-right-radius: 40px;
-    border-top-left-radius: 5px;
-    border-bottom: white double 5px;
-    border-left: white groove 5px;
-    border-right: white groove 5px;
-    margin-right: 15vw;
-    margin-left: 15vw;
-    font-family: 'Alegreya', serif;
-    display: inline-flex;
+    font-weight: normal;
+    font-size: large;
+    padding: 0;
+    font-family: 'Segoe UI', 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: var(--safelivingcolor1);
+    border-radius: 0px;
 }
 
 .navbar:after{
@@ -29,33 +22,17 @@ Description:
     color: white
 }
 
-.navbar-button {
-    background-color: #fa8413;
-    letter-spacing: .2ch;
-    text-emphasis-color: black;
-    color: white;
-    border-radius: 10px;
-    border:white 2px ridge;
-    padding-top: .3vh;
-    padding-bottom: .3vh;
-    padding-right: 1vw;
-    padding-left: 1vw;
-    line-height: 50px;
-    box-sizing: content-box;
-    transition:all 0.2s;
-    display: inline-block;
+.navbar-button{
+    color: var(--textdefaultcolor)
 }
 
 .navbar-button:hover{
-    background-color:#ad5c10;
-    color: #ffffff;
+    filter:brightness(85%);
+    color: var(--texthovercolor);
 }
 
 .navbar-button:focus{
-    background-color:#fa8413;
-    color: #000000;
+    filter:brightness(85%);
+    color: var(--textdefaultcolor);
 }
 
-.container-fluid{
-    display: inline;
-}

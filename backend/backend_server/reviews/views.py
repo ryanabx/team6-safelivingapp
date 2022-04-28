@@ -35,7 +35,7 @@ def getReview(request, city, state):
 
 def getReviewList(city, state):
     # debug statement for retrieving review
-    print("Retrieving Reviews for: " + city + ", " + state)
+    # print("Retrieving Reviews for: " + city + ", " + state)
 
     # filter DB based on city, state searched
     relevant = Review.objects.filter(city=city, state=state)

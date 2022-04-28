@@ -6,21 +6,13 @@ Date Last Edited:
 Description:
 */
 
-@import url('https://fonts.googleapis.com/css2?family=Alegreya:wght@400&display=swap');
 
 .footer-styles{
-    background-color: #fa8413;
-    height:4%;
-    font-family: 'Alegreya', sans-serif;
-    font-size: large;
+    background-color: var(--safelivingcolor1);
+    height:3%;
+    font-family: 'Segoe UI', 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: small;
     vertical-align: middle;
     text-align:center;
-    border-top-left-radius: 25px;
-    border-top-right-radius: 25px;
-    border-top: white 8px ridge;
-    border-left: white 1px double;
-    border-right: white 1px double;
-    margin-right: 30vw;
-    margin-left: 30vw;
-    padding-top: .3vh;
+    color: var(--textdefaultcolor)
 }
