@@ -75,6 +75,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   recForm: FormGroup;
   maxSizeForm: FormGroup;
   minSizeForm: FormGroup;
+  radForm: FormGroup;
 
   testPaths: any = [
     
@@ -120,6 +121,10 @@ export class MapComponent implements AfterViewInit, OnInit {
 
       this.minSizeForm = fb.group({
         minSize: ['0', Validators.required]
+      });
+
+      this.radForm = fb.group({
+        radSize: ['100', Validators.required]
       });
       
 

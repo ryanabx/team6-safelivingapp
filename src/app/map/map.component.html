@@ -207,6 +207,19 @@
                 </form>
 
                 <!--User Chooses Min City Size-->
+                <form name="radius" action="N/A" method="N/A" [formGroup] = "radForm">
+                  <h4>Preferred Search Radius?</h4>
+                  <input type="radio" id="radOne" value="50" name="radius" formControlName = "radSize">
+                  <label for="radOne">50</label> <br/>
+                  <input type="radio" id="radTwo" value="100" name="radius" formControlName = "radSize">
+                  <label for="radTwo">100</label> <br/>
+                  <input type="radio" id="radThree" value="250" name="radius" formControlName = "radSize">
+                  <label for="radThree">250</label> <br/>
+                  <input type="radio" id="radFour" value="500" name="radius" formControlName = "radSize">
+                  <label for="radFour">500</label> <br/>
+                </form>
+
+                <!--User Chooses Min City Size-->
                 <form name="citySizeMin" action="N/A" method="N/A" [formGroup] = "minSizeForm">
                   <h4>Preferred Minimum City Size?</h4>
                   <input type="radio" id="minOne" value="0" name="citySizeMin" formControlName = "minSize">
