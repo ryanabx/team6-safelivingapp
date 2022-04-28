@@ -7,7 +7,7 @@ import { MapsAPILoader } from '@agm/core';
 import { HttpClient } from '@angular/common/http';
 import { UserService } from '../user.service';
 import { analyzeAndValidateNgModules } from '@angular/compiler';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 // import { stringify } from 'querystring';
 
 @Component({
@@ -25,7 +25,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   avgRating = 0;
   isReadonly = false;
 
-  //recommendation
+  // recommendation
   radiusValue = 20; 
   minPop = -1;
   maxPop = Infinity;
@@ -72,6 +72,10 @@ export class MapComponent implements AfterViewInit, OnInit {
   censusPovRate: any;
   censusPovCount: any;
 
+  recForm: FormGroup;
+  maxSizeForm: FormGroup;
+  minSizeForm: FormGroup;
+
   testPaths: any = [
     
     { lat: 30, lng: 30 },
@@ -105,6 +109,18 @@ export class MapComponent implements AfterViewInit, OnInit {
       this.radius = 5000
 
       this.crimeScore = "Loading... Please wait!";
+
+      this.recForm = fb.group({
+        recPriority: ['safe-living', Validators.required]
+      });
+
+      this.maxSizeForm = fb.group({
+        maxSize: ['10000000000', Validators.required]
+      });
+
+      this.minSizeForm = fb.group({
+        minSize: ['0', Validators.required]
+      });
       
 
       // private mapsAPILoader: MapsAPILoader;
@@ -381,24 +397,25 @@ export class MapComponent implements AfterViewInit, OnInit {
     }
   }
 
-  //call in html for recommendation func using filters
-  recommendCity(city: any, state: any, rad: any, min: any, max: any, category: any) {
-      this.appService.recommendCity(city, state, this.radiusValue, this.minPop, this.maxPop, this.scoreCat).subscribe(
-        (data:any) => {
-          console.log("Data Under Here: \n")
-              console.log(data)
+  // call in html for recommendation func using filters
+  recommendCity(location: any, rad: any, min: any, max: any, category: any) {
+      this.appService.recommendCity(location.city, rad, min, max, category).subscribe(
+        (data: any) => {
+          console.log("Data Under Here: \n");
+          console.log(data);
 
-          var recList:any[][] = new Array()
-              for(let j=0; j<10; j++){
-                recList.push(["a",1])
-              }
-              for(let x=0; x<10; x++)
-                {
-                  recList[x][0] = (data["cityPairs"][x][0]["city"])
-                  recList[x][1] = (data["cityPairs"][x][1])
-                }
-              console.log(recList)
-              this.locations.setRecommendations(recList)
+          var recList: any[][] = new Array()
+          for(let j=0; j < 10; j++) {
+            recList.push(["a", 1]);
+          }
+          for(let x=0; x<10; x++)
+          {
+            recList[x][0] = (data["cityPairs"][x][0]["city"]);
+            recList[x][1] = (data["cityPairs"][x][1]);
+          }
+          console.log(recList);
+          location.recommendations = recList;
+          // this.locations.setRecommendations(recList)
         }
       );
   }
@@ -519,7 +536,7 @@ export class MapComponent implements AfterViewInit, OnInit {
           )
 
           //recommendation
-          this.appService.recommendCity(this.locations[i].city, this.locations[i].state, this.radiusValue, this.minPop, this.maxPop, this.scoreCat).subscribe(
+          this.appService.recommendCity(this.locations[i].city, this.radiusValue, this.minPop, this.maxPop, this.scoreCat).subscribe(
             (data: any) => {
               console.log("Data Under Here: \n")
               console.log(data)

@@ -72,23 +72,23 @@ export class AppService {
   }
 
   submitReview(city: any, state: any, rating: any, text: any) {
-    return this.http.get(this.serverURL + "reviews/api/submitReview/" + city + "/" + state + "/ " + rating + "/" + encodeURIComponent(text) + "/ ")
+    return this.http.get(this.serverURL + "reviews/api/submitReview/" + city + "/" + state + "/ " + rating + "/" + encodeURIComponent(text) + "/ ");
   }
 
   getReview(city: any, state: any) {
-    return this.http.get(this.serverURL + "reviews/api/getReview/" + city + "/" + state + "/ ")
+    return this.http.get(this.serverURL + "reviews/api/getReview/" + city + "/" + state + "/ ");
   }
 
   getAvgRating(city: any, state: any) {
-    return this.http.get(this.serverURL + "reviews/api/getAvgRating/" + city + "/" + state + "/ ")
+    return this.http.get(this.serverURL + "reviews/api/getAvgRating/" + city + "/" + state + "/ ");
   }
 
   getSearchSuggestions(currentInput: any) {
-    return this.http.get(this.serverURL + "datasets/api/get/searchsuggestions/" + currentInput + "/")
+    return this.http.get(this.serverURL + "datasets/api/get/searchsuggestions/" + currentInput + "/");
   }
 
   //recommendation
-  recommendCity(city: any, state: any, radiusValue=20, minPopulation=-1, maxPopulation=Infinity, scoreCategory="safe-living") {
-    return this.http.get(this.serverURL + "recommendations/api/radius/"+scoreCategory+"/"+city+"/"+radiusValue)
+  recommendCity(city: any, radiusValue: number, minPopulation: number, maxPopulation: number, scoreCategory: any) {
+    return this.http.get(this.serverURL + "recommendations/api/radius/"+scoreCategory+"/"+city+"/"+radiusValue+"/"+minPopulation+"/"+maxPopulation+"/");
   }
 }

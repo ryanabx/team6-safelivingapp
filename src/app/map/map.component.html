@@ -189,47 +189,46 @@
                 <!-- Need to get recommendations from backend-->
               
                 <!--Recommendations based on Safe Livng Score, Violence, or Property Costs-->
-                <form name="priority" action="N/A" method="N/A">
+                <form name="priority" action="N/A" method="N/A" [formGroup] = "recForm">
                   <h4>Which metric is most important to you?</h4>
-                  <input type="radio" id="priorityOne" value="safe-living" name="priority" checked>
+                  <input type="radio" id="priorityOne" value="safe-living" name="priority" formControlName = "recPriority">
                   <label for="priorityOne">Safe Living Score</label> <br/>
-                  <input type="radio" id="priorityTwo" value="violent" name="priority" >
+                  <input type="radio" id="priorityTwo" value="violent" name="priority" formControlName = "recPriority">
                   <label for="priorityTwo">Violent Crime</label> <br/>
-                  <input type="radio" id="priorityThree" value="property" name="priority" >
+                  <input type="radio" id="priorityThree" value="property" name="priority" formControlName = "recPriority">
                   <label for="priorityThree">Property Crime</label> <br/>
-                  </form>
-
+                </form>
 
                 <!--User Chooses Min City Size-->
-                <form name="citySizeMin" action="N/A" method="N/A">
+                <form name="citySizeMin" action="N/A" method="N/A" [formGroup] = "minSizeForm">
                   <h4>Preferred Minimum City Size?</h4>
-                  <input type="radio" id="minOne" value="0" name="citySizeMin" checked>
+                  <input type="radio" id="minOne" value="0" name="citySizeMin" formControlName = "minSize">
                   <label for="minOne">Any</label> <br/>
-                  <input type="radio" id="minTwo" value="100000" name="citySizeMin" >
-                  <label for="minTwo">100k</label> <br/>
-                  <input type="radio" id="minThree" value="250000" name="citySizeMin" >
-                  <label for="minThree">250k</label> <br/>
-                  <input type="radio" id="minFour" value="500000" name="citySizeMin" >
-                  <label for="minFour">500k</label> <br/>
-                  </form>
+                  <input type="radio" id="minTwo" value="5000" name="citySizeMin" formControlName = "minSize">
+                  <label for="minTwo">5k</label> <br/>
+                  <input type="radio" id="minThree" value="10000" name="citySizeMin" formControlName = "minSize">
+                  <label for="minThree">10k</label> <br/>
+                  <input type="radio" id="minFour" value="25000" name="citySizeMin" formControlName = "minSize">
+                  <label for="minFour">25k</label> <br/>
+                </form>
 
                   <!--User Chooses Max City Size-->
-                <form name="citySizeMax" action="N/A" method="N/A">
+                <form name="citySizeMax" action="N/A" method="N/A" [formGroup] = "maxSizeForm">
                   <h4>Preferred Maximum City Size?</h4>
-                  <input type="radio" id="maxOne" value="100000" name="citySizeMax" >
-                  <label for="maxOne">100k</label> <br/>
-                  <input type="radio" id="maxTwo" value="500000" name="citySizeMax" >
-                  <label for="maxTwo">500k</label> <br/>
-                  <input type="radio" id="maxThree" value="1000000" name="citySizeMax" >
-                  <label for="maxThree">1M</label> <br/>
-                  <input type="radio" id="maxFour" value="10000000" name="citySizeMax" checked>
+                  <input type="radio" id="maxOne" value="50000" name="citySizeMax" formControlName = "maxSize">
+                  <label for="maxOne">50k</label> <br/>
+                  <input type="radio" id="maxTwo" value="100000" name="citySizeMax" formControlName = "maxSize">
+                  <label for="maxTwo">100k</label> <br/>
+                  <input type="radio" id="maxThree" value="200000" name="citySizeMax" formControlName = "maxSize">
+                  <label for="maxThree">200k</label> <br/>
+                  <input type="radio" id="maxFour" value="10000000000" name="citySizeMax" formControlName = "maxSize">
                   <label for="maxFour">Any</label> <br/>
-                  </form>
+                </form>
 
-                  <div class="row justify-content-center" style="margin-right: 40%; margin-left: 40%;">
-                    <button class="btn mt-4" (click)="recommendCity('Dallas', 'Texas', '100', '100', '100', 'safe-living')"
-                      style="min-width:100%; background-color: #FFD580;">Submit</button>
-                  </div>
+                <div class="row justify-content-center" style="margin-right: 40%; margin-left: 40%;">
+                  <button class="btn mt-4" (click)="recommendCity(location, 100, minSizeForm.value.minSize, maxSizeForm.value.maxSize, recForm.value.recPriority)"
+                    style="min-width:100%; background-color: #FFD580;">Submit</button>
+                </div>
                   
 
                 <div *ngFor="let rec of location.recommendations; let i = index">
