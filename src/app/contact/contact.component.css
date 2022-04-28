@@ -6,6 +6,7 @@ Date Last Edited:
 Description:
 */
 .jumbotron {
+  background: url(neighborhood-2.jpg);
   background-repeat: no-repeat;
   text-align: center;
   text-shadow: black 0px 0px 2px;
@@ -16,7 +17,10 @@ Description:
   text-align: center;
   display: block;
   background-size: cover;
-  border: 0;
+  overflow-y: scroll;
+  overflow-x: hide;
+  top:0;
+  bottom:0;
 }
 
 .vertical-center {
@@ -36,8 +40,11 @@ min-width: 100vw;
   left: 0;
   bottom: 0;
   right: 0;
-  position: absolute;
-  z-index: -1;   
+  position: fixed;
+  z-index: -1;
+  overflow-y: scroll;
+  overflow-x: hide;
+  background: cover;
 }
 
 .text-border-default {

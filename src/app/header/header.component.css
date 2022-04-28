@@ -21,12 +21,15 @@ Description:
     margin-right: 15vw;
     margin-left: 15vw;
     font-family: 'Alegreya', serif;
-    display: inline-flex;
+    display: inline-block;
+    
+    position: fixed;
 }
 
 .navbar:after{
     background-color: #ffffff;
-    color: white
+    color: white;
+    overflow: hidden;
 }
 
 .navbar-button {
@@ -40,10 +43,11 @@ Description:
     padding-bottom: .3vh;
     padding-right: 1vw;
     padding-left: 1vw;
-    line-height: 50px;
+    line-height: 40px;
     box-sizing: content-box;
     transition:all 0.2s;
     display: inline-block;
+    overflow: hidden;
 }
 
 .navbar-button:hover{
@@ -58,4 +62,9 @@ Description:
 
 .container-fluid{
     display: inline;
+    overflow: hidden;
+}
+
+.ul {
+    overflow: hidden;
 }

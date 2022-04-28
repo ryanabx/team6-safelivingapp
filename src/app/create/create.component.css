@@ -17,6 +17,8 @@ Description:
   display: block;
   background-size: cover;
   border: 0;
+  overflow-y: scroll;
+  overflow-x: hide;
 }
 
 .vertical-center {
@@ -40,6 +42,8 @@ min-width: 100vw;
   z-index: -1;
   background-repeat: no-repeat;
   background-size: cover;
+  overflow-y: scroll;
+  overflow-x: hide;
 }
 
 .text-border-default {
