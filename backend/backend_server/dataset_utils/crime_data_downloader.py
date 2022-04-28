@@ -3,6 +3,10 @@ import json
 from django.http import JsonResponse
 import requests
 import os
+<<<<<<< HEAD
+=======
+import numpy
+>>>>>>> parent of 0116a7f (Merge branch 'main' into ES-frontend-code-cleanup)
 
 import safe_living_score
 
