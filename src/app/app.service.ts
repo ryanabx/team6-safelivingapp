@@ -88,7 +88,7 @@ export class AppService {
   }
 
   //recommendation
-  recommendCity(city: any, state: any, radius:number, minPopulation: number, maxPopulation: number, scoreCategory: any) {
-    return this.http.get(this.serverURL + "recommendations/api/radius/"+scoreCategory+"/"+city+"/"+state+"/"+radius+"/"+minPopulation+"/"+maxPopulation+"/");
+  recommendCity(city: any, radiusValue: number, minPopulation: number, maxPopulation: number, scoreCategory: any) {
+    return this.http.get(this.serverURL + "recommendations/api/radius/"+scoreCategory+"/"+city+"/"+radiusValue+"/"+minPopulation+"/"+maxPopulation+"/");
   }
 }
