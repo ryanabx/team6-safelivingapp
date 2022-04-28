@@ -217,6 +217,8 @@
                   <label for="radThree">250</label> <br/>
                   <input type="radio" id="radFour" value="500" name="radius" formControlName = "radSize">
                   <label for="radFour">500</label> <br/>
+                  <input type="radio" id="radFive" value="10000000000" name="radius" formControlName = "radSize">
+                  <label for="radFive">Any</label> <br/>
                 </form>
 
                 <!--User Chooses Min City Size-->
@@ -246,7 +248,7 @@
                 </form>
 
                 <div class="row justify-content-center" style="margin-right: 40%; margin-left: 40%;">
-                  <button class="btn mt-4" (click)="recommendCity(location, 100, minSizeForm.value.minSize, maxSizeForm.value.maxSize, recForm.value.recPriority)"
+                  <button class="btn mt-4" (click)="recommendCity(location, radForm.value.radSize, minSizeForm.value.minSize, maxSizeForm.value.maxSize, recForm.value.recPriority)"
                     style="min-width:100%; background-color: #FFD580;">Submit</button>
                 </div>
                   

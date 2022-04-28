@@ -26,9 +26,9 @@ export class MapComponent implements AfterViewInit, OnInit {
   isReadonly = false;
 
   // recommendation
-  radiusValue = 20; 
-  minPop = -1;
-  maxPop = Infinity;
+  radiusValue = 100; 
+  minPop = 0;
+  maxPop = 10000000000;
   scoreCat = "safe-living";
   
   lat: number;
@@ -410,15 +410,15 @@ export class MapComponent implements AfterViewInit, OnInit {
           console.log(data);
 
           var recList: any[][] = new Array()
-          for(let j=0; j < 10; j++) {
+          for(let j=0; j < data["cityPairs"].length; j++) {
             recList.push(["a", 1]);
           }
-          for(let x=0; x<10; x++)
+          for(let x=0; x < data["cityPairs"].length; x++)
           {
             recList[x][0] = (data["cityPairs"][x][0]["city"]);
             recList[x][1] = (data["cityPairs"][x][1]);
           }
-          console.log(recList);
+          // console.log(recList);
           location.recommendations = recList;
           // this.locations.setRecommendations(recList)
         }
@@ -553,10 +553,10 @@ export class MapComponent implements AfterViewInit, OnInit {
               console.log(data["cityPairs"][0][1]);*/
 
               var recList:any[][] = new Array()
-              for(let j=0; j<10; j++){
+              for(let j=0; j < data["cityPairs"].length; j++){
                 recList.push(["a",1])
               }
-              for(let x=0; x<10; x++)
+              for(let x=0; x < data["cityPairs"].length; x++)
                 {
                   recList[x][0] = (data["cityPairs"][x][0]["city"])
                   recList[x][1] = (data["cityPairs"][x][1])
