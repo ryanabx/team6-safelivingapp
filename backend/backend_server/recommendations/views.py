@@ -144,6 +144,8 @@ def getScore(city, state, scoreCategory,
         crimeScore = 100 - score_dict["property_crime"] 
     if(scoreCategory == "violent"):
         crimeScore = 100 - score_dict["violent_crime"] 
+    if(scoreCategory == "projected-safe-living"):
+        crimeScore = score_dict["projected_score"] 
 
 
     #url = ("https://localhost:8000/safelivingscore/api/", city, "/", state, "/")192.168.2.68
