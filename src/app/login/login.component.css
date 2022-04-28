@@ -8,39 +8,40 @@ Description:
 
 
 .jumbotron {
-    background-image: url(neighborhood.jpg);
-    background-repeat: no-repeat;
-    text-align: center;
-    text-shadow: black 0px 0px 15px;
-    font-family: Georgia, serif;
-    font-weight: bold;
-    color: white;
-    position: relative;
-    display: block;
-    background-size: cover;
-  }
+  background-repeat: no-repeat;
+  text-align: center;
+  text-shadow: black 0px 0px 2px;
+  font-family: Georgia, serif;
+  font-weight: bold;
+  color: white;
+  position: fixed;
+  text-align: center;
+  display: block;
+  background-size: cover;
+  border: 0;
+}
 
   .vertical-center {
     min-height: 100%; /* Fallback for browsers do NOT support vh unit */
     min-height: 100vh; /* These two lines are counted as one :-)       */
-
+    min-width: 100%;
+    min-width: 100vw;
     /*min-height: calc(100% - 75px); /*  */
     /*min-height: calc(100vh - 100px); /* */
   }
 
-  .gradient-custom-2 {
-    background: rgb(2,2,68);
-    background: -moz-linear-gradient(90deg, rgba(2,2,68,1) 0%, rgba(0,0,157,1) 50%, rgba(2,2,68,1) 100%);
-    background: -webkit-linear-gradient(90deg, rgba(2,2,68,1) 0%, rgba(0,0,157,1) 50%, rgba(2,2,68,1) 100%);
-    background: linear-gradient(90deg, rgba(2,2,68,1) 0%, rgba(0,0,157,1) 50%, rgba(2,2,68,1) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#020244",endColorstr="#020244",GradientType=1);
-    text-align: center;
-    text-shadow: black 0px 0px 15px;
-    font-family: Georgia, serif;
-    font-weight: bold;
-    color: white;
-    position: relative;
-    border: 0;
-    background-size: cover;
-    /*decided to go against gradient and figured this was easiest way to modify*/
+  .jumbotron::after {
+    content: "";
+    background: url(tulsa.jpg);
+    opacity: 0.8;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    z-index: -1;   
+  }
+  
+  .text-border-default {
+    border: 3px solid;
   }

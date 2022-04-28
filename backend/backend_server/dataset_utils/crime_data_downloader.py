@@ -3,6 +3,8 @@ import json
 from django.http import JsonResponse
 import requests
 import os
+import numpy
+
 import safe_living_score
 
 CRIME_DATA_EXPLORER_KEY = json.load(open('./API_KEYS.json'))["crime_data_explorer"]
