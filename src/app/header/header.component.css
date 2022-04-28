@@ -11,7 +11,6 @@ Description:
     src: url(SL_Logo_NoBkg.png);
     font-weight: 600;
     font-size: 1.2vw;
-    padding: 0;
     background-color: #fa8413;
     border-bottom-left-radius: 40px;
     border-bottom-right-radius: 40px;
@@ -23,7 +22,6 @@ Description:
     margin-left: 15vw;
     font-family: 'Alegreya', serif;
     display: inline-flex;
-
 }
 
 .navbar:after{

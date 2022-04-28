@@ -6,24 +6,64 @@ Date Last Edited:
 Description:
 */
 
-  .vertical-center {
-    min-height: 100%; /* Fallback for browsers do NOT support vh unit */
-    min-height: 100vh; /* These two lines are counted as one :-)       */
+.jumbotron {
+  background-repeat: no-repeat;
+  text-align: center;
+  text-shadow: black 0px 2px 2px;
+  font-family: 'Georgia', serif;
+  font-weight: bolder;
+  color: white;
+  position: fixed;
+  text-align: center;
+  display: block;
+  background-size: cover;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  top: 0;
+  bottom: 0;
 
-   /* min-height: calc(100% - 75px);  */
-    /*min-height: calc(100vh - 100px);  */
+}
+  
+.vertical-center {
+  min-height: 100%; /* Fallback for browsers do NOT support vh unit */
+  min-height: 100vh; /* These two lines are counted as one :-)       */
+  min-width: 100%;
+  min-width: 100vw;
   }
 
-h1, .display-4  {
+h1{
     text-align: center;
     font-weight: bold;
-    line-height: 3;
+    line-height:200%;
     font-size:xx-large;
+    margin-bottom: 0;
 }
 h2{
     text-align: center;
     font-size:x-large;
+    line-height: 175%;
+    margin-bottom: 1%;
+    margin-top: 1%;
 }
 p {
     font-size: large;
+    margin-right: 20%;
+    margin-left: 20%;
+    margin-top: 0%;
+
+}
+
+.jumbotron::after {
+  content: "";
+  background: url(download.jpg);
+  opacity: 0.8;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: -1;
+  position: fixed;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }

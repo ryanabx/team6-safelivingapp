@@ -17,6 +17,8 @@ Description:
 
     <!-- JavaScript Error Handler -->
     <script src="global-error.js"></script>
+    
+
 </head>
 
  <!-- Create the Navbar -->
@@ -25,13 +27,13 @@ Description:
     <div class="container-fluid w-100 d-flex">
         
         
-      <div class="navbar-header pb-1 pt-1 m-0 m-auto pr-4">
+      <div class="navbar-header pb-1 pt-1 m-0 m-auto pr-3">
           <img  class="images" src="SL_Logo_NoBkg.png" width=110vw height=100vh/>
       </div>
 
         <!-- Left Side Tabs-->
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="nav navbar-nav mb-0 navbar-expand d-xl-flex mr-2 pl-3 position-relative gap-5">
+            <ul class="nav navbar-nav mb-0 navbar-expand d-xl-flex mr-4 pl-4 pr-1 position-relative gap-5">
                 <li class = "nav-item" routerLinkActive="active">
                   <a routerLink="/home"  class = "navbar-button btn-outline-light bg-gradient">Home</a>
                 </li>
@@ -52,11 +54,14 @@ Description:
 
         <!-- Right Side Tabs-->
         <div class="collapse navbar-collapse">
-            <ul class=" nav navbar-nav mb-0 d-xl-flex gap-5 m-auto m-0 pl-3 ml-4 position-relative">
+            <ul class=" nav navbar-nav mb-0 d-xl-flex gap-5 m-0 pl-1 ml-5 pr-0 mr-0 position-relative">
                 <!-- Navbar Tabs (not logged in)-->
                 <ng-template [ngIf]="this._userService.username === null">
+                  <li>
+                    <button type="button" class = "navbar-button btn-outline-light bg-gradient" data-toggle="popover" title="Popover title" data-content="And here's some amazing content. It's very engaging. Right?">Login</button>
+                  </li>
                   <li routerLinkActive="active">
-                    <a routerLink="/login" class = "navbar-button btn-outline-light bg-gradient">Login</a>
+                    <a routerLink="/create" class = "navbar-button btn-outline-light bg-gradient">Register</a>
                   </li>
                 </ng-template>
                 <ng-template [ngIf]="this._userService.username != null">
@@ -76,3 +81,18 @@ Description:
           </div>
     </div>
 </nav>
+
+<script src="js/bootstrap.min.js"></script>
+<script src="js/bootstrap.bundle.min.js"></script>
+
+
+<script>
+  var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+  var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+    return new bootstrap.Popover(popoverTriggerEl)
+  })
+  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+  var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl)
+  })
+</script>
